@@ -1,5 +1,5 @@
 theme = "terminimal"
-title = "Gists"
+title = "Rabbit Hole"
 
 # The theme supports feeds (RSS and ATOM)
 generate_feeds = true
@@ -40,7 +40,7 @@ accent_color = "green"
 background_color = "green"
 
 # The logo text - defaults to "Terminimal theme"
-#logo_text = "Terminimal theme"
+logo_text = "Gists"
 
 # The logo link - defaults to base_url.
 #logo_home_link = "/take/me/away!"

@@ -3,10 +3,10 @@ title = "ServerStatus-Rust on OpenRC"
 date = 2025-03-22
 
 [taxonomies]
-tags = ["openrc", "alpine", "ssr"]
+tags = ["openrc", "alpine", "serverstatus"]
 +++
 
-For monitoring openrc based system usage.
+_`For monitoring openrc based system usage.`_
 
 <!-- more -->
 
