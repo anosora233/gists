@@ -1,0 +1,252 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <title>Rabbit Hole</title>
+    
+    <meta http-equiv="content-type" content="text/html; charset=utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1">
+    <meta name="robots" content="noodp"/>
+
+    <link rel="stylesheet" href="https://anosora233.github.io/gists/style.css">
+    <link rel="stylesheet" href="https://anosora233.github.io/gists/color/green.css">
+
+    <link rel="stylesheet" href="https://anosora233.github.io/gists/font-hack-subset.css">
+
+    <meta name="description" content="">
+
+    <meta property="og:description" content="">
+    <meta property="og:title" content="Rabbit Hole">
+    <meta property="og:type" content="article">
+    <meta property="og:url" content="https://anosora233.github.io/gists/docker-unix/">
+
+    <meta name="twitter:card" content="summary_large_image">
+    <meta name="twitter:description" content="">
+    <meta name="twitter:title" content="Rabbit Hole">
+    <meta property="twitter:domain" content="anosora233.github.io&#x2F;gists&#x2F;">
+    <meta property="twitter:url" content="https://anosora233.github.io/gists/docker-unix/">
+
+                <link rel="alternate" type="application/atom+xml" title="Rabbit Hole Atom Feed" href="https://anosora233.github.io/gists/atom.xml" />
+        <link rel="shortcut icon" type="image&#x2F;x-icon" href="/gists/favicon.ico">
+    
+    </head>
+
+<body class="">
+<div class="container">
+    
+    <header class="header">
+        <div class="header__inner">
+            <div class="header__logo">
+                    
+                <a href="https://anosora233.github.io/gists/" style="text-decoration: none;">
+                    <div class="logo">
+                      
+                            Gists
+                        
+                    </div>
+                </a>
+            </div>
+        </div>
+
+        
+        
+                <nav class="menu">
+            <ul class="menu__inner">
+                <li class="active"><a href="https://anosora233.github.io/gists/">blog</a></li>
+            
+                <li><a href="https://anosora233.github.io/gists//tags">tags</a></li>
+            
+                <li><a href="https://anosora233.github.io/gists//archive">archive</a></li>
+            </ul>
+        </nav>
+    
+    
+        
+    </header>
+    
+
+    <div class="content">
+        
+    <div class="post">
+        
+    <h1 class="post-title"><a href="https://anosora233.github.io/gists/docker-unix/">Docker with Unix Domain Socket</a></h1>
+    <div class="post-meta-inline">
+        
+    <span class="post-date">
+            2024-08-31
+        </span>
+
+    </div>
+
+    
+        <span class="post-tags-inline">
+                :: tags:&nbsp;
+                <a class="post-tag" href="https://anosora233.github.io/gists/tags/docker/">#docker</a>&nbsp;
+                <a class="post-tag" href="https://anosora233.github.io/gists/tags/unix-domain-socket/">#unix-domain-socket</a></span>
+    
+
+        <div class="post-content">
+            <p><em><code>Some docker compose snippets.</code></em></p>
+<span id="continue-reading"></span><h2 id="unix-domain-socket">unix domain socket</h2>
+<p>Bind a host Unix socket to a container port.</p>
+<p>Refer to <a href="https://serverfault.com/questions/1156554/bind-a-host-unix-socket-to-a-container-port">this</a>.</p>
+<pre data-lang="yml" style="background-color:#151515;color:#e8e8d3;" class="language-yml "><code class="language-yml" data-lang="yml"><span style="color:#ffb964;">services</span><span>:
+</span><span>  </span><span style="color:#ffb964;">app</span><span>:
+</span><span>    </span><span style="color:#ffb964;">image</span><span>: </span><span style="color:#99ad6a;">someapp
+</span><span>  </span><span style="color:#ffb964;">web</span><span>:
+</span><span>    </span><span style="color:#ffb964;">image</span><span>: </span><span style="color:#99ad6a;">alpine/socat
+</span><span>    </span><span style="color:#ffb964;">network_mode</span><span>: </span><span style="color:#99ad6a;">service:app
+</span><span>    </span><span style="color:#ffb964;">restart</span><span>: </span><span style="color:#99ad6a;">always
+</span><span>    </span><span style="color:#ffb964;">command</span><span>:
+</span><span>      - </span><span style="color:#99ad6a;">unix-listen:/run/web.sock,fork,reuseaddr,mode=666
+</span><span>      - </span><span style="color:#99ad6a;">tcp-connect:localhost:PORT </span><span style="color:#888888;"># or udp-connect:localhost:PORT
+</span><span>    </span><span style="color:#ffb964;">volumes</span><span>:
+</span><span>      - </span><span style="color:#99ad6a;">.:/run
+</span></code></pre>
+<h2 id="uptime-kuma">uptime kuma</h2>
+<pre data-lang="yml" style="background-color:#151515;color:#e8e8d3;" class="language-yml "><code class="language-yml" data-lang="yml"><span style="color:#ffb964;">services</span><span>:
+</span><span>  </span><span style="color:#ffb964;">app</span><span>:
+</span><span>    </span><span style="color:#ffb964;">image</span><span>: </span><span style="color:#99ad6a;">louislam/uptime-kuma:1
+</span><span>    </span><span style="color:#ffb964;">network_mode</span><span>: </span><span style="color:#99ad6a;">bridge
+</span><span>    </span><span style="color:#ffb964;">restart</span><span>: </span><span style="color:#99ad6a;">always
+</span><span>    </span><span style="color:#ffb964;">volumes</span><span>:
+</span><span>      - </span><span style="color:#99ad6a;">.:/app/data
+</span><span>  </span><span style="color:#ffb964;">web</span><span>:
+</span><span>    </span><span style="color:#ffb964;">image</span><span>: </span><span style="color:#99ad6a;">alpine/socat
+</span><span>    </span><span style="color:#ffb964;">network_mode</span><span>: </span><span style="color:#99ad6a;">service:app
+</span><span>    </span><span style="color:#ffb964;">restart</span><span>: </span><span style="color:#99ad6a;">always
+</span><span>    </span><span style="color:#ffb964;">command</span><span>:
+</span><span>      - </span><span style="color:#99ad6a;">unix-listen:/run/web.sock,fork,reuseaddr,mode=666
+</span><span>      - </span><span style="color:#99ad6a;">tcp-connect:localhost:3001
+</span><span>    </span><span style="color:#ffb964;">volumes</span><span>:
+</span><span>      - </span><span style="color:#99ad6a;">.:/run
+</span></code></pre>
+<h2 id="librespeed">librespeed</h2>
+<pre data-lang="yml" style="background-color:#151515;color:#e8e8d3;" class="language-yml "><code class="language-yml" data-lang="yml"><span style="color:#ffb964;">services</span><span>:
+</span><span>  </span><span style="color:#ffb964;">app</span><span>:
+</span><span>    </span><span style="color:#ffb964;">image</span><span>: </span><span style="color:#99ad6a;">lscr.io/linuxserver/librespeed:latest
+</span><span>    </span><span style="color:#ffb964;">network_mode</span><span>: </span><span style="color:#99ad6a;">bridge
+</span><span>    </span><span style="color:#ffb964;">restart</span><span>: </span><span style="color:#99ad6a;">always
+</span><span>    </span><span style="color:#ffb964;">environment</span><span>:
+</span><span>      - </span><span style="color:#99ad6a;">PUID=1000
+</span><span>      - </span><span style="color:#99ad6a;">PGID=1000
+</span><span>      - </span><span style="color:#99ad6a;">TZ=Asia/Shanghai
+</span><span>    </span><span style="color:#ffb964;">volumes</span><span>:
+</span><span>      - </span><span style="color:#99ad6a;">./config:/config
+</span><span>  </span><span style="color:#ffb964;">web</span><span>:
+</span><span>    </span><span style="color:#ffb964;">image</span><span>: </span><span style="color:#99ad6a;">alpine/socat
+</span><span>    </span><span style="color:#ffb964;">network_mode</span><span>: </span><span style="color:#99ad6a;">service:app
+</span><span>    </span><span style="color:#ffb964;">restart</span><span>: </span><span style="color:#99ad6a;">always
+</span><span>    </span><span style="color:#ffb964;">command</span><span>:
+</span><span>      - </span><span style="color:#99ad6a;">unix-listen:/run/web.sock,fork,reuseaddr,mode=666
+</span><span>      - </span><span style="color:#99ad6a;">tcp-connect:localhost:80
+</span><span>    </span><span style="color:#ffb964;">volumes</span><span>:
+</span><span>      - </span><span style="color:#99ad6a;">.:/run
+</span></code></pre>
+<h2 id="caddy">caddy</h2>
+<pre data-lang="yml" style="background-color:#151515;color:#e8e8d3;" class="language-yml "><code class="language-yml" data-lang="yml"><span style="color:#ffb964;">services</span><span>:
+</span><span>  </span><span style="color:#ffb964;">app</span><span>:
+</span><span>    </span><span style="color:#ffb964;">image</span><span>: </span><span style="color:#99ad6a;">caddy
+</span><span>    </span><span style="color:#ffb964;">network_mode</span><span>: </span><span style="color:#99ad6a;">host
+</span><span>    </span><span style="color:#ffb964;">restart</span><span>: </span><span style="color:#99ad6a;">always
+</span><span>    </span><span style="color:#ffb964;">volumes</span><span>:
+</span><span>      - </span><span style="color:#99ad6a;">./Caddyfile:/etc/caddy/Caddyfile
+</span><span>      - </span><span style="color:#99ad6a;">data:/data
+</span><span>      - </span><span style="color:#99ad6a;">conf:/config
+</span><span>      - </span><span style="color:#99ad6a;">/opt/cert:/cert
+</span><span>      - </span><span style="color:#99ad6a;">/srv:/srv
+</span><span>      - </span><span style="color:#99ad6a;">/run:/run
+</span><span style="color:#ffb964;">volumes</span><span>:
+</span><span>  </span><span style="color:#ffb964;">data</span><span>:
+</span><span>  </span><span style="color:#ffb964;">conf</span><span>:
+</span></code></pre>
+<p>Caddyfile Example</p>
+<pre data-lang="caddyfile" style="background-color:#151515;color:#e8e8d3;" class="language-caddyfile "><code class="language-caddyfile" data-lang="caddyfile"><span>example.com,
+</span><span>*.example.com {
+</span><span>    tls _CERT_ _KEY_
+</span><span>    encode zstd gzip
+</span><span>
+</span><span>    @api host api.example.com
+</span><span>    handle @api {
+</span><span>        reverse_proxy [::1]:8080
+</span><span>    }
+</span><span>
+</span><span>    # other sites
+</span><span>
+</span><span>
+</span><span>    # fallback site
+</span><span>    handle {
+</span><span>        root * /usr/share/caddy
+</span><span>        file_server
+</span><span>    }
+</span><span>}
+</span></code></pre>
+<h2 id="memos">memos</h2>
+<pre data-lang="yml" style="background-color:#151515;color:#e8e8d3;" class="language-yml "><code class="language-yml" data-lang="yml"><span style="color:#ffb964;">services</span><span>:
+</span><span>  </span><span style="color:#ffb964;">app</span><span>:
+</span><span>    </span><span style="color:#ffb964;">image</span><span>: </span><span style="color:#99ad6a;">neosmemo/memos:stable
+</span><span>    </span><span style="color:#ffb964;">network_mode</span><span>: </span><span style="color:#99ad6a;">none
+</span><span>    </span><span style="color:#ffb964;">restart</span><span>: </span><span style="color:#99ad6a;">always
+</span><span>    </span><span style="color:#ffb964;">volumes</span><span>:
+</span><span>      - </span><span style="color:#99ad6a;">./memos/:/var/opt/memos
+</span><span>  </span><span style="color:#ffb964;">web</span><span>:
+</span><span>    </span><span style="color:#ffb964;">image</span><span>: </span><span style="color:#99ad6a;">alpine/socat
+</span><span>    </span><span style="color:#ffb964;">network_mode</span><span>: </span><span style="color:#99ad6a;">service:app
+</span><span>    </span><span style="color:#ffb964;">restart</span><span>: </span><span style="color:#99ad6a;">always
+</span><span>    </span><span style="color:#ffb964;">command</span><span>:
+</span><span>      - </span><span style="color:#99ad6a;">unix-listen:/run/web.sock,fork,reuseaddr,mode=666
+</span><span>      - </span><span style="color:#99ad6a;">tcp-connect:localhost:5230
+</span><span>    </span><span style="color:#ffb964;">volumes</span><span>:
+</span><span>      - </span><span style="color:#99ad6a;">.:/run
+</span></code></pre>
+
+        </div>
+
+        
+            <div class="pagination">
+                <div class="pagination__title">
+                    <span class="pagination__title-h">Thanks for reading! Read other posts?</span>
+                    <hr />
+                </div>
+                <div class="pagination__buttons">
+                        <span class="button previous">
+                            <a href="https://anosora233.github.io/gists/snippets-old/">
+                                <span class="button__icon">←</span>&nbsp;
+                                <span class="button__text">Migrated Snippets</span>
+                            </a>
+                        </span>
+                    
+                    
+                        <span class="button next">
+                            <a href="https://anosora233.github.io/gists/openrc-ssr/">
+                                <span class="button__text">ServerStatus-Rust on OpenRC</span>&nbsp;
+                                <span class="button__icon">→</span>
+                            </a>
+                        </span>
+                    </div>
+            </div>
+        
+    </div>
+
+    </div>
+
+    
+    <footer class="footer">
+        <div class="footer__inner">
+                <div class="copyright">
+                        <span>© 
+    2025
+ Powered by <a href="https://www.getzola.org/">Zola</a></span>
+                    <span class="copyright-theme">
+                        <span class="copyright-theme-sep">:: </span>
+                        Theme: <a href="https://github.com/pawroman/zola-theme-terminimal/">Terminimal</a> by pawroman
+                    </span>
+                </div>
+            </div>
+    </footer>
+    
+
+</div>
+</body>
+
+</html>

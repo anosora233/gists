@@ -1,0 +1,66 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<feed xmlns="http://www.w3.org/2005/Atom" xml:lang="en">
+    <title>Rabbit Hole</title>
+    <link rel="self" type="application/atom+xml" href="https://anosora233.github.io/gists/atom.xml"/>
+    <link rel="alternate" type="text/html" href="https://anosora233.github.io/gists/"/>
+    <generator uri="https://www.getzola.org/">Zola</generator>
+    <updated>2025-03-22T00:00:00+00:00</updated>
+    <id>https://anosora233.github.io/gists/atom.xml</id>
+    <entry xml:lang="en">
+        <title>ServerStatus-Rust on OpenRC</title>
+        <published>2025-03-22T00:00:00+00:00</published>
+        <updated>2025-03-22T00:00:00+00:00</updated>
+        
+        <author>
+          <name>
+            
+              Unknown
+            
+          </name>
+        </author>
+        
+        <link rel="alternate" type="text/html" href="https://anosora233.github.io/gists/openrc-ssr/"/>
+        <id>https://anosora233.github.io/gists/openrc-ssr/</id>
+        
+        <summary type="html">&lt;p&gt;&lt;em&gt;&lt;code&gt;For monitoring openrc based system usage.&lt;&#x2F;code&gt;&lt;&#x2F;em&gt;&lt;&#x2F;p&gt;</summary>
+        
+    </entry>
+    <entry xml:lang="en">
+        <title>Docker with Unix Domain Socket</title>
+        <published>2024-08-31T00:00:00+00:00</published>
+        <updated>2024-08-31T00:00:00+00:00</updated>
+        
+        <author>
+          <name>
+            
+              Unknown
+            
+          </name>
+        </author>
+        
+        <link rel="alternate" type="text/html" href="https://anosora233.github.io/gists/docker-unix/"/>
+        <id>https://anosora233.github.io/gists/docker-unix/</id>
+        
+        <summary type="html">&lt;p&gt;&lt;em&gt;&lt;code&gt;Some docker compose snippets.&lt;&#x2F;code&gt;&lt;&#x2F;em&gt;&lt;&#x2F;p&gt;</summary>
+        
+    </entry>
+    <entry xml:lang="en">
+        <title>Migrated Snippets</title>
+        <published>2024-08-20T00:00:00+00:00</published>
+        <updated>2024-08-20T00:00:00+00:00</updated>
+        
+        <author>
+          <name>
+            
+              Unknown
+            
+          </name>
+        </author>
+        
+        <link rel="alternate" type="text/html" href="https://anosora233.github.io/gists/snippets-old/"/>
+        <id>https://anosora233.github.io/gists/snippets-old/</id>
+        
+        <summary type="html">&lt;p&gt;&lt;em&gt;&lt;code&gt;Just some snippets.&lt;&#x2F;code&gt;&lt;&#x2F;em&gt;&lt;&#x2F;p&gt;</summary>
+        
+    </entry>
+</feed>
