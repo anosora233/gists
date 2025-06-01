@@ -1,0 +1,337 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<feed xmlns="http://www.w3.org/2005/Atom" xml:lang="en">
+    <title>Anosora233</title>
+    <subtitle>Github user anosora233&#x27;s gists</subtitle>
+    <link rel="self" type="application/atom+xml" href="https://anosora233.github.io/gists/atom.xml"/>
+    <link rel="alternate" type="text/html" href="https://anosora233.github.io/gists/"/>
+    <generator uri="https://www.getzola.org/">Zola</generator>
+    <updated>2025-03-22T00:00:00+00:00</updated>
+    <id>https://anosora233.github.io/gists/atom.xml</id>
+    <entry xml:lang="en">
+        <title>在基于 Alpine 上配置 ServerStatus</title>
+        <published>2025-03-22T00:00:00+00:00</published>
+        <updated>2025-03-22T00:00:00+00:00</updated>
+        
+        <author>
+          <name>
+            
+              Unknown
+            
+          </name>
+        </author>
+        
+        <link rel="alternate" type="text/html" href="https://anosora233.github.io/gists/blog/alpine-ssr/"/>
+        <id>https://anosora233.github.io/gists/blog/alpine-ssr/</id>
+        
+        <content type="html" xml:base="https://anosora233.github.io/gists/blog/alpine-ssr/">&lt;p&gt;&lt;em&gt;&lt;code&gt;用于监控基于 Alpine 系统使用情况&lt;&#x2F;code&gt;&lt;&#x2F;em&gt;&lt;&#x2F;p&gt;
+&lt;h2 id=&quot;fu-wu-qi-duan-pei-zhi&quot;&gt;服务器端配置&lt;&#x2F;h2&gt;
+&lt;p&gt;由于原始二进制文件名较冗长，在此将其重命名为 ssrd。&lt;&#x2F;p&gt;
+&lt;blockquote&gt;
+&lt;p&gt;警告：请记得将所有 N 替换为你的配置。&lt;&#x2F;p&gt;
+&lt;&#x2F;blockquote&gt;
+&lt;pre data-lang=&quot;sh&quot; style=&quot;background-color:#31333d;color:#ffffffc4;&quot; class=&quot;language-sh &quot;&gt;&lt;code class=&quot;language-sh&quot; data-lang=&quot;sh&quot;&gt;&lt;span style=&quot;font-weight:bold;color:#a3cbe3;&quot;&gt;mkdir&lt;&#x2F;span&gt;&lt;span style=&quot;color:#ffffff;&quot;&gt; -p&lt;&#x2F;span&gt;&lt;span&gt; &#x2F;opt&#x2F;ssr
+&lt;&#x2F;span&gt;&lt;span&gt;
+&lt;&#x2F;span&gt;&lt;span style=&quot;color:#707180;&quot;&gt;# server binary
+&lt;&#x2F;span&gt;&lt;span style=&quot;font-weight:bold;color:#a3cbe3;&quot;&gt;wget&lt;&#x2F;span&gt;&lt;span style=&quot;color:#ffffff;&quot;&gt; -qO-&lt;&#x2F;span&gt;&lt;span&gt; https:&#x2F;&#x2F;github.com&#x2F;zdz&#x2F;ServerStatus-Rust&#x2F;releases&#x2F;download&#x2F;v1.8.1&#x2F;server-x86_64-unknown-linux-musl.zip \
+&lt;&#x2F;span&gt;&lt;span style=&quot;color:#db7c6d;&quot;&gt;| &lt;&#x2F;span&gt;&lt;span style=&quot;font-weight:bold;color:#a3cbe3;&quot;&gt;unzip&lt;&#x2F;span&gt;&lt;span style=&quot;color:#ffffff;&quot;&gt; -po&lt;&#x2F;span&gt;&lt;span&gt; - stat_server &lt;&#x2F;span&gt;&lt;span style=&quot;color:#db7c6d;&quot;&gt;&amp;gt;&lt;&#x2F;span&gt;&lt;span&gt; &#x2F;opt&#x2F;ssr&#x2F;ssrd &lt;&#x2F;span&gt;&lt;span style=&quot;color:#db7c6d;&quot;&gt;&amp;amp;&amp;amp; &lt;&#x2F;span&gt;&lt;span style=&quot;font-weight:bold;color:#a3cbe3;&quot;&gt;chmod&lt;&#x2F;span&gt;&lt;span&gt; +x &#x2F;opt&#x2F;ssr&#x2F;ssrd
+&lt;&#x2F;span&gt;&lt;span&gt;
+&lt;&#x2F;span&gt;&lt;span style=&quot;font-weight:bold;color:#a3cbe3;&quot;&gt;cat &lt;&#x2F;span&gt;&lt;span style=&quot;color:#db7c6d;&quot;&gt;&amp;lt;&amp;lt; EOF &amp;gt;&lt;&#x2F;span&gt;&lt;span&gt; &#x2F;opt&#x2F;ssr&#x2F;config.toml
+&lt;&#x2F;span&gt;&lt;span&gt;grpc_addr = &amp;quot;[::1]:9394&amp;quot;
+&lt;&#x2F;span&gt;&lt;span&gt;http_addr = &amp;quot;[::1]:8080&amp;quot;
+&lt;&#x2F;span&gt;&lt;span&gt;
+&lt;&#x2F;span&gt;&lt;span&gt;jwt_secret = &amp;quot;N&amp;quot;
+&lt;&#x2F;span&gt;&lt;span&gt;admin_user = &amp;quot;N&amp;quot;
+&lt;&#x2F;span&gt;&lt;span&gt;admin_pass = &amp;quot;N&amp;quot;
+&lt;&#x2F;span&gt;&lt;span&gt;
+&lt;&#x2F;span&gt;&lt;span&gt;hosts_group = [
+&lt;&#x2F;span&gt;&lt;span&gt;  {gid = &amp;quot;N&amp;quot;, password = &amp;quot;N&amp;quot;}
+&lt;&#x2F;span&gt;&lt;span&gt;]
+&lt;&#x2F;span&gt;&lt;span&gt;
+&lt;&#x2F;span&gt;&lt;span&gt;group_gc = 3600
+&lt;&#x2F;span&gt;&lt;span style=&quot;color:#db7c6d;&quot;&gt;EOF
+&lt;&#x2F;span&gt;&lt;span&gt;
+&lt;&#x2F;span&gt;&lt;span&gt;
+&lt;&#x2F;span&gt;&lt;span style=&quot;font-weight:bold;color:#a3cbe3;&quot;&gt;cat &lt;&#x2F;span&gt;&lt;span style=&quot;color:#db7c6d;&quot;&gt;&amp;lt;&amp;lt; EOF &amp;gt;&lt;&#x2F;span&gt;&lt;span&gt; &#x2F;etc&#x2F;init.d&#x2F;ssrd
+&lt;&#x2F;span&gt;&lt;span&gt;#!&#x2F;sbin&#x2F;openrc-run
+&lt;&#x2F;span&gt;&lt;span&gt;
+&lt;&#x2F;span&gt;&lt;span&gt;respawn_max=30
+&lt;&#x2F;span&gt;&lt;span&gt;supervisor=&amp;quot;supervise-daemon&amp;quot;
+&lt;&#x2F;span&gt;&lt;span&gt;supervise_daemon_args=&amp;quot;--chdir &#x2F;opt&#x2F;ssr&amp;quot;
+&lt;&#x2F;span&gt;&lt;span&gt;command=&amp;quot;&#x2F;opt&#x2F;ssr&#x2F;ssrd&amp;quot;
+&lt;&#x2F;span&gt;&lt;span&gt;command_args=&amp;quot;-c &#x2F;opt&#x2F;ssr&#x2F;config.toml&amp;quot;
+&lt;&#x2F;span&gt;&lt;span&gt;
+&lt;&#x2F;span&gt;&lt;span&gt;depend() {
+&lt;&#x2F;span&gt;&lt;span&gt;  after net dns
+&lt;&#x2F;span&gt;&lt;span&gt;}
+&lt;&#x2F;span&gt;&lt;span style=&quot;color:#db7c6d;&quot;&gt;EOF
+&lt;&#x2F;span&gt;&lt;span&gt;
+&lt;&#x2F;span&gt;&lt;span style=&quot;font-weight:bold;color:#a3cbe3;&quot;&gt;chmod&lt;&#x2F;span&gt;&lt;span&gt; +x &#x2F;etc&#x2F;init.d&#x2F;ssrd
+&lt;&#x2F;span&gt;&lt;span style=&quot;font-weight:bold;color:#a3cbe3;&quot;&gt;rc-service&lt;&#x2F;span&gt;&lt;span&gt; ssrd start
+&lt;&#x2F;span&gt;&lt;span style=&quot;font-weight:bold;color:#a3cbe3;&quot;&gt;rc-update&lt;&#x2F;span&gt;&lt;span&gt; add ssrd
+&lt;&#x2F;span&gt;&lt;&#x2F;code&gt;&lt;&#x2F;pre&gt;
+&lt;h2 id=&quot;ke-hu-duan-pei-zhi&quot;&gt;客户端配置&lt;&#x2F;h2&gt;
+&lt;p&gt;对于客户端参数的管理可以使用 .env 文件来定义客户端设置。要从 .env 文件中读取环境变量，参考这个&lt;a href=&quot;https:&#x2F;&#x2F;stackoverflow.com&#x2F;questions&#x2F;19331497&#x2F;set-environment-variables-from-file-of-key-value-pairs&quot;&gt;讨论&lt;&#x2F;a&gt;，可以考虑使用命令 &lt;code&gt;export $(xargs &amp;lt; FILE)&lt;&#x2F;code&gt;。&lt;&#x2F;p&gt;
+&lt;pre data-lang=&quot;sh&quot; style=&quot;background-color:#31333d;color:#ffffffc4;&quot; class=&quot;language-sh &quot;&gt;&lt;code class=&quot;language-sh&quot; data-lang=&quot;sh&quot;&gt;&lt;span style=&quot;font-weight:bold;color:#a3cbe3;&quot;&gt;mkdir&lt;&#x2F;span&gt;&lt;span style=&quot;color:#ffffff;&quot;&gt; -p&lt;&#x2F;span&gt;&lt;span&gt; &#x2F;opt&#x2F;ssr
+&lt;&#x2F;span&gt;&lt;span&gt;
+&lt;&#x2F;span&gt;&lt;span style=&quot;color:#707180;&quot;&gt;# some dependencies
+&lt;&#x2F;span&gt;&lt;span style=&quot;font-weight:bold;color:#a3cbe3;&quot;&gt;apk&lt;&#x2F;span&gt;&lt;span&gt; add procps iproute2 coreutils vnstat
+&lt;&#x2F;span&gt;&lt;span style=&quot;font-weight:bold;color:#a3cbe3;&quot;&gt;rc-service&lt;&#x2F;span&gt;&lt;span&gt; vnstatd start
+&lt;&#x2F;span&gt;&lt;span style=&quot;font-weight:bold;color:#a3cbe3;&quot;&gt;rc-update&lt;&#x2F;span&gt;&lt;span&gt; add vnstatd
+&lt;&#x2F;span&gt;&lt;span&gt;
+&lt;&#x2F;span&gt;&lt;span style=&quot;color:#707180;&quot;&gt;# client binary
+&lt;&#x2F;span&gt;&lt;span style=&quot;font-weight:bold;color:#a3cbe3;&quot;&gt;wget&lt;&#x2F;span&gt;&lt;span style=&quot;color:#ffffff;&quot;&gt; -qO-&lt;&#x2F;span&gt;&lt;span&gt; https:&#x2F;&#x2F;github.com&#x2F;zdz&#x2F;ServerStatus-Rust&#x2F;releases&#x2F;download&#x2F;v1.8.1&#x2F;client-x86_64-unknown-linux-musl.zip \
+&lt;&#x2F;span&gt;&lt;span style=&quot;color:#db7c6d;&quot;&gt;| &lt;&#x2F;span&gt;&lt;span style=&quot;font-weight:bold;color:#a3cbe3;&quot;&gt;unzip&lt;&#x2F;span&gt;&lt;span style=&quot;color:#ffffff;&quot;&gt; -po&lt;&#x2F;span&gt;&lt;span&gt; - stat_client &lt;&#x2F;span&gt;&lt;span style=&quot;color:#db7c6d;&quot;&gt;&amp;gt;&lt;&#x2F;span&gt;&lt;span&gt; &#x2F;opt&#x2F;ssr&#x2F;ssr &lt;&#x2F;span&gt;&lt;span style=&quot;color:#db7c6d;&quot;&gt;&amp;amp;&amp;amp; &lt;&#x2F;span&gt;&lt;span style=&quot;font-weight:bold;color:#a3cbe3;&quot;&gt;chmod&lt;&#x2F;span&gt;&lt;span&gt; +x &#x2F;opt&#x2F;ssr&#x2F;ssr
+&lt;&#x2F;span&gt;&lt;span&gt;
+&lt;&#x2F;span&gt;&lt;span&gt;
+&lt;&#x2F;span&gt;&lt;span style=&quot;font-weight:bold;color:#a3cbe3;&quot;&gt;cat &lt;&#x2F;span&gt;&lt;span style=&quot;color:#db7c6d;&quot;&gt;&amp;lt;&amp;lt; EOF &amp;gt;&lt;&#x2F;span&gt;&lt;span&gt; &#x2F;opt&#x2F;ssr&#x2F;.env
+&lt;&#x2F;span&gt;&lt;span&gt;SSR_GID=N
+&lt;&#x2F;span&gt;&lt;span&gt;SSR_PASS=N
+&lt;&#x2F;span&gt;&lt;span&gt;SSR_LOC=us
+&lt;&#x2F;span&gt;&lt;span&gt;SSR_TYPE=kvm
+&lt;&#x2F;span&gt;&lt;span&gt;SSR_VNSTAT=true
+&lt;&#x2F;span&gt;&lt;span&gt;SSR_VNSTAT_MR=10
+&lt;&#x2F;span&gt;&lt;span&gt;SSR_ALIAS=N
+&lt;&#x2F;span&gt;&lt;span&gt;SSR_ADDR=N
+&lt;&#x2F;span&gt;&lt;span style=&quot;color:#db7c6d;&quot;&gt;EOF
+&lt;&#x2F;span&gt;&lt;span&gt;
+&lt;&#x2F;span&gt;&lt;span style=&quot;font-weight:bold;color:#a3cbe3;&quot;&gt;cat &lt;&#x2F;span&gt;&lt;span style=&quot;color:#db7c6d;&quot;&gt;&amp;lt;&amp;lt; EOF &amp;gt;&lt;&#x2F;span&gt;&lt;span&gt; &#x2F;etc&#x2F;init.d&#x2F;ssr
+&lt;&#x2F;span&gt;&lt;span&gt;#!&#x2F;sbin&#x2F;openrc-run
+&lt;&#x2F;span&gt;&lt;span&gt;
+&lt;&#x2F;span&gt;&lt;span&gt;export RUST_BACKTRACE=1 &lt;&#x2F;span&gt;&lt;span style=&quot;font-weight:bold;color:#dbbb3d;&quot;&gt;$&lt;&#x2F;span&gt;&lt;span&gt;(&lt;&#x2F;span&gt;&lt;span style=&quot;font-weight:bold;color:#a3cbe3;&quot;&gt;xargs&lt;&#x2F;span&gt;&lt;span style=&quot;color:#db7c6d;&quot;&gt;&amp;lt;&lt;&#x2F;span&gt;&lt;span&gt;&#x2F;opt&#x2F;ssr&#x2F;.env)
+&lt;&#x2F;span&gt;&lt;span&gt;
+&lt;&#x2F;span&gt;&lt;span&gt;respawn_max=30
+&lt;&#x2F;span&gt;&lt;span&gt;supervisor=supervise-daemon
+&lt;&#x2F;span&gt;&lt;span&gt;supervise_daemon_args=&amp;quot;--chdir &#x2F;opt&#x2F;ssr&amp;quot;
+&lt;&#x2F;span&gt;&lt;span&gt;command=&#x2F;opt&#x2F;ssr&#x2F;ssr
+&lt;&#x2F;span&gt;&lt;span&gt;
+&lt;&#x2F;span&gt;&lt;span&gt;depend() {
+&lt;&#x2F;span&gt;&lt;span&gt;  after net dns
+&lt;&#x2F;span&gt;&lt;span&gt;}
+&lt;&#x2F;span&gt;&lt;span style=&quot;color:#db7c6d;&quot;&gt;EOF
+&lt;&#x2F;span&gt;&lt;span&gt;
+&lt;&#x2F;span&gt;&lt;span style=&quot;font-weight:bold;color:#a3cbe3;&quot;&gt;chmod&lt;&#x2F;span&gt;&lt;span&gt; +x &#x2F;etc&#x2F;init.d&#x2F;ssr
+&lt;&#x2F;span&gt;&lt;span style=&quot;font-weight:bold;color:#a3cbe3;&quot;&gt;rc-service&lt;&#x2F;span&gt;&lt;span&gt; ssr start
+&lt;&#x2F;span&gt;&lt;span style=&quot;font-weight:bold;color:#a3cbe3;&quot;&gt;rc-update&lt;&#x2F;span&gt;&lt;span&gt; add ssr
+&lt;&#x2F;span&gt;&lt;&#x2F;code&gt;&lt;&#x2F;pre&gt;
+</content>
+        
+    </entry>
+    <entry xml:lang="en">
+        <title>在 Docker 中使用 unix 域套接字</title>
+        <published>2024-08-31T00:00:00+00:00</published>
+        <updated>2024-08-31T00:00:00+00:00</updated>
+        
+        <author>
+          <name>
+            
+              Unknown
+            
+          </name>
+        </author>
+        
+        <link rel="alternate" type="text/html" href="https://anosora233.github.io/gists/blog/docker-unix/"/>
+        <id>https://anosora233.github.io/gists/blog/docker-unix/</id>
+        
+        <content type="html" xml:base="https://anosora233.github.io/gists/blog/docker-unix/">&lt;p&gt;&lt;em&gt;&lt;code&gt;Some docker compose snippets.&lt;&#x2F;code&gt;&lt;&#x2F;em&gt;&lt;&#x2F;p&gt;
+&lt;h2 id=&quot;unix-domain-socket&quot;&gt;unix domain socket&lt;&#x2F;h2&gt;
+&lt;p&gt;Bind a host Unix socket to a container port.&lt;&#x2F;p&gt;
+&lt;p&gt;Refer to &lt;a href=&quot;https:&#x2F;&#x2F;serverfault.com&#x2F;questions&#x2F;1156554&#x2F;bind-a-host-unix-socket-to-a-container-port&quot;&gt;this&lt;&#x2F;a&gt;.&lt;&#x2F;p&gt;
+&lt;pre data-lang=&quot;yml&quot; style=&quot;background-color:#31333d;color:#ffffffc4;&quot; class=&quot;language-yml &quot;&gt;&lt;code class=&quot;language-yml&quot; data-lang=&quot;yml&quot;&gt;&lt;span style=&quot;color:#db7c6d;&quot;&gt;services&lt;&#x2F;span&gt;&lt;span style=&quot;font-weight:bold;color:#db7c6d;&quot;&gt;:
+&lt;&#x2F;span&gt;&lt;span&gt;  &lt;&#x2F;span&gt;&lt;span style=&quot;color:#db7c6d;&quot;&gt;app&lt;&#x2F;span&gt;&lt;span style=&quot;font-weight:bold;color:#db7c6d;&quot;&gt;:
+&lt;&#x2F;span&gt;&lt;span&gt;    &lt;&#x2F;span&gt;&lt;span style=&quot;color:#db7c6d;&quot;&gt;image&lt;&#x2F;span&gt;&lt;span style=&quot;font-weight:bold;color:#db7c6d;&quot;&gt;: &lt;&#x2F;span&gt;&lt;span&gt;someapp
+&lt;&#x2F;span&gt;&lt;span&gt;  &lt;&#x2F;span&gt;&lt;span style=&quot;color:#db7c6d;&quot;&gt;web&lt;&#x2F;span&gt;&lt;span style=&quot;font-weight:bold;color:#db7c6d;&quot;&gt;:
+&lt;&#x2F;span&gt;&lt;span&gt;    &lt;&#x2F;span&gt;&lt;span style=&quot;color:#db7c6d;&quot;&gt;image&lt;&#x2F;span&gt;&lt;span style=&quot;font-weight:bold;color:#db7c6d;&quot;&gt;: &lt;&#x2F;span&gt;&lt;span&gt;alpine&#x2F;socat
+&lt;&#x2F;span&gt;&lt;span&gt;    &lt;&#x2F;span&gt;&lt;span style=&quot;color:#db7c6d;&quot;&gt;network_mode&lt;&#x2F;span&gt;&lt;span style=&quot;font-weight:bold;color:#db7c6d;&quot;&gt;: &lt;&#x2F;span&gt;&lt;span&gt;service:app
+&lt;&#x2F;span&gt;&lt;span&gt;    &lt;&#x2F;span&gt;&lt;span style=&quot;color:#db7c6d;&quot;&gt;restart&lt;&#x2F;span&gt;&lt;span style=&quot;font-weight:bold;color:#db7c6d;&quot;&gt;: &lt;&#x2F;span&gt;&lt;span&gt;always
+&lt;&#x2F;span&gt;&lt;span&gt;    &lt;&#x2F;span&gt;&lt;span style=&quot;color:#db7c6d;&quot;&gt;command&lt;&#x2F;span&gt;&lt;span style=&quot;font-weight:bold;color:#db7c6d;&quot;&gt;:
+&lt;&#x2F;span&gt;&lt;span&gt;      - unix-listen:&#x2F;run&#x2F;web.sock,fork,reuseaddr,mode=666
+&lt;&#x2F;span&gt;&lt;span&gt;      - tcp-connect:localhost:PORT &lt;&#x2F;span&gt;&lt;span style=&quot;color:#707180;&quot;&gt;# or udp-connect:localhost:PORT
+&lt;&#x2F;span&gt;&lt;span&gt;    &lt;&#x2F;span&gt;&lt;span style=&quot;color:#db7c6d;&quot;&gt;volumes&lt;&#x2F;span&gt;&lt;span style=&quot;font-weight:bold;color:#db7c6d;&quot;&gt;:
+&lt;&#x2F;span&gt;&lt;span&gt;      - .:&#x2F;run
+&lt;&#x2F;span&gt;&lt;&#x2F;code&gt;&lt;&#x2F;pre&gt;
+&lt;h2 id=&quot;uptime-kuma&quot;&gt;uptime kuma&lt;&#x2F;h2&gt;
+&lt;pre data-lang=&quot;yml&quot; style=&quot;background-color:#31333d;color:#ffffffc4;&quot; class=&quot;language-yml &quot;&gt;&lt;code class=&quot;language-yml&quot; data-lang=&quot;yml&quot;&gt;&lt;span style=&quot;color:#db7c6d;&quot;&gt;services&lt;&#x2F;span&gt;&lt;span style=&quot;font-weight:bold;color:#db7c6d;&quot;&gt;:
+&lt;&#x2F;span&gt;&lt;span&gt;  &lt;&#x2F;span&gt;&lt;span style=&quot;color:#db7c6d;&quot;&gt;app&lt;&#x2F;span&gt;&lt;span style=&quot;font-weight:bold;color:#db7c6d;&quot;&gt;:
+&lt;&#x2F;span&gt;&lt;span&gt;    &lt;&#x2F;span&gt;&lt;span style=&quot;color:#db7c6d;&quot;&gt;image&lt;&#x2F;span&gt;&lt;span style=&quot;font-weight:bold;color:#db7c6d;&quot;&gt;: &lt;&#x2F;span&gt;&lt;span&gt;louislam&#x2F;uptime-kuma:1
+&lt;&#x2F;span&gt;&lt;span&gt;    &lt;&#x2F;span&gt;&lt;span style=&quot;color:#db7c6d;&quot;&gt;network_mode&lt;&#x2F;span&gt;&lt;span style=&quot;font-weight:bold;color:#db7c6d;&quot;&gt;: &lt;&#x2F;span&gt;&lt;span&gt;bridge
+&lt;&#x2F;span&gt;&lt;span&gt;    &lt;&#x2F;span&gt;&lt;span style=&quot;color:#db7c6d;&quot;&gt;restart&lt;&#x2F;span&gt;&lt;span style=&quot;font-weight:bold;color:#db7c6d;&quot;&gt;: &lt;&#x2F;span&gt;&lt;span&gt;always
+&lt;&#x2F;span&gt;&lt;span&gt;    &lt;&#x2F;span&gt;&lt;span style=&quot;color:#db7c6d;&quot;&gt;volumes&lt;&#x2F;span&gt;&lt;span style=&quot;font-weight:bold;color:#db7c6d;&quot;&gt;:
+&lt;&#x2F;span&gt;&lt;span&gt;      - .:&#x2F;app&#x2F;data
+&lt;&#x2F;span&gt;&lt;span&gt;  &lt;&#x2F;span&gt;&lt;span style=&quot;color:#db7c6d;&quot;&gt;web&lt;&#x2F;span&gt;&lt;span style=&quot;font-weight:bold;color:#db7c6d;&quot;&gt;:
+&lt;&#x2F;span&gt;&lt;span&gt;    &lt;&#x2F;span&gt;&lt;span style=&quot;color:#db7c6d;&quot;&gt;image&lt;&#x2F;span&gt;&lt;span style=&quot;font-weight:bold;color:#db7c6d;&quot;&gt;: &lt;&#x2F;span&gt;&lt;span&gt;alpine&#x2F;socat
+&lt;&#x2F;span&gt;&lt;span&gt;    &lt;&#x2F;span&gt;&lt;span style=&quot;color:#db7c6d;&quot;&gt;network_mode&lt;&#x2F;span&gt;&lt;span style=&quot;font-weight:bold;color:#db7c6d;&quot;&gt;: &lt;&#x2F;span&gt;&lt;span&gt;service:app
+&lt;&#x2F;span&gt;&lt;span&gt;    &lt;&#x2F;span&gt;&lt;span style=&quot;color:#db7c6d;&quot;&gt;restart&lt;&#x2F;span&gt;&lt;span style=&quot;font-weight:bold;color:#db7c6d;&quot;&gt;: &lt;&#x2F;span&gt;&lt;span&gt;always
+&lt;&#x2F;span&gt;&lt;span&gt;    &lt;&#x2F;span&gt;&lt;span style=&quot;color:#db7c6d;&quot;&gt;command&lt;&#x2F;span&gt;&lt;span style=&quot;font-weight:bold;color:#db7c6d;&quot;&gt;:
+&lt;&#x2F;span&gt;&lt;span&gt;      - unix-listen:&#x2F;run&#x2F;web.sock,fork,reuseaddr,mode=666
+&lt;&#x2F;span&gt;&lt;span&gt;      - tcp-connect:localhost:3001
+&lt;&#x2F;span&gt;&lt;span&gt;    &lt;&#x2F;span&gt;&lt;span style=&quot;color:#db7c6d;&quot;&gt;volumes&lt;&#x2F;span&gt;&lt;span style=&quot;font-weight:bold;color:#db7c6d;&quot;&gt;:
+&lt;&#x2F;span&gt;&lt;span&gt;      - .:&#x2F;run
+&lt;&#x2F;span&gt;&lt;&#x2F;code&gt;&lt;&#x2F;pre&gt;
+&lt;h2 id=&quot;librespeed&quot;&gt;librespeed&lt;&#x2F;h2&gt;
+&lt;pre data-lang=&quot;yml&quot; style=&quot;background-color:#31333d;color:#ffffffc4;&quot; class=&quot;language-yml &quot;&gt;&lt;code class=&quot;language-yml&quot; data-lang=&quot;yml&quot;&gt;&lt;span style=&quot;color:#db7c6d;&quot;&gt;services&lt;&#x2F;span&gt;&lt;span style=&quot;font-weight:bold;color:#db7c6d;&quot;&gt;:
+&lt;&#x2F;span&gt;&lt;span&gt;  &lt;&#x2F;span&gt;&lt;span style=&quot;color:#db7c6d;&quot;&gt;app&lt;&#x2F;span&gt;&lt;span style=&quot;font-weight:bold;color:#db7c6d;&quot;&gt;:
+&lt;&#x2F;span&gt;&lt;span&gt;    &lt;&#x2F;span&gt;&lt;span style=&quot;color:#db7c6d;&quot;&gt;image&lt;&#x2F;span&gt;&lt;span style=&quot;font-weight:bold;color:#db7c6d;&quot;&gt;: &lt;&#x2F;span&gt;&lt;span&gt;lscr.io&#x2F;linuxserver&#x2F;librespeed:latest
+&lt;&#x2F;span&gt;&lt;span&gt;    &lt;&#x2F;span&gt;&lt;span style=&quot;color:#db7c6d;&quot;&gt;network_mode&lt;&#x2F;span&gt;&lt;span style=&quot;font-weight:bold;color:#db7c6d;&quot;&gt;: &lt;&#x2F;span&gt;&lt;span&gt;bridge
+&lt;&#x2F;span&gt;&lt;span&gt;    &lt;&#x2F;span&gt;&lt;span style=&quot;color:#db7c6d;&quot;&gt;restart&lt;&#x2F;span&gt;&lt;span style=&quot;font-weight:bold;color:#db7c6d;&quot;&gt;: &lt;&#x2F;span&gt;&lt;span&gt;always
+&lt;&#x2F;span&gt;&lt;span&gt;    &lt;&#x2F;span&gt;&lt;span style=&quot;color:#db7c6d;&quot;&gt;environment&lt;&#x2F;span&gt;&lt;span style=&quot;font-weight:bold;color:#db7c6d;&quot;&gt;:
+&lt;&#x2F;span&gt;&lt;span&gt;      - PUID=1000
+&lt;&#x2F;span&gt;&lt;span&gt;      - PGID=1000
+&lt;&#x2F;span&gt;&lt;span&gt;      - TZ=Asia&#x2F;Shanghai
+&lt;&#x2F;span&gt;&lt;span&gt;    &lt;&#x2F;span&gt;&lt;span style=&quot;color:#db7c6d;&quot;&gt;volumes&lt;&#x2F;span&gt;&lt;span style=&quot;font-weight:bold;color:#db7c6d;&quot;&gt;:
+&lt;&#x2F;span&gt;&lt;span&gt;      - .&#x2F;config:&#x2F;config
+&lt;&#x2F;span&gt;&lt;span&gt;  &lt;&#x2F;span&gt;&lt;span style=&quot;color:#db7c6d;&quot;&gt;web&lt;&#x2F;span&gt;&lt;span style=&quot;font-weight:bold;color:#db7c6d;&quot;&gt;:
+&lt;&#x2F;span&gt;&lt;span&gt;    &lt;&#x2F;span&gt;&lt;span style=&quot;color:#db7c6d;&quot;&gt;image&lt;&#x2F;span&gt;&lt;span style=&quot;font-weight:bold;color:#db7c6d;&quot;&gt;: &lt;&#x2F;span&gt;&lt;span&gt;alpine&#x2F;socat
+&lt;&#x2F;span&gt;&lt;span&gt;    &lt;&#x2F;span&gt;&lt;span style=&quot;color:#db7c6d;&quot;&gt;network_mode&lt;&#x2F;span&gt;&lt;span style=&quot;font-weight:bold;color:#db7c6d;&quot;&gt;: &lt;&#x2F;span&gt;&lt;span&gt;service:app
+&lt;&#x2F;span&gt;&lt;span&gt;    &lt;&#x2F;span&gt;&lt;span style=&quot;color:#db7c6d;&quot;&gt;restart&lt;&#x2F;span&gt;&lt;span style=&quot;font-weight:bold;color:#db7c6d;&quot;&gt;: &lt;&#x2F;span&gt;&lt;span&gt;always
+&lt;&#x2F;span&gt;&lt;span&gt;    &lt;&#x2F;span&gt;&lt;span style=&quot;color:#db7c6d;&quot;&gt;command&lt;&#x2F;span&gt;&lt;span style=&quot;font-weight:bold;color:#db7c6d;&quot;&gt;:
+&lt;&#x2F;span&gt;&lt;span&gt;      - unix-listen:&#x2F;run&#x2F;web.sock,fork,reuseaddr,mode=666
+&lt;&#x2F;span&gt;&lt;span&gt;      - tcp-connect:localhost:80
+&lt;&#x2F;span&gt;&lt;span&gt;    &lt;&#x2F;span&gt;&lt;span style=&quot;color:#db7c6d;&quot;&gt;volumes&lt;&#x2F;span&gt;&lt;span style=&quot;font-weight:bold;color:#db7c6d;&quot;&gt;:
+&lt;&#x2F;span&gt;&lt;span&gt;      - .:&#x2F;run
+&lt;&#x2F;span&gt;&lt;&#x2F;code&gt;&lt;&#x2F;pre&gt;
+&lt;h2 id=&quot;caddy&quot;&gt;caddy&lt;&#x2F;h2&gt;
+&lt;pre data-lang=&quot;yml&quot; style=&quot;background-color:#31333d;color:#ffffffc4;&quot; class=&quot;language-yml &quot;&gt;&lt;code class=&quot;language-yml&quot; data-lang=&quot;yml&quot;&gt;&lt;span style=&quot;color:#db7c6d;&quot;&gt;services&lt;&#x2F;span&gt;&lt;span style=&quot;font-weight:bold;color:#db7c6d;&quot;&gt;:
+&lt;&#x2F;span&gt;&lt;span&gt;  &lt;&#x2F;span&gt;&lt;span style=&quot;color:#db7c6d;&quot;&gt;app&lt;&#x2F;span&gt;&lt;span style=&quot;font-weight:bold;color:#db7c6d;&quot;&gt;:
+&lt;&#x2F;span&gt;&lt;span&gt;    &lt;&#x2F;span&gt;&lt;span style=&quot;color:#db7c6d;&quot;&gt;image&lt;&#x2F;span&gt;&lt;span style=&quot;font-weight:bold;color:#db7c6d;&quot;&gt;: &lt;&#x2F;span&gt;&lt;span&gt;caddy
+&lt;&#x2F;span&gt;&lt;span&gt;    &lt;&#x2F;span&gt;&lt;span style=&quot;color:#db7c6d;&quot;&gt;network_mode&lt;&#x2F;span&gt;&lt;span style=&quot;font-weight:bold;color:#db7c6d;&quot;&gt;: &lt;&#x2F;span&gt;&lt;span&gt;host
+&lt;&#x2F;span&gt;&lt;span&gt;    &lt;&#x2F;span&gt;&lt;span style=&quot;color:#db7c6d;&quot;&gt;restart&lt;&#x2F;span&gt;&lt;span style=&quot;font-weight:bold;color:#db7c6d;&quot;&gt;: &lt;&#x2F;span&gt;&lt;span&gt;always
+&lt;&#x2F;span&gt;&lt;span&gt;    &lt;&#x2F;span&gt;&lt;span style=&quot;color:#db7c6d;&quot;&gt;volumes&lt;&#x2F;span&gt;&lt;span style=&quot;font-weight:bold;color:#db7c6d;&quot;&gt;:
+&lt;&#x2F;span&gt;&lt;span&gt;      - .&#x2F;Caddyfile:&#x2F;etc&#x2F;caddy&#x2F;Caddyfile
+&lt;&#x2F;span&gt;&lt;span&gt;      - data:&#x2F;data
+&lt;&#x2F;span&gt;&lt;span&gt;      - conf:&#x2F;config
+&lt;&#x2F;span&gt;&lt;span&gt;      - &#x2F;opt&#x2F;cert:&#x2F;cert
+&lt;&#x2F;span&gt;&lt;span&gt;      - &#x2F;srv:&#x2F;srv
+&lt;&#x2F;span&gt;&lt;span&gt;      - &#x2F;run:&#x2F;run
+&lt;&#x2F;span&gt;&lt;span style=&quot;color:#db7c6d;&quot;&gt;volumes&lt;&#x2F;span&gt;&lt;span style=&quot;font-weight:bold;color:#db7c6d;&quot;&gt;:
+&lt;&#x2F;span&gt;&lt;span&gt;  &lt;&#x2F;span&gt;&lt;span style=&quot;color:#db7c6d;&quot;&gt;data&lt;&#x2F;span&gt;&lt;span style=&quot;font-weight:bold;color:#db7c6d;&quot;&gt;:
+&lt;&#x2F;span&gt;&lt;span&gt;  &lt;&#x2F;span&gt;&lt;span style=&quot;color:#db7c6d;&quot;&gt;conf&lt;&#x2F;span&gt;&lt;span style=&quot;font-weight:bold;color:#db7c6d;&quot;&gt;:
+&lt;&#x2F;span&gt;&lt;&#x2F;code&gt;&lt;&#x2F;pre&gt;
+&lt;p&gt;Caddyfile Example&lt;&#x2F;p&gt;
+&lt;pre data-lang=&quot;caddyfile&quot; style=&quot;background-color:#31333d;color:#ffffffc4;&quot; class=&quot;language-caddyfile &quot;&gt;&lt;code class=&quot;language-caddyfile&quot; data-lang=&quot;caddyfile&quot;&gt;&lt;span&gt;example.com,
+&lt;&#x2F;span&gt;&lt;span&gt;*.example.com {
+&lt;&#x2F;span&gt;&lt;span&gt;    tls _CERT_ _KEY_
+&lt;&#x2F;span&gt;&lt;span&gt;    encode zstd gzip
+&lt;&#x2F;span&gt;&lt;span&gt;
+&lt;&#x2F;span&gt;&lt;span&gt;    @api host api.example.com
+&lt;&#x2F;span&gt;&lt;span&gt;    handle @api {
+&lt;&#x2F;span&gt;&lt;span&gt;        reverse_proxy [::1]:8080
+&lt;&#x2F;span&gt;&lt;span&gt;    }
+&lt;&#x2F;span&gt;&lt;span&gt;
+&lt;&#x2F;span&gt;&lt;span&gt;    # other sites
+&lt;&#x2F;span&gt;&lt;span&gt;
+&lt;&#x2F;span&gt;&lt;span&gt;
+&lt;&#x2F;span&gt;&lt;span&gt;    # fallback site
+&lt;&#x2F;span&gt;&lt;span&gt;    handle {
+&lt;&#x2F;span&gt;&lt;span&gt;        root * &#x2F;usr&#x2F;share&#x2F;caddy
+&lt;&#x2F;span&gt;&lt;span&gt;        file_server
+&lt;&#x2F;span&gt;&lt;span&gt;    }
+&lt;&#x2F;span&gt;&lt;span&gt;}
+&lt;&#x2F;span&gt;&lt;&#x2F;code&gt;&lt;&#x2F;pre&gt;
+&lt;h2 id=&quot;memos&quot;&gt;memos&lt;&#x2F;h2&gt;
+&lt;pre data-lang=&quot;yml&quot; style=&quot;background-color:#31333d;color:#ffffffc4;&quot; class=&quot;language-yml &quot;&gt;&lt;code class=&quot;language-yml&quot; data-lang=&quot;yml&quot;&gt;&lt;span style=&quot;color:#db7c6d;&quot;&gt;services&lt;&#x2F;span&gt;&lt;span style=&quot;font-weight:bold;color:#db7c6d;&quot;&gt;:
+&lt;&#x2F;span&gt;&lt;span&gt;  &lt;&#x2F;span&gt;&lt;span style=&quot;color:#db7c6d;&quot;&gt;app&lt;&#x2F;span&gt;&lt;span style=&quot;font-weight:bold;color:#db7c6d;&quot;&gt;:
+&lt;&#x2F;span&gt;&lt;span&gt;    &lt;&#x2F;span&gt;&lt;span style=&quot;color:#db7c6d;&quot;&gt;image&lt;&#x2F;span&gt;&lt;span style=&quot;font-weight:bold;color:#db7c6d;&quot;&gt;: &lt;&#x2F;span&gt;&lt;span&gt;neosmemo&#x2F;memos:stable
+&lt;&#x2F;span&gt;&lt;span&gt;    &lt;&#x2F;span&gt;&lt;span style=&quot;color:#db7c6d;&quot;&gt;network_mode&lt;&#x2F;span&gt;&lt;span style=&quot;font-weight:bold;color:#db7c6d;&quot;&gt;: &lt;&#x2F;span&gt;&lt;span&gt;none
+&lt;&#x2F;span&gt;&lt;span&gt;    &lt;&#x2F;span&gt;&lt;span style=&quot;color:#db7c6d;&quot;&gt;restart&lt;&#x2F;span&gt;&lt;span style=&quot;font-weight:bold;color:#db7c6d;&quot;&gt;: &lt;&#x2F;span&gt;&lt;span&gt;always
+&lt;&#x2F;span&gt;&lt;span&gt;    &lt;&#x2F;span&gt;&lt;span style=&quot;color:#db7c6d;&quot;&gt;volumes&lt;&#x2F;span&gt;&lt;span style=&quot;font-weight:bold;color:#db7c6d;&quot;&gt;:
+&lt;&#x2F;span&gt;&lt;span&gt;      - .&#x2F;memos&#x2F;:&#x2F;var&#x2F;opt&#x2F;memos
+&lt;&#x2F;span&gt;&lt;span&gt;  &lt;&#x2F;span&gt;&lt;span style=&quot;color:#db7c6d;&quot;&gt;web&lt;&#x2F;span&gt;&lt;span style=&quot;font-weight:bold;color:#db7c6d;&quot;&gt;:
+&lt;&#x2F;span&gt;&lt;span&gt;    &lt;&#x2F;span&gt;&lt;span style=&quot;color:#db7c6d;&quot;&gt;image&lt;&#x2F;span&gt;&lt;span style=&quot;font-weight:bold;color:#db7c6d;&quot;&gt;: &lt;&#x2F;span&gt;&lt;span&gt;alpine&#x2F;socat
+&lt;&#x2F;span&gt;&lt;span&gt;    &lt;&#x2F;span&gt;&lt;span style=&quot;color:#db7c6d;&quot;&gt;network_mode&lt;&#x2F;span&gt;&lt;span style=&quot;font-weight:bold;color:#db7c6d;&quot;&gt;: &lt;&#x2F;span&gt;&lt;span&gt;service:app
+&lt;&#x2F;span&gt;&lt;span&gt;    &lt;&#x2F;span&gt;&lt;span style=&quot;color:#db7c6d;&quot;&gt;restart&lt;&#x2F;span&gt;&lt;span style=&quot;font-weight:bold;color:#db7c6d;&quot;&gt;: &lt;&#x2F;span&gt;&lt;span&gt;always
+&lt;&#x2F;span&gt;&lt;span&gt;    &lt;&#x2F;span&gt;&lt;span style=&quot;color:#db7c6d;&quot;&gt;command&lt;&#x2F;span&gt;&lt;span style=&quot;font-weight:bold;color:#db7c6d;&quot;&gt;:
+&lt;&#x2F;span&gt;&lt;span&gt;      - unix-listen:&#x2F;run&#x2F;web.sock,fork,reuseaddr,mode=666
+&lt;&#x2F;span&gt;&lt;span&gt;      - tcp-connect:localhost:5230
+&lt;&#x2F;span&gt;&lt;span&gt;    &lt;&#x2F;span&gt;&lt;span style=&quot;color:#db7c6d;&quot;&gt;volumes&lt;&#x2F;span&gt;&lt;span style=&quot;font-weight:bold;color:#db7c6d;&quot;&gt;:
+&lt;&#x2F;span&gt;&lt;span&gt;      - .:&#x2F;run
+&lt;&#x2F;span&gt;&lt;&#x2F;code&gt;&lt;&#x2F;pre&gt;
+</content>
+        
+    </entry>
+    <entry xml:lang="en">
+        <title>废弃的配置和代码片段</title>
+        <published>2024-08-20T00:00:00+00:00</published>
+        <updated>2024-08-20T00:00:00+00:00</updated>
+        
+        <author>
+          <name>
+            
+              Unknown
+            
+          </name>
+        </author>
+        
+        <link rel="alternate" type="text/html" href="https://anosora233.github.io/gists/blog/snippets/"/>
+        <id>https://anosora233.github.io/gists/blog/snippets/</id>
+        
+        <summary type="html">&lt;p&gt;&lt;em&gt;&lt;code&gt;Just some snippets.&lt;&#x2F;code&gt;&lt;&#x2F;em&gt;&lt;&#x2F;p&gt;</summary>
+        
+    </entry>
+    <entry xml:lang="en">
+        <title>Markdown 测试</title>
+        <published>2021-07-30T00:00:00+00:00</published>
+        <updated>2021-07-30T00:00:00+00:00</updated>
+        
+        <author>
+          <name>
+            
+              Unknown
+            
+          </name>
+        </author>
+        
+        <link rel="alternate" type="text/html" href="https://anosora233.github.io/gists/blog/markdown/"/>
+        <id>https://anosora233.github.io/gists/blog/markdown/</id>
+        
+        <content type="html" xml:base="https://anosora233.github.io/gists/blog/markdown/">&lt;p&gt;This post is a markdown example.&lt;&#x2F;p&gt;
+&lt;p&gt;Here is &lt;a href=&quot;http:&#x2F;&#x2F;example.com&quot;&gt;a link&lt;&#x2F;a&gt;.&lt;&#x2F;p&gt;
+&lt;p&gt;Some &lt;em&gt;italic text&lt;&#x2F;em&gt; and &lt;strong&gt;bold text&lt;&#x2F;strong&gt; and &lt;del&gt;strikethrough text&lt;&#x2F;del&gt; and &lt;code&gt;inline code&lt;&#x2F;code&gt;. &lt;sup class=&quot;footnote-reference&quot; id=&quot;fr-1-1&quot;&gt;&lt;a href=&quot;#fn-1&quot;&gt;1&lt;&#x2F;a&gt;&lt;&#x2F;sup&gt;&lt;&#x2F;p&gt;
+&lt;pre data-lang=&quot;rust&quot; style=&quot;background-color:#31333d;color:#ffffffc4;&quot; class=&quot;language-rust &quot;&gt;&lt;code class=&quot;language-rust&quot; data-lang=&quot;rust&quot;&gt;&lt;span style=&quot;color:#707180;&quot;&gt;&#x2F;&#x2F; Here is a code block
+&lt;&#x2F;span&gt;&lt;span&gt;
+&lt;&#x2F;span&gt;&lt;span style=&quot;color:#a3cbe3;&quot;&gt;fn &lt;&#x2F;span&gt;&lt;span style=&quot;color:#a2ba43;&quot;&gt;main&lt;&#x2F;span&gt;&lt;span&gt;() {
+&lt;&#x2F;span&gt;&lt;span&gt;    println!(&lt;&#x2F;span&gt;&lt;span style=&quot;font-weight:bold;color:#dbbb3d;&quot;&gt;&amp;quot;&lt;&#x2F;span&gt;&lt;span&gt;Hello world!&lt;&#x2F;span&gt;&lt;span style=&quot;font-weight:bold;color:#dbbb3d;&quot;&gt;&amp;quot;&lt;&#x2F;span&gt;&lt;span&gt;);
+&lt;&#x2F;span&gt;&lt;span&gt;}
+&lt;&#x2F;span&gt;&lt;&#x2F;code&gt;&lt;&#x2F;pre&gt;
+&lt;p&gt;Unordered list: &lt;sup class=&quot;footnote-reference&quot; id=&quot;fr-2-1&quot;&gt;&lt;a href=&quot;#fn-2&quot;&gt;2&lt;&#x2F;a&gt;&lt;&#x2F;sup&gt;&lt;&#x2F;p&gt;
+&lt;ul&gt;
+&lt;li&gt;An unordered,&lt;&#x2F;li&gt;
+&lt;li&gt;bulleted list&lt;&#x2F;li&gt;
+&lt;li&gt;of items&lt;&#x2F;li&gt;
+&lt;&#x2F;ul&gt;
+&lt;p&gt;Ordered list:&lt;&#x2F;p&gt;
+&lt;ol&gt;
+&lt;li&gt;An ordered,&lt;&#x2F;li&gt;
+&lt;li&gt;numbered list&lt;&#x2F;li&gt;
+&lt;li&gt;of items&lt;&#x2F;li&gt;
+&lt;&#x2F;ol&gt;
+&lt;blockquote&gt;
+&lt;p&gt;A quote.&lt;&#x2F;p&gt;
+&lt;p&gt;It contains multiple paragraphs.&lt;&#x2F;p&gt;
+&lt;&#x2F;blockquote&gt;
+&lt;h1 id=&quot;heading-1&quot;&gt;Heading 1&lt;&#x2F;h1&gt;
+&lt;h2 id=&quot;heading-2&quot;&gt;Heading 2&lt;&#x2F;h2&gt;
+&lt;h3 id=&quot;heading-3&quot;&gt;Heading 3&lt;&#x2F;h3&gt;
+&lt;h4 id=&quot;heading-4&quot;&gt;Heading 4&lt;&#x2F;h4&gt;
+&lt;h5 id=&quot;heading-5&quot;&gt;Heading 5&lt;&#x2F;h5&gt;
+&lt;h6 id=&quot;heading-6&quot;&gt;Heading 6&lt;&#x2F;h6&gt;
+&lt;p&gt;&lt;img src=&quot;https:&#x2F;&#x2F;plchldr.co&#x2F;i&#x2F;480x360?bg=EB6361&quot; alt=&quot;An example image&quot; &#x2F;&gt;&lt;&#x2F;p&gt;
+&lt;p&gt;&lt;img src=&quot;https:&#x2F;&#x2F;plchldr.co&#x2F;i&#x2F;1280x720?bg=3D8EB9&quot; alt=&quot;A large image&quot; &#x2F;&gt;&lt;&#x2F;p&gt;
+&lt;table&gt;&lt;thead&gt;&lt;tr&gt;&lt;th&gt;Hello world!&lt;&#x2F;th&gt;&lt;th&gt;This is a table.&lt;&#x2F;th&gt;&lt;th&gt;Tables are also supported.&lt;&#x2F;th&gt;&lt;&#x2F;tr&gt;&lt;&#x2F;thead&gt;&lt;tbody&gt;
+&lt;tr&gt;&lt;td&gt;They even&lt;&#x2F;td&gt;&lt;td&gt;have alternating&lt;&#x2F;td&gt;&lt;td&gt;row colors!&lt;&#x2F;td&gt;&lt;&#x2F;tr&gt;
+&lt;tr&gt;&lt;td&gt;Let me add&lt;&#x2F;td&gt;&lt;td&gt;another row so&lt;&#x2F;td&gt;&lt;td&gt;it&#x27;s easier to see.&lt;&#x2F;td&gt;&lt;&#x2F;tr&gt;
+&lt;&#x2F;tbody&gt;&lt;&#x2F;table&gt;
+&lt;footer class=&quot;footnotes&quot;&gt;
+&lt;ol class=&quot;footnotes-list&quot;&gt;
+&lt;li id=&quot;fn-1&quot;&gt;
+&lt;p&gt;A footnote. Footnotes can be used for things that could have explanation or extra context, but
+for which the explanation is not relevant or otherwise desirable to have inline. &lt;a href=&quot;#fr-1-1&quot;&gt;↩&lt;&#x2F;a&gt;&lt;&#x2F;p&gt;
+&lt;&#x2F;li&gt;
+&lt;li id=&quot;fn-2&quot;&gt;
+&lt;p&gt;Another footnote. &lt;a href=&quot;#fr-2-1&quot;&gt;↩&lt;&#x2F;a&gt;&lt;&#x2F;p&gt;
+&lt;&#x2F;li&gt;
+&lt;&#x2F;ol&gt;
+&lt;&#x2F;footer&gt;
+</content>
+        
+    </entry>
+</feed>

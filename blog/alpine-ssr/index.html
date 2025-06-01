@@ -1,0 +1,194 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="description" content="Github user anosora233&amp;#x27;s gists">
+    <title>Anosora233 | 在基于 Alpine 上配置 ServerStatus</title>
+    
+    <link rel="stylesheet" href="https://anosora233.github.io/gists/style.css?h=501c6ea82db27d74ea03">
+    
+    
+        
+            
+                
+                    
+                        <link rel="alternate" type="application/atom+xml" title="Anosora233 - Atom Feed" href="https://anosora233.github.io/gists/atom.xml">
+                    
+                
+            
+        
+    
+</head>
+<body>
+    
+<header class="space">
+    <a href="https:&#x2F;&#x2F;anosora233.github.io&#x2F;gists&#x2F;">&LeftArrow; Home</a>
+</header>
+
+    
+<main>
+    <h1>在基于 Alpine 上配置 ServerStatus</h1>
+    
+    <p class="secondary small">
+        22 March, 2025
+
+        
+        
+        
+        
+        
+
+        
+        
+        - Tags:
+        
+        
+        <a href="https:&#x2F;&#x2F;anosora233.github.io&#x2F;gists&#x2F;tags&#x2F;openrc&#x2F;">openrc</a>,
+        
+        
+        <a href="https:&#x2F;&#x2F;anosora233.github.io&#x2F;gists&#x2F;tags&#x2F;alpine&#x2F;">alpine</a>,
+        
+        
+        <a href="https:&#x2F;&#x2F;anosora233.github.io&#x2F;gists&#x2F;tags&#x2F;serverstatus&#x2F;">serverstatus</a>
+        
+        
+    </p>
+    
+    <div class="space"></div>
+    <p><em><code>用于监控基于 Alpine 系统使用情况</code></em></p>
+<h2 id="fu-wu-qi-duan-pei-zhi">服务器端配置</h2>
+<p>由于原始二进制文件名较冗长，在此将其重命名为 ssrd。</p>
+<blockquote>
+<p>警告：请记得将所有 N 替换为你的配置。</p>
+</blockquote>
+<pre data-lang="sh" style="background-color:#31333d;color:#ffffffc4;" class="language-sh "><code class="language-sh" data-lang="sh"><span style="font-weight:bold;color:#a3cbe3;">mkdir</span><span style="color:#ffffff;"> -p</span><span> /opt/ssr
+</span><span>
+</span><span style="color:#707180;"># server binary
+</span><span style="font-weight:bold;color:#a3cbe3;">wget</span><span style="color:#ffffff;"> -qO-</span><span> https://github.com/zdz/ServerStatus-Rust/releases/download/v1.8.1/server-x86_64-unknown-linux-musl.zip \
+</span><span style="color:#db7c6d;">| </span><span style="font-weight:bold;color:#a3cbe3;">unzip</span><span style="color:#ffffff;"> -po</span><span> - stat_server </span><span style="color:#db7c6d;">&gt;</span><span> /opt/ssr/ssrd </span><span style="color:#db7c6d;">&amp;&amp; </span><span style="font-weight:bold;color:#a3cbe3;">chmod</span><span> +x /opt/ssr/ssrd
+</span><span>
+</span><span style="font-weight:bold;color:#a3cbe3;">cat </span><span style="color:#db7c6d;">&lt;&lt; EOF &gt;</span><span> /opt/ssr/config.toml
+</span><span>grpc_addr = &quot;[::1]:9394&quot;
+</span><span>http_addr = &quot;[::1]:8080&quot;
+</span><span>
+</span><span>jwt_secret = &quot;N&quot;
+</span><span>admin_user = &quot;N&quot;
+</span><span>admin_pass = &quot;N&quot;
+</span><span>
+</span><span>hosts_group = [
+</span><span>  {gid = &quot;N&quot;, password = &quot;N&quot;}
+</span><span>]
+</span><span>
+</span><span>group_gc = 3600
+</span><span style="color:#db7c6d;">EOF
+</span><span>
+</span><span>
+</span><span style="font-weight:bold;color:#a3cbe3;">cat </span><span style="color:#db7c6d;">&lt;&lt; EOF &gt;</span><span> /etc/init.d/ssrd
+</span><span>#!/sbin/openrc-run
+</span><span>
+</span><span>respawn_max=30
+</span><span>supervisor=&quot;supervise-daemon&quot;
+</span><span>supervise_daemon_args=&quot;--chdir /opt/ssr&quot;
+</span><span>command=&quot;/opt/ssr/ssrd&quot;
+</span><span>command_args=&quot;-c /opt/ssr/config.toml&quot;
+</span><span>
+</span><span>depend() {
+</span><span>  after net dns
+</span><span>}
+</span><span style="color:#db7c6d;">EOF
+</span><span>
+</span><span style="font-weight:bold;color:#a3cbe3;">chmod</span><span> +x /etc/init.d/ssrd
+</span><span style="font-weight:bold;color:#a3cbe3;">rc-service</span><span> ssrd start
+</span><span style="font-weight:bold;color:#a3cbe3;">rc-update</span><span> add ssrd
+</span></code></pre>
+<h2 id="ke-hu-duan-pei-zhi">客户端配置</h2>
+<p>对于客户端参数的管理可以使用 .env 文件来定义客户端设置。要从 .env 文件中读取环境变量，参考这个<a href="https://stackoverflow.com/questions/19331497/set-environment-variables-from-file-of-key-value-pairs">讨论</a>，可以考虑使用命令 <code>export $(xargs &lt; FILE)</code>。</p>
+<pre data-lang="sh" style="background-color:#31333d;color:#ffffffc4;" class="language-sh "><code class="language-sh" data-lang="sh"><span style="font-weight:bold;color:#a3cbe3;">mkdir</span><span style="color:#ffffff;"> -p</span><span> /opt/ssr
+</span><span>
+</span><span style="color:#707180;"># some dependencies
+</span><span style="font-weight:bold;color:#a3cbe3;">apk</span><span> add procps iproute2 coreutils vnstat
+</span><span style="font-weight:bold;color:#a3cbe3;">rc-service</span><span> vnstatd start
+</span><span style="font-weight:bold;color:#a3cbe3;">rc-update</span><span> add vnstatd
+</span><span>
+</span><span style="color:#707180;"># client binary
+</span><span style="font-weight:bold;color:#a3cbe3;">wget</span><span style="color:#ffffff;"> -qO-</span><span> https://github.com/zdz/ServerStatus-Rust/releases/download/v1.8.1/client-x86_64-unknown-linux-musl.zip \
+</span><span style="color:#db7c6d;">| </span><span style="font-weight:bold;color:#a3cbe3;">unzip</span><span style="color:#ffffff;"> -po</span><span> - stat_client </span><span style="color:#db7c6d;">&gt;</span><span> /opt/ssr/ssr </span><span style="color:#db7c6d;">&amp;&amp; </span><span style="font-weight:bold;color:#a3cbe3;">chmod</span><span> +x /opt/ssr/ssr
+</span><span>
+</span><span>
+</span><span style="font-weight:bold;color:#a3cbe3;">cat </span><span style="color:#db7c6d;">&lt;&lt; EOF &gt;</span><span> /opt/ssr/.env
+</span><span>SSR_GID=N
+</span><span>SSR_PASS=N
+</span><span>SSR_LOC=us
+</span><span>SSR_TYPE=kvm
+</span><span>SSR_VNSTAT=true
+</span><span>SSR_VNSTAT_MR=10
+</span><span>SSR_ALIAS=N
+</span><span>SSR_ADDR=N
+</span><span style="color:#db7c6d;">EOF
+</span><span>
+</span><span style="font-weight:bold;color:#a3cbe3;">cat </span><span style="color:#db7c6d;">&lt;&lt; EOF &gt;</span><span> /etc/init.d/ssr
+</span><span>#!/sbin/openrc-run
+</span><span>
+</span><span>export RUST_BACKTRACE=1 </span><span style="font-weight:bold;color:#dbbb3d;">$</span><span>(</span><span style="font-weight:bold;color:#a3cbe3;">xargs</span><span style="color:#db7c6d;">&lt;</span><span>/opt/ssr/.env)
+</span><span>
+</span><span>respawn_max=30
+</span><span>supervisor=supervise-daemon
+</span><span>supervise_daemon_args=&quot;--chdir /opt/ssr&quot;
+</span><span>command=/opt/ssr/ssr
+</span><span>
+</span><span>depend() {
+</span><span>  after net dns
+</span><span>}
+</span><span style="color:#db7c6d;">EOF
+</span><span>
+</span><span style="font-weight:bold;color:#a3cbe3;">chmod</span><span> +x /etc/init.d/ssr
+</span><span style="font-weight:bold;color:#a3cbe3;">rc-service</span><span> ssr start
+</span><span style="font-weight:bold;color:#a3cbe3;">rc-update</span><span> add ssr
+</span></code></pre>
+
+</main>
+
+    <div class="dark-mode-buttons">
+        <button class="dark-mode-button" id="dark-mode-on"><img src="https://anosora233.github.io/gists/dark_mode.svg" width="24" height="24" alt="Dark mode" aria-label="dark mode toggle" title="Dark mode"></button>
+        <button class="dark-mode-button" id="dark-mode-off"><img src="https://anosora233.github.io/gists/light_mode.svg" width="24" height="24" alt="Light mode" aria-label="light mode toggle" title="Light mode"></button>
+    </div>
+    <script>
+        const cls = document.querySelector("html").classList;
+        const sessionTheme = sessionStorage.getItem("theme");
+
+        function setDark() {
+            cls.add("dark-mode");
+            cls.remove("light-mode");
+            sessionStorage.setItem("theme", "dark");
+        }
+        function setLight() {
+            cls.add("light-mode");
+            cls.remove("dark-mode");
+            sessionStorage.setItem("theme", "light");
+        }
+
+        if (sessionTheme === "dark") {
+            setDark();
+        } else if (sessionTheme === "light") {
+            setLight();
+        } else if (window.matchMedia("(prefers-color-scheme: dark)").matches) {
+            setDark();
+        }
+
+        document.getElementById("dark-mode-on").addEventListener("click", function(e) {
+            setDark();
+        });
+        document.getElementById("dark-mode-off").addEventListener("click", function(e) {
+            setLight();
+        });
+    </script>
+    <noscript>
+        <style>
+            .dark-mode-buttons {
+                display: none;
+            }
+        </style>
+    </noscript>
+</body>
+</html>

@@ -1,0 +1,214 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="description" content="Github user anosora233&amp;#x27;s gists">
+    <title>Anosora233 | 在 Docker 中使用 unix 域套接字</title>
+    
+    <link rel="stylesheet" href="https://anosora233.github.io/gists/style.css?h=501c6ea82db27d74ea03">
+    
+    
+        
+            
+                
+                    
+                        <link rel="alternate" type="application/atom+xml" title="Anosora233 - Atom Feed" href="https://anosora233.github.io/gists/atom.xml">
+                    
+                
+            
+        
+    
+</head>
+<body>
+    
+<header class="space">
+    <a href="https:&#x2F;&#x2F;anosora233.github.io&#x2F;gists&#x2F;">&LeftArrow; Home</a>
+</header>
+
+    
+<main>
+    <h1>在 Docker 中使用 unix 域套接字</h1>
+    
+    <p class="secondary small">
+        31 August, 2024
+
+        
+        
+        
+        
+        
+
+        
+        
+        - Tags:
+        
+        
+        <a href="https:&#x2F;&#x2F;anosora233.github.io&#x2F;gists&#x2F;tags&#x2F;docker&#x2F;">docker</a>,
+        
+        
+        <a href="https:&#x2F;&#x2F;anosora233.github.io&#x2F;gists&#x2F;tags&#x2F;unix-domain-socket&#x2F;">unix-domain-socket</a>
+        
+        
+    </p>
+    
+    <div class="space"></div>
+    <p><em><code>Some docker compose snippets.</code></em></p>
+<h2 id="unix-domain-socket">unix domain socket</h2>
+<p>Bind a host Unix socket to a container port.</p>
+<p>Refer to <a href="https://serverfault.com/questions/1156554/bind-a-host-unix-socket-to-a-container-port">this</a>.</p>
+<pre data-lang="yml" style="background-color:#31333d;color:#ffffffc4;" class="language-yml "><code class="language-yml" data-lang="yml"><span style="color:#db7c6d;">services</span><span style="font-weight:bold;color:#db7c6d;">:
+</span><span>  </span><span style="color:#db7c6d;">app</span><span style="font-weight:bold;color:#db7c6d;">:
+</span><span>    </span><span style="color:#db7c6d;">image</span><span style="font-weight:bold;color:#db7c6d;">: </span><span>someapp
+</span><span>  </span><span style="color:#db7c6d;">web</span><span style="font-weight:bold;color:#db7c6d;">:
+</span><span>    </span><span style="color:#db7c6d;">image</span><span style="font-weight:bold;color:#db7c6d;">: </span><span>alpine/socat
+</span><span>    </span><span style="color:#db7c6d;">network_mode</span><span style="font-weight:bold;color:#db7c6d;">: </span><span>service:app
+</span><span>    </span><span style="color:#db7c6d;">restart</span><span style="font-weight:bold;color:#db7c6d;">: </span><span>always
+</span><span>    </span><span style="color:#db7c6d;">command</span><span style="font-weight:bold;color:#db7c6d;">:
+</span><span>      - unix-listen:/run/web.sock,fork,reuseaddr,mode=666
+</span><span>      - tcp-connect:localhost:PORT </span><span style="color:#707180;"># or udp-connect:localhost:PORT
+</span><span>    </span><span style="color:#db7c6d;">volumes</span><span style="font-weight:bold;color:#db7c6d;">:
+</span><span>      - .:/run
+</span></code></pre>
+<h2 id="uptime-kuma">uptime kuma</h2>
+<pre data-lang="yml" style="background-color:#31333d;color:#ffffffc4;" class="language-yml "><code class="language-yml" data-lang="yml"><span style="color:#db7c6d;">services</span><span style="font-weight:bold;color:#db7c6d;">:
+</span><span>  </span><span style="color:#db7c6d;">app</span><span style="font-weight:bold;color:#db7c6d;">:
+</span><span>    </span><span style="color:#db7c6d;">image</span><span style="font-weight:bold;color:#db7c6d;">: </span><span>louislam/uptime-kuma:1
+</span><span>    </span><span style="color:#db7c6d;">network_mode</span><span style="font-weight:bold;color:#db7c6d;">: </span><span>bridge
+</span><span>    </span><span style="color:#db7c6d;">restart</span><span style="font-weight:bold;color:#db7c6d;">: </span><span>always
+</span><span>    </span><span style="color:#db7c6d;">volumes</span><span style="font-weight:bold;color:#db7c6d;">:
+</span><span>      - .:/app/data
+</span><span>  </span><span style="color:#db7c6d;">web</span><span style="font-weight:bold;color:#db7c6d;">:
+</span><span>    </span><span style="color:#db7c6d;">image</span><span style="font-weight:bold;color:#db7c6d;">: </span><span>alpine/socat
+</span><span>    </span><span style="color:#db7c6d;">network_mode</span><span style="font-weight:bold;color:#db7c6d;">: </span><span>service:app
+</span><span>    </span><span style="color:#db7c6d;">restart</span><span style="font-weight:bold;color:#db7c6d;">: </span><span>always
+</span><span>    </span><span style="color:#db7c6d;">command</span><span style="font-weight:bold;color:#db7c6d;">:
+</span><span>      - unix-listen:/run/web.sock,fork,reuseaddr,mode=666
+</span><span>      - tcp-connect:localhost:3001
+</span><span>    </span><span style="color:#db7c6d;">volumes</span><span style="font-weight:bold;color:#db7c6d;">:
+</span><span>      - .:/run
+</span></code></pre>
+<h2 id="librespeed">librespeed</h2>
+<pre data-lang="yml" style="background-color:#31333d;color:#ffffffc4;" class="language-yml "><code class="language-yml" data-lang="yml"><span style="color:#db7c6d;">services</span><span style="font-weight:bold;color:#db7c6d;">:
+</span><span>  </span><span style="color:#db7c6d;">app</span><span style="font-weight:bold;color:#db7c6d;">:
+</span><span>    </span><span style="color:#db7c6d;">image</span><span style="font-weight:bold;color:#db7c6d;">: </span><span>lscr.io/linuxserver/librespeed:latest
+</span><span>    </span><span style="color:#db7c6d;">network_mode</span><span style="font-weight:bold;color:#db7c6d;">: </span><span>bridge
+</span><span>    </span><span style="color:#db7c6d;">restart</span><span style="font-weight:bold;color:#db7c6d;">: </span><span>always
+</span><span>    </span><span style="color:#db7c6d;">environment</span><span style="font-weight:bold;color:#db7c6d;">:
+</span><span>      - PUID=1000
+</span><span>      - PGID=1000
+</span><span>      - TZ=Asia/Shanghai
+</span><span>    </span><span style="color:#db7c6d;">volumes</span><span style="font-weight:bold;color:#db7c6d;">:
+</span><span>      - ./config:/config
+</span><span>  </span><span style="color:#db7c6d;">web</span><span style="font-weight:bold;color:#db7c6d;">:
+</span><span>    </span><span style="color:#db7c6d;">image</span><span style="font-weight:bold;color:#db7c6d;">: </span><span>alpine/socat
+</span><span>    </span><span style="color:#db7c6d;">network_mode</span><span style="font-weight:bold;color:#db7c6d;">: </span><span>service:app
+</span><span>    </span><span style="color:#db7c6d;">restart</span><span style="font-weight:bold;color:#db7c6d;">: </span><span>always
+</span><span>    </span><span style="color:#db7c6d;">command</span><span style="font-weight:bold;color:#db7c6d;">:
+</span><span>      - unix-listen:/run/web.sock,fork,reuseaddr,mode=666
+</span><span>      - tcp-connect:localhost:80
+</span><span>    </span><span style="color:#db7c6d;">volumes</span><span style="font-weight:bold;color:#db7c6d;">:
+</span><span>      - .:/run
+</span></code></pre>
+<h2 id="caddy">caddy</h2>
+<pre data-lang="yml" style="background-color:#31333d;color:#ffffffc4;" class="language-yml "><code class="language-yml" data-lang="yml"><span style="color:#db7c6d;">services</span><span style="font-weight:bold;color:#db7c6d;">:
+</span><span>  </span><span style="color:#db7c6d;">app</span><span style="font-weight:bold;color:#db7c6d;">:
+</span><span>    </span><span style="color:#db7c6d;">image</span><span style="font-weight:bold;color:#db7c6d;">: </span><span>caddy
+</span><span>    </span><span style="color:#db7c6d;">network_mode</span><span style="font-weight:bold;color:#db7c6d;">: </span><span>host
+</span><span>    </span><span style="color:#db7c6d;">restart</span><span style="font-weight:bold;color:#db7c6d;">: </span><span>always
+</span><span>    </span><span style="color:#db7c6d;">volumes</span><span style="font-weight:bold;color:#db7c6d;">:
+</span><span>      - ./Caddyfile:/etc/caddy/Caddyfile
+</span><span>      - data:/data
+</span><span>      - conf:/config
+</span><span>      - /opt/cert:/cert
+</span><span>      - /srv:/srv
+</span><span>      - /run:/run
+</span><span style="color:#db7c6d;">volumes</span><span style="font-weight:bold;color:#db7c6d;">:
+</span><span>  </span><span style="color:#db7c6d;">data</span><span style="font-weight:bold;color:#db7c6d;">:
+</span><span>  </span><span style="color:#db7c6d;">conf</span><span style="font-weight:bold;color:#db7c6d;">:
+</span></code></pre>
+<p>Caddyfile Example</p>
+<pre data-lang="caddyfile" style="background-color:#31333d;color:#ffffffc4;" class="language-caddyfile "><code class="language-caddyfile" data-lang="caddyfile"><span>example.com,
+</span><span>*.example.com {
+</span><span>    tls _CERT_ _KEY_
+</span><span>    encode zstd gzip
+</span><span>
+</span><span>    @api host api.example.com
+</span><span>    handle @api {
+</span><span>        reverse_proxy [::1]:8080
+</span><span>    }
+</span><span>
+</span><span>    # other sites
+</span><span>
+</span><span>
+</span><span>    # fallback site
+</span><span>    handle {
+</span><span>        root * /usr/share/caddy
+</span><span>        file_server
+</span><span>    }
+</span><span>}
+</span></code></pre>
+<h2 id="memos">memos</h2>
+<pre data-lang="yml" style="background-color:#31333d;color:#ffffffc4;" class="language-yml "><code class="language-yml" data-lang="yml"><span style="color:#db7c6d;">services</span><span style="font-weight:bold;color:#db7c6d;">:
+</span><span>  </span><span style="color:#db7c6d;">app</span><span style="font-weight:bold;color:#db7c6d;">:
+</span><span>    </span><span style="color:#db7c6d;">image</span><span style="font-weight:bold;color:#db7c6d;">: </span><span>neosmemo/memos:stable
+</span><span>    </span><span style="color:#db7c6d;">network_mode</span><span style="font-weight:bold;color:#db7c6d;">: </span><span>none
+</span><span>    </span><span style="color:#db7c6d;">restart</span><span style="font-weight:bold;color:#db7c6d;">: </span><span>always
+</span><span>    </span><span style="color:#db7c6d;">volumes</span><span style="font-weight:bold;color:#db7c6d;">:
+</span><span>      - ./memos/:/var/opt/memos
+</span><span>  </span><span style="color:#db7c6d;">web</span><span style="font-weight:bold;color:#db7c6d;">:
+</span><span>    </span><span style="color:#db7c6d;">image</span><span style="font-weight:bold;color:#db7c6d;">: </span><span>alpine/socat
+</span><span>    </span><span style="color:#db7c6d;">network_mode</span><span style="font-weight:bold;color:#db7c6d;">: </span><span>service:app
+</span><span>    </span><span style="color:#db7c6d;">restart</span><span style="font-weight:bold;color:#db7c6d;">: </span><span>always
+</span><span>    </span><span style="color:#db7c6d;">command</span><span style="font-weight:bold;color:#db7c6d;">:
+</span><span>      - unix-listen:/run/web.sock,fork,reuseaddr,mode=666
+</span><span>      - tcp-connect:localhost:5230
+</span><span>    </span><span style="color:#db7c6d;">volumes</span><span style="font-weight:bold;color:#db7c6d;">:
+</span><span>      - .:/run
+</span></code></pre>
+
+</main>
+
+    <div class="dark-mode-buttons">
+        <button class="dark-mode-button" id="dark-mode-on"><img src="https://anosora233.github.io/gists/dark_mode.svg" width="24" height="24" alt="Dark mode" aria-label="dark mode toggle" title="Dark mode"></button>
+        <button class="dark-mode-button" id="dark-mode-off"><img src="https://anosora233.github.io/gists/light_mode.svg" width="24" height="24" alt="Light mode" aria-label="light mode toggle" title="Light mode"></button>
+    </div>
+    <script>
+        const cls = document.querySelector("html").classList;
+        const sessionTheme = sessionStorage.getItem("theme");
+
+        function setDark() {
+            cls.add("dark-mode");
+            cls.remove("light-mode");
+            sessionStorage.setItem("theme", "dark");
+        }
+        function setLight() {
+            cls.add("light-mode");
+            cls.remove("dark-mode");
+            sessionStorage.setItem("theme", "light");
+        }
+
+        if (sessionTheme === "dark") {
+            setDark();
+        } else if (sessionTheme === "light") {
+            setLight();
+        } else if (window.matchMedia("(prefers-color-scheme: dark)").matches) {
+            setDark();
+        }
+
+        document.getElementById("dark-mode-on").addEventListener("click", function(e) {
+            setDark();
+        });
+        document.getElementById("dark-mode-off").addEventListener("click", function(e) {
+            setLight();
+        });
+    </script>
+    <noscript>
+        <style>
+            .dark-mode-buttons {
+                display: none;
+            }
+        </style>
+    </noscript>
+</body>
+</html>

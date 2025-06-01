@@ -1,0 +1,282 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="description" content="Github user anosora233&amp;#x27;s gists">
+    <title>Anosora233 | 废弃的配置和代码片段</title>
+    
+    <link rel="stylesheet" href="https://anosora233.github.io/gists/style.css?h=501c6ea82db27d74ea03">
+    
+    
+        
+            
+                
+                    
+                        <link rel="alternate" type="application/atom+xml" title="Anosora233 - Atom Feed" href="https://anosora233.github.io/gists/atom.xml">
+                    
+                
+            
+        
+    
+</head>
+<body>
+    
+<header class="space">
+    <a href="https:&#x2F;&#x2F;anosora233.github.io&#x2F;gists&#x2F;">&LeftArrow; Home</a>
+</header>
+
+    
+<main>
+    <h1>废弃的配置和代码片段</h1>
+    
+    <p class="secondary small">
+        20 August, 2024
+
+        
+        
+        
+        
+        
+
+        
+        
+        - Tags:
+        
+        
+        <a href="https:&#x2F;&#x2F;anosora233.github.io&#x2F;gists&#x2F;tags&#x2F;wsl&#x2F;">wsl</a>,
+        
+        
+        <a href="https:&#x2F;&#x2F;anosora233.github.io&#x2F;gists&#x2F;tags&#x2F;zsh&#x2F;">zsh</a>,
+        
+        
+        <a href="https:&#x2F;&#x2F;anosora233.github.io&#x2F;gists&#x2F;tags&#x2F;ndp&#x2F;">ndp</a>,
+        
+        
+        <a href="https:&#x2F;&#x2F;anosora233.github.io&#x2F;gists&#x2F;tags&#x2F;ipv6&#x2F;">ipv6</a>,
+        
+        
+        <a href="https:&#x2F;&#x2F;anosora233.github.io&#x2F;gists&#x2F;tags&#x2F;fish&#x2F;">fish</a>
+        
+        
+    </p>
+    
+    <div class="space"></div>
+    <p><em><code>Just some snippets.</code></em></p>
+<span id="continue-reading"></span>
+<h2 id="wsl">wsl</h2>
+<ul>
+<li>locale</li>
+</ul>
+<pre data-lang="zsh" style="background-color:#31333d;color:#ffffffc4;" class="language-zsh "><code class="language-zsh" data-lang="zsh"><span style="font-weight:bold;color:#a3cbe3;">localectl</span><span> set-locale LANG=en_US.UTF-8
+</span><span style="color:#707180;"># localectl set-locale LANG=zh_CN.UTF-8
+</span></code></pre>
+<ul>
+<li>tun mode <code>resolv.conf</code></li>
+</ul>
+<pre data-lang="zsh" style="background-color:#31333d;color:#ffffffc4;" class="language-zsh "><code class="language-zsh" data-lang="zsh"><span style="font-weight:bold;color:#a3cbe3;">sudo</span><span> rm /etc/resolv.conf
+</span><span style="color:#db7c6d;">echo </span><span style="font-weight:bold;color:#dbbb3d;">&quot;</span><span>nameserver 1.0.0.1</span><span style="font-weight:bold;color:#dbbb3d;">&quot; </span><span style="color:#db7c6d;">| </span><span style="font-weight:bold;color:#a3cbe3;">sudo</span><span> tee /etc/resolv.conf
+</span><span style="color:#707180;"># immutable filesystem attribute
+</span><span style="font-weight:bold;color:#a3cbe3;">sudo</span><span> chattr +i /etc/resolv.conf
+</span></code></pre>
+<h2 id="zsh">zsh</h2>
+<p>use antidote as zsh plugin manager</p>
+<ul>
+<li>clone antidote</li>
+</ul>
+<pre data-lang="zsh" style="background-color:#31333d;color:#ffffffc4;" class="language-zsh "><code class="language-zsh" data-lang="zsh"><span style="font-weight:bold;color:#a3cbe3;">git</span><span> clone</span><span style="color:#ffffff;"> --depth</span><span style="color:#db7c6d;">=</span><span>1 https://github.com/mattmc3/antidote.git </span><span style="font-weight:bold;color:#dbbb3d;">$</span><span>{</span><span style="font-weight:bold;color:#a3cbe3;">ZDOTDIR</span><span style="color:#db7c6d;">:-</span><span style="font-weight:bold;color:#dbbb3d;">$</span><span style="font-weight:bold;color:#a3cbe3;">HOME</span><span>}/.antidote
+</span></code></pre>
+<ul>
+<li>configuration</li>
+</ul>
+<pre data-lang="zsh" style="background-color:#31333d;color:#ffffffc4;" class="language-zsh "><code class="language-zsh" data-lang="zsh"><span style="font-weight:bold;color:#a3cbe3;">cat </span><span style="color:#db7c6d;">&lt;&lt; </span><span style="font-weight:bold;color:#dbbb3d;">&#39;</span><span style="color:#db7c6d;">EOF</span><span style="font-weight:bold;color:#dbbb3d;">&#39; </span><span style="color:#db7c6d;">&gt;</span><span> .zshrc
+</span><span># Lines configured by zsh-newuser-install
+</span><span>HISTFILE=~/.histfile
+</span><span>HISTSIZE=1000
+</span><span>SAVEHIST=1000
+</span><span># End of lines configured by zsh-newuser-install
+</span><span># The following lines were added by compinstall
+</span><span>zstyle :compinstall filename ${HOME}/.zshrc
+</span><span>
+</span><span>autoload -Uz compinit
+</span><span>compinit
+</span><span># End of lines added by compinstall
+</span><span># antidote
+</span><span>source ${ZDOTDIR:-$HOME}/.antidote/antidote.zsh
+</span><span>antidote load ${ZDOTDIR:-$HOME}/.zsh_plugins.txt
+</span><span>
+</span><span>if [ -d &quot;${HOME}/.acme.sh&quot; ]; then
+</span><span>. &quot;${HOME}/.acme.sh/acme.sh.env&quot;
+</span><span>fi
+</span><span>
+</span><span>zstyle &#39;:prompt:pure:path&#39; color yellow
+</span><span>zstyle &#39;:prompt:pure:prompt:success&#39; color cyan
+</span><span>zstyle &#39;:completion:*&#39; rehash true
+</span><span>
+</span><span>bindkey &#39;^H&#39; backward-kill-word
+</span><span style="color:#db7c6d;">EOF
+</span><span>
+</span><span style="font-weight:bold;color:#a3cbe3;">cat </span><span style="color:#db7c6d;">&lt;&lt; EOF &gt;</span><span> .zsh_plugins.txt
+</span><span># .zsh_plugins.txt
+</span><span>rupa/z              # some bash plugins work too
+</span><span>sindresorhus/pure   # enhance your prompt
+</span><span>
+</span><span># you can even use Oh My Zsh plugins
+</span><span>getantidote/use-omz
+</span><span>ohmyzsh/ohmyzsh path:lib
+</span><span>ohmyzsh/ohmyzsh path:plugins/extract
+</span><span>
+</span><span># add fish-like features
+</span><span>zsh-users/zsh-syntax-highlighting
+</span><span>zsh-users/zsh-autosuggestions
+</span><span>zsh-users/zsh-history-substring-search
+</span><span style="color:#db7c6d;">EOF
+</span></code></pre>
+<h2 id="ndppd">ndppd</h2>
+<ol>
+<li>Install</li>
+</ol>
+<pre data-lang="zsh" style="background-color:#31333d;color:#ffffffc4;" class="language-zsh "><code class="language-zsh" data-lang="zsh"><span style="font-weight:bold;color:#a3cbe3;">sudo</span><span> apt install ndppd
+</span></code></pre>
+<ol start="2">
+<li>Configuration</li>
+</ol>
+<pre data-lang="zsh" style="background-color:#31333d;color:#ffffffc4;" class="language-zsh "><code class="language-zsh" data-lang="zsh"><span style="color:#707180;"># replace `2001:ff::/64` with yours
+</span><span style="font-weight:bold;color:#a3cbe3;">cat </span><span style="color:#db7c6d;">&lt;&lt; EOF &gt;</span><span> /etc/ndppd.conf
+</span><span>route-ttl 30000
+</span><span>proxy eth0 {
+</span><span>    router no
+</span><span>    timeout 500
+</span><span>    ttl 30000
+</span><span>    rule 2001:ff::/64 {
+</span><span>        static
+</span><span>    }
+</span><span>}
+</span><span style="color:#db7c6d;">EOF
+</span><span>
+</span><span style="font-weight:bold;color:#a3cbe3;">ip</span><span> route add local 2001:ff::/64 dev lo
+</span><span style="font-weight:bold;color:#a3cbe3;">ip</span><span> route del local 2001:ff::/64 dev lo
+</span></code></pre>
+<h2 id="color-os-13">color os 13</h2>
+<pre data-lang="zsh" style="background-color:#31333d;color:#ffffffc4;" class="language-zsh "><code class="language-zsh" data-lang="zsh"><span style="color:#707180;"># adb shell pm unsuspend &lt;package&gt;
+</span><span style="font-weight:bold;color:#a3cbe3;">adb</span><span> shell pm suspend com.oplus.ota
+</span><span>
+</span><span style="color:#707180;"># adb shell pm install-existing --user 0 &lt;package&gt;
+</span><span style="font-weight:bold;color:#a3cbe3;">adb</span><span> shell pm disable-user com.opos.ads
+</span><span style="font-weight:bold;color:#a3cbe3;">adb</span><span> shell pm disable-user com.heytap.yoli
+</span><span style="font-weight:bold;color:#a3cbe3;">adb</span><span> shell pm disable-user com.heytap.music
+</span><span>
+</span><span style="font-weight:bold;color:#a3cbe3;">adb</span><span> shell pm uninstall</span><span style="color:#ffffff;"> --user</span><span> 0 com.heytap.browser
+</span><span style="font-weight:bold;color:#a3cbe3;">adb</span><span> shell pm uninstall</span><span style="color:#ffffff;"> --user</span><span> 0 com.opuls.appdetail
+</span><span style="font-weight:bold;color:#a3cbe3;">adb</span><span> shell pm uninstall</span><span style="color:#ffffff;"> --user</span><span> 0 com.nearme.instant.platform
+</span></code></pre>
+<h2 id="sync-ssl-cert">sync ssl cert</h2>
+<p><em><code>Deprecated</code></em></p>
+<ul>
+<li>Server Side</li>
+</ul>
+<pre data-lang="zsh" style="background-color:#31333d;color:#ffffffc4;" class="language-zsh "><code class="language-zsh" data-lang="zsh"><span style="font-weight:bold;color:#a3cbe3;">sudo</span><span> apt install rsync
+</span><span>
+</span><span style="color:#db7c6d;">echo </span><span style="font-weight:bold;color:#dbbb3d;">&quot;</span><span>USER:PASSWORD</span><span style="font-weight:bold;color:#dbbb3d;">&quot; </span><span style="color:#db7c6d;">&gt;</span><span> /etc/rsyncd.secrets
+</span><span style="font-weight:bold;color:#a3cbe3;">chmod</span><span> 600 /etc/rsyncd.secrets
+</span><span>
+</span><span style="font-weight:bold;color:#a3cbe3;">cat </span><span style="color:#db7c6d;">&lt;&lt; EOF &gt;</span><span> /etc/rsyncd.conf
+</span><span>uid = 0
+</span><span>gid = 0
+</span><span>read only = yes
+</span><span>secrets file = /etc/rsyncd.secrets
+</span><span>[cert]
+</span><span>path = /root/cert
+</span><span>auth users = cert
+</span><span style="color:#db7c6d;">EOF
+</span><span>
+</span><span style="font-weight:bold;color:#a3cbe3;">sudo</span><span> systemctl enable</span><span style="color:#ffffff;"> --now</span><span> rsync
+</span><span style="font-weight:bold;color:#a3cbe3;">sudo</span><span> systemctl status rsync
+</span></code></pre>
+<ul>
+<li>Client Side</li>
+</ul>
+<pre data-lang="zsh" style="background-color:#31333d;color:#ffffffc4;" class="language-zsh "><code class="language-zsh" data-lang="zsh"><span style="font-weight:bold;color:#a3cbe3;">sudo</span><span> apt install rsync
+</span><span>
+</span><span style="color:#db7c6d;">echo </span><span style="font-weight:bold;color:#dbbb3d;">&quot;</span><span>PASSWORD</span><span style="font-weight:bold;color:#dbbb3d;">&quot; </span><span style="color:#db7c6d;">&gt;</span><span> /root/syncpass
+</span><span style="font-weight:bold;color:#a3cbe3;">chmod</span><span> 600 /root/syncpass
+</span><span>
+</span><span style="font-weight:bold;color:#a3cbe3;">cat </span><span style="color:#db7c6d;">&lt;&lt; EOF &gt;</span><span> /root/sync.sh
+</span><span>#!/bin/bash
+</span><span>rsync -avz --password-file=/root/syncpass cert@SERVER::cert /root/cert
+</span><span style="color:#db7c6d;">EOF
+</span><span>
+</span><span style="color:#707180;"># crontab -e then add a new line
+</span><span style="font-weight:bold;color:#a3cbe3;">@monthly</span><span> bash /root/sync.sh
+</span></code></pre>
+<h2 id="hurricane-electric-ipv6-tunnel">hurricane electric ipv6 tunnel</h2>
+<p>edit <code>/etc/network/interfaces</code></p>
+<pre data-lang="zsh" style="background-color:#31333d;color:#ffffffc4;" class="language-zsh "><code class="language-zsh" data-lang="zsh"><span> </span><span style="font-weight:bold;color:#a3cbe3;">auto</span><span> he6
+</span><span>  </span><span style="font-weight:bold;color:#a3cbe3;">iface</span><span> he6 inet6 v4tunnel
+</span><span>    </span><span style="font-weight:bold;color:#a3cbe3;">address</span><span> YOURS
+</span><span>    </span><span style="font-weight:bold;color:#a3cbe3;">netmask</span><span> YOURS
+</span><span>    </span><span style="font-weight:bold;color:#a3cbe3;">endpoint</span><span> YOURS
+</span><span>    </span><span style="color:#dbbb3d;">local </span><span style="font-weight:bold;color:#a3cbe3;">YOUR
+</span><span>    </span><span style="font-weight:bold;color:#a3cbe3;">ttl</span><span> 255
+</span><span>    </span><span style="font-weight:bold;color:#a3cbe3;">up</span><span> ip</span><span style="color:#ffffff;"> -6</span><span> route add default via YOURS dev he6 table 51666
+</span><span>    </span><span style="font-weight:bold;color:#a3cbe3;">up</span><span> ip</span><span style="color:#ffffff;"> -6</span><span> rule add from 2001:470::/32 lookup 51666
+</span><span>    </span><span style="font-weight:bold;color:#a3cbe3;">down</span><span> ip</span><span style="color:#ffffff;"> -6</span><span> route del default table 51666
+</span><span>    </span><span style="font-weight:bold;color:#a3cbe3;">down</span><span> ip</span><span style="color:#ffffff;"> -6</span><span> rule del lookup 51666
+</span></code></pre>
+<h2 id="fish">fish</h2>
+<pre data-lang="sh" style="background-color:#31333d;color:#ffffffc4;" class="language-sh "><code class="language-sh" data-lang="sh"><span style="font-weight:bold;color:#a3cbe3;">curl</span><span style="color:#ffffff;"> -sL</span><span> https://raw.githubusercontent.com/jorgebucaran/fisher/main/functions/fisher.fish </span><span style="color:#db7c6d;">| </span><span>\
+</span><span> </span><span style="color:#db7c6d;">source &amp;&amp; </span><span style="font-weight:bold;color:#a3cbe3;">fisher</span><span> install jorgebucaran/fisher
+</span><span>
+</span><span style="font-weight:bold;color:#a3cbe3;">fisher</span><span> install pure-fish/pure
+</span><span>
+</span><span style="color:#db7c6d;">echo </span><span style="font-weight:bold;color:#dbbb3d;">&quot;</span><span style="font-weight:bold;color:#a2ba43;">\
+</span><span>set -x EDITOR nano
+</span><span>bind \b backward-kill-word</span><span style="font-weight:bold;color:#a2ba43;">\
+</span><span style="font-weight:bold;color:#dbbb3d;">&quot;</span><span style="color:#db7c6d;">&gt; </span><span style="font-weight:bold;color:#a3cbe3;">~</span><span>/.config/fish/conf.d/xtom.fish
+</span></code></pre>
+
+</main>
+
+    <div class="dark-mode-buttons">
+        <button class="dark-mode-button" id="dark-mode-on"><img src="https://anosora233.github.io/gists/dark_mode.svg" width="24" height="24" alt="Dark mode" aria-label="dark mode toggle" title="Dark mode"></button>
+        <button class="dark-mode-button" id="dark-mode-off"><img src="https://anosora233.github.io/gists/light_mode.svg" width="24" height="24" alt="Light mode" aria-label="light mode toggle" title="Light mode"></button>
+    </div>
+    <script>
+        const cls = document.querySelector("html").classList;
+        const sessionTheme = sessionStorage.getItem("theme");
+
+        function setDark() {
+            cls.add("dark-mode");
+            cls.remove("light-mode");
+            sessionStorage.setItem("theme", "dark");
+        }
+        function setLight() {
+            cls.add("light-mode");
+            cls.remove("dark-mode");
+            sessionStorage.setItem("theme", "light");
+        }
+
+        if (sessionTheme === "dark") {
+            setDark();
+        } else if (sessionTheme === "light") {
+            setLight();
+        } else if (window.matchMedia("(prefers-color-scheme: dark)").matches) {
+            setDark();
+        }
+
+        document.getElementById("dark-mode-on").addEventListener("click", function(e) {
+            setDark();
+        });
+        document.getElementById("dark-mode-off").addEventListener("click", function(e) {
+            setLight();
+        });
+    </script>
+    <noscript>
+        <style>
+            .dark-mode-buttons {
+                display: none;
+            }
+        </style>
+    </noscript>
+</body>
+</html>

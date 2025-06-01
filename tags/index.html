@@ -1,0 +1,153 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="description" content="Github user anosora233&amp;#x27;s gists">
+    <title>Anosora233 | Tags</title>
+    
+    <link rel="stylesheet" href="https://anosora233.github.io/gists/style.css?h=501c6ea82db27d74ea03">
+    
+    
+        
+            
+                
+                    
+                        <link rel="alternate" type="application/atom+xml" title="Anosora233 - Atom Feed" href="https://anosora233.github.io/gists/atom.xml">
+                    
+                
+            
+        
+    
+</head>
+<body>
+    
+<header class="space">
+    <a href="https:&#x2F;&#x2F;anosora233.github.io&#x2F;gists&#x2F;">&LeftArrow; Home</a>
+</header>
+
+    
+<main>
+    <h1>Tags</h1>
+    <div>
+        <ul>
+            
+            <li>
+                <a href="https:&#x2F;&#x2F;anosora233.github.io&#x2F;gists&#x2F;tags&#x2F;alpine&#x2F;">alpine</a>
+                
+                <span class="secondary small">(1 page)</span>
+            </li>
+            
+            <li>
+                <a href="https:&#x2F;&#x2F;anosora233.github.io&#x2F;gists&#x2F;tags&#x2F;docker&#x2F;">docker</a>
+                
+                <span class="secondary small">(1 page)</span>
+            </li>
+            
+            <li>
+                <a href="https:&#x2F;&#x2F;anosora233.github.io&#x2F;gists&#x2F;tags&#x2F;fish&#x2F;">fish</a>
+                
+                <span class="secondary small">(1 page)</span>
+            </li>
+            
+            <li>
+                <a href="https:&#x2F;&#x2F;anosora233.github.io&#x2F;gists&#x2F;tags&#x2F;ipv6&#x2F;">ipv6</a>
+                
+                <span class="secondary small">(1 page)</span>
+            </li>
+            
+            <li>
+                <a href="https:&#x2F;&#x2F;anosora233.github.io&#x2F;gists&#x2F;tags&#x2F;markdown&#x2F;">markdown</a>
+                
+                <span class="secondary small">(1 page)</span>
+            </li>
+            
+            <li>
+                <a href="https:&#x2F;&#x2F;anosora233.github.io&#x2F;gists&#x2F;tags&#x2F;ndp&#x2F;">ndp</a>
+                
+                <span class="secondary small">(1 page)</span>
+            </li>
+            
+            <li>
+                <a href="https:&#x2F;&#x2F;anosora233.github.io&#x2F;gists&#x2F;tags&#x2F;openrc&#x2F;">openrc</a>
+                
+                <span class="secondary small">(1 page)</span>
+            </li>
+            
+            <li>
+                <a href="https:&#x2F;&#x2F;anosora233.github.io&#x2F;gists&#x2F;tags&#x2F;serverstatus&#x2F;">serverstatus</a>
+                
+                <span class="secondary small">(1 page)</span>
+            </li>
+            
+            <li>
+                <a href="https:&#x2F;&#x2F;anosora233.github.io&#x2F;gists&#x2F;tags&#x2F;syntax&#x2F;">syntax</a>
+                
+                <span class="secondary small">(1 page)</span>
+            </li>
+            
+            <li>
+                <a href="https:&#x2F;&#x2F;anosora233.github.io&#x2F;gists&#x2F;tags&#x2F;unix-domain-socket&#x2F;">unix-domain-socket</a>
+                
+                <span class="secondary small">(1 page)</span>
+            </li>
+            
+            <li>
+                <a href="https:&#x2F;&#x2F;anosora233.github.io&#x2F;gists&#x2F;tags&#x2F;wsl&#x2F;">wsl</a>
+                
+                <span class="secondary small">(1 page)</span>
+            </li>
+            
+            <li>
+                <a href="https:&#x2F;&#x2F;anosora233.github.io&#x2F;gists&#x2F;tags&#x2F;zsh&#x2F;">zsh</a>
+                
+                <span class="secondary small">(1 page)</span>
+            </li>
+            
+        </ul>
+    </div>
+</main>
+
+    <div class="dark-mode-buttons">
+        <button class="dark-mode-button" id="dark-mode-on"><img src="https://anosora233.github.io/gists/dark_mode.svg" width="24" height="24" alt="Dark mode" aria-label="dark mode toggle" title="Dark mode"></button>
+        <button class="dark-mode-button" id="dark-mode-off"><img src="https://anosora233.github.io/gists/light_mode.svg" width="24" height="24" alt="Light mode" aria-label="light mode toggle" title="Light mode"></button>
+    </div>
+    <script>
+        const cls = document.querySelector("html").classList;
+        const sessionTheme = sessionStorage.getItem("theme");
+
+        function setDark() {
+            cls.add("dark-mode");
+            cls.remove("light-mode");
+            sessionStorage.setItem("theme", "dark");
+        }
+        function setLight() {
+            cls.add("light-mode");
+            cls.remove("dark-mode");
+            sessionStorage.setItem("theme", "light");
+        }
+
+        if (sessionTheme === "dark") {
+            setDark();
+        } else if (sessionTheme === "light") {
+            setLight();
+        } else if (window.matchMedia("(prefers-color-scheme: dark)").matches) {
+            setDark();
+        }
+
+        document.getElementById("dark-mode-on").addEventListener("click", function(e) {
+            setDark();
+        });
+        document.getElementById("dark-mode-off").addEventListener("click", function(e) {
+            setLight();
+        });
+    </script>
+    <noscript>
+        <style>
+            .dark-mode-buttons {
+                display: none;
+            }
+        </style>
+    </noscript>
+</body>
+</html>
