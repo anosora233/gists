@@ -2,7 +2,7 @@ theme = "hook"
 generate_feeds = true
 
 # The URL the site will be built for
-base_url = "https://anosora233.github.io/gists/"
+base_url = "/gists"
 
 # Whether to automatically compile all Sass files in the sass directory
 compile_sass = true
@@ -31,7 +31,7 @@ bottom_footnotes = true
 # Put all your custom variables here
 
 links = [
-    # { title = "Mail", href = "mailto:example@example.com" },
+    { title = "Mail", href = "mailto:feixiangs@outlook.com" },
     { title = "GitHub", href = "https://github.com/anosora233" },
     # { title = "LinkedIn", href = "https://linkedin.com" }
 ]

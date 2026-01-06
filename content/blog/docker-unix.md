@@ -6,13 +6,11 @@ date = 2024-08-31
 tags = ["docker", "unix-domain-socket"]
 +++
 
-_`Some docker compose snippets.`_
+_`曾经部署的一些自托管服务，用了一些不太寻常的方法让每个容器用上了域名套接字。这样做的好处有每个应用都可得到一个非常清晰的套接字名称并且避免了占用主机端口，但缺点是需要一个额外的容器及额外的资源开销。`_
 
-## unix domain socket
+# unix domain socket
 
-Bind a host Unix socket to a container port.
-
-Refer to [this](https://serverfault.com/questions/1156554/bind-a-host-unix-socket-to-a-container-port).
+以下是基本的 compose 模板，主要参考了这篇[讨论](https://serverfault.com/questions/1156554/bind-a-host-unix-socket-to-a-container-port).
 
 ```yml
 services:
@@ -95,7 +93,7 @@ volumes:
   conf:
 ```
 
-Caddyfile Example
+_Caddyfile Example_
 
 ```caddyfile
 example.com,
