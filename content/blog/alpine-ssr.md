@@ -6,7 +6,7 @@ date = 2025-03-22
 tags = ["openrc", "alpine", "serverstatus"]
 +++
 
-_`为了监控运行 Alpine 系统的低配服务器使用情况，折腾学习了一下 OpenRC 服务的编写。`_
+_`为了监控运行 Alpine 发行版的小型服务器使用情况，折腾学习了一下 OpenRC 服务的编写。`_
 
 ## 服务器端配置
 
@@ -63,7 +63,7 @@ rc-service ssrd start && rc-update add ssrd
 
 对于客户端参数的管理可以使用 .env 文件来定义客户端设置。
 
-要从 .env 文件中读取环境变量，参考这个[讨论](https://stackoverflow.com/questions/19331497/set-environment-variables-from-file-of-key-value-pairs)，可以在 OpenRC 脚本中使用命令 `export $(xargs < FILE)`。
+要从 .env 文件中读取环境变量，我参考这篇[讨论](https://stackoverflow.com/questions/19331497/set-environment-variables-from-file-of-key-value-pairs)，可以在 OpenRC 脚本中使用命令 `export $(xargs < FILE)`。
 
 ```sh
 # some dependencies
