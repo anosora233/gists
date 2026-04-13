@@ -1,0 +1,359 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<feed xmlns="http://www.w3.org/2005/Atom" xml:lang="en">
+    <title>Anosora233</title>
+    <subtitle>Github user anosora233&#x27;s gists</subtitle>
+    <link rel="self" type="application/atom+xml" href="/gists/atom.xml"/>
+    <link rel="alternate" type="text/html" href="/gists"/>
+    <generator uri="https://www.getzola.org/">Zola</generator>
+    <updated>2025-04-12T00:00:00+00:00</updated>
+    <id>/gists/atom.xml</id>
+    <entry xml:lang="en">
+        <title>为 Windows 的 ssh 连接用上 socks 代理</title>
+        <published>2025-04-12T00:00:00+00:00</published>
+        <updated>2025-04-12T00:00:00+00:00</updated>
+        
+        <author>
+          <name>
+            
+              Unknown
+            
+          </name>
+        </author>
+        
+        <link rel="alternate" type="text/html" href="/gists/blog/proxy-ssh/"/>
+        <id>/gists/blog/proxy-ssh/</id>
+        
+        <content type="html" xml:base="/gists/blog/proxy-ssh/">&lt;p&gt;&lt;em&gt;&lt;code&gt;为了远程一些直连网络质量不太好的服务器，希望在 Windows 下透过 socks5 代理建立连接。&lt;&#x2F;code&gt;&lt;&#x2F;em&gt;&lt;&#x2F;p&gt;
+&lt;h2 id=&quot;qian-yan&quot;&gt;前言&lt;&#x2F;h2&gt;
+&lt;p&gt;ssh 客户端支持透过代理进行连接，关键是配置 ProxyCommand 参数。这需要一个外部程序来建立 tcp 连接，支持这种行为的程序在 Windows 平台下有 &lt;code&gt;ncat&lt;&#x2F;code&gt; (&lt;code&gt;nmap&lt;&#x2F;code&gt; 的子程序) 和 &lt;code&gt;connect&lt;&#x2F;code&gt;。&lt;&#x2F;p&gt;
+&lt;h2 id=&quot;ncat-fang-an&quot;&gt;ncat 方案&lt;&#x2F;h2&gt;
+&lt;p&gt;安装 nmap 即可拥有 ncat，推荐使用 scoop 安装：&lt;code&gt;scoop install nmap&lt;&#x2F;code&gt;。&lt;&#x2F;p&gt;
+&lt;pre class=&quot;giallo&quot; style=&quot;color-scheme: light dark; color: light-dark(#24292E, #B392F0); background-color: light-dark(#FFFFFF, #1F1F1F);&quot;&gt;&lt;code data-lang=&quot;shellscript&quot;&gt;&lt;span class=&quot;giallo-l&quot;&gt;&lt;span style=&quot;color: light-dark(#6F42C1, #B392F0);&quot;&gt;ssh&lt;&#x2F;span&gt;&lt;span style=&quot;color: light-dark(#2B5581, #9DB1C5);&quot;&gt; -&lt;&#x2F;span&gt;&lt;span style=&quot;color: light-dark(#2B5581, #9DB1C5);&quot;&gt;o&lt;&#x2F;span&gt;&lt;span style=&quot;color: light-dark(#2B5581, #9DB1C5);&quot;&gt; ProxyCommand=&lt;&#x2F;span&gt;&lt;span style=&quot;color: light-dark(#22863A, #FFAB70);&quot;&gt;&amp;quot;&lt;&#x2F;span&gt;&lt;span style=&quot;color: light-dark(#22863A, #FFAB70);&quot;&gt;ncat --proxy 127.0.0.1:8080 %h %p&lt;&#x2F;span&gt;&lt;span style=&quot;color: light-dark(#22863A, #FFAB70);&quot;&gt;&amp;quot;&lt;&#x2F;span&gt;&lt;span style=&quot;color: light-dark(#D32F2F, #F97583);&quot;&gt; &amp;lt;&lt;&#x2F;span&gt;&lt;span style=&quot;color: light-dark(#2B5581, #9DB1C5);&quot;&gt;hos&lt;&#x2F;span&gt;&lt;span&gt;t&lt;&#x2F;span&gt;&lt;span style=&quot;color: light-dark(#D32F2F, #F97583);&quot;&gt;&amp;gt;&lt;&#x2F;span&gt;&lt;&#x2F;span&gt;&lt;&#x2F;code&gt;&lt;&#x2F;pre&gt;
+&lt;p&gt;虽然不确定具体原因，但在我的使用场景下透过 ncat 建立的连接有可能在终端输出过长内容时断开连接。&lt;&#x2F;p&gt;
+&lt;h2 id=&quot;connect-fang-an&quot;&gt;connect 方案&lt;&#x2F;h2&gt;
+&lt;p&gt;同样推荐使用 scoop 安装：&lt;code&gt;scoop install connect&lt;&#x2F;code&gt;。&lt;&#x2F;p&gt;
+&lt;pre class=&quot;giallo&quot; style=&quot;color-scheme: light dark; color: light-dark(#24292E, #B392F0); background-color: light-dark(#FFFFFF, #1F1F1F);&quot;&gt;&lt;code data-lang=&quot;shellscript&quot;&gt;&lt;span class=&quot;giallo-l&quot;&gt;&lt;span style=&quot;color: light-dark(#6F42C1, #B392F0);&quot;&gt;ssh&lt;&#x2F;span&gt;&lt;span style=&quot;color: light-dark(#2B5581, #9DB1C5);&quot;&gt; -&lt;&#x2F;span&gt;&lt;span style=&quot;color: light-dark(#2B5581, #9DB1C5);&quot;&gt;o&lt;&#x2F;span&gt;&lt;span style=&quot;color: light-dark(#2B5581, #9DB1C5);&quot;&gt; ProxyCommand=&lt;&#x2F;span&gt;&lt;span style=&quot;color: light-dark(#22863A, #FFAB70);&quot;&gt;&amp;quot;&lt;&#x2F;span&gt;&lt;span style=&quot;color: light-dark(#22863A, #FFAB70);&quot;&gt;connect -S 127.0.0.1:8080 %h %p&lt;&#x2F;span&gt;&lt;span style=&quot;color: light-dark(#22863A, #FFAB70);&quot;&gt;&amp;quot;&lt;&#x2F;span&gt;&lt;span style=&quot;color: light-dark(#D32F2F, #F97583);&quot;&gt; &amp;lt;&lt;&#x2F;span&gt;&lt;span style=&quot;color: light-dark(#2B5581, #9DB1C5);&quot;&gt;hos&lt;&#x2F;span&gt;&lt;span&gt;t&lt;&#x2F;span&gt;&lt;span style=&quot;color: light-dark(#D32F2F, #F97583);&quot;&gt;&amp;gt;&lt;&#x2F;span&gt;&lt;&#x2F;span&gt;&lt;&#x2F;code&gt;&lt;&#x2F;pre&gt;&lt;h2 id=&quot;tong-guo-ssh-config-yu-xian-ding-yi-xing-wei&quot;&gt;通过 .ssh&#x2F;config 预先定义行为&lt;&#x2F;h2&gt;
+&lt;p&gt;我们可以在主机名前定义一个是否需要代理的标记，在这里我用 &lt;strong&gt;+&lt;&#x2F;strong&gt; 代表需要代理。具体配置如下：&lt;&#x2F;p&gt;
+&lt;pre class=&quot;giallo&quot; style=&quot;color-scheme: light dark; color: light-dark(#24292E, #B392F0); background-color: light-dark(#FFFFFF, #1F1F1F);&quot;&gt;&lt;code data-lang=&quot;plain&quot;&gt;&lt;span class=&quot;giallo-l&quot;&gt;&lt;span&gt;# +[HOST]:PROXY, _[HOST]:DIRECT.&lt;&#x2F;span&gt;&lt;&#x2F;span&gt;
+&lt;span class=&quot;giallo-l&quot;&gt;&lt;span&gt;Host +*&lt;&#x2F;span&gt;&lt;&#x2F;span&gt;
+&lt;span class=&quot;giallo-l&quot;&gt;&lt;span&gt;  ProxyCommand connect -S 127.0.0.1:8080 %h %p&lt;&#x2F;span&gt;&lt;&#x2F;span&gt;&lt;&#x2F;code&gt;&lt;&#x2F;pre&gt;
+&lt;p&gt;这样，在连接远程服务器时只需要在主机名前加上 &lt;strong&gt;+&lt;&#x2F;strong&gt; 标记即可透过代理连接服务器。&lt;&#x2F;p&gt;
+</content>
+        
+    </entry>
+    <entry xml:lang="en">
+        <title>在 Alpine 系统上配置 ServerStatus</title>
+        <published>2025-03-22T00:00:00+00:00</published>
+        <updated>2025-03-22T00:00:00+00:00</updated>
+        
+        <author>
+          <name>
+            
+              Unknown
+            
+          </name>
+        </author>
+        
+        <link rel="alternate" type="text/html" href="/gists/blog/alpine-ssr/"/>
+        <id>/gists/blog/alpine-ssr/</id>
+        
+        <content type="html" xml:base="/gists/blog/alpine-ssr/">&lt;p&gt;&lt;em&gt;&lt;code&gt;为了监控运行 Alpine 发行版的小型服务器使用情况，折腾学习了一下 OpenRC 服务的编写。&lt;&#x2F;code&gt;&lt;&#x2F;em&gt;&lt;&#x2F;p&gt;
+&lt;h2 id=&quot;fu-wu-qi-duan-pei-zhi&quot;&gt;服务器端配置&lt;&#x2F;h2&gt;
+&lt;p&gt;由于原始二进制文件名较冗长，在此将其重命名为 ssrd。&lt;&#x2F;p&gt;
+&lt;blockquote&gt;
+&lt;p&gt;警告：请记得将所有 N 替换为你的配置。&lt;&#x2F;p&gt;
+&lt;&#x2F;blockquote&gt;
+&lt;pre class=&quot;giallo&quot; style=&quot;color-scheme: light dark; color: light-dark(#24292E, #B392F0); background-color: light-dark(#FFFFFF, #1F1F1F);&quot;&gt;&lt;code data-lang=&quot;shellscript&quot;&gt;&lt;span class=&quot;giallo-l&quot;&gt;&lt;span style=&quot;color: light-dark(#6F42C1, #B392F0);&quot;&gt;mkdir&lt;&#x2F;span&gt;&lt;span style=&quot;color: light-dark(#2B5581, #9DB1C5);&quot;&gt; -&lt;&#x2F;span&gt;&lt;span style=&quot;color: light-dark(#2B5581, #9DB1C5);&quot;&gt;p&lt;&#x2F;span&gt;&lt;span style=&quot;color: light-dark(#2B5581, #9DB1C5);&quot;&gt; &#x2F;opt&#x2F;ssr&lt;&#x2F;span&gt;&lt;span&gt; \&lt;&#x2F;span&gt;&lt;&#x2F;span&gt;
+&lt;span class=&quot;giallo-l&quot;&gt;&lt;span style=&quot;color: light-dark(#212121, #BBBBBB);&quot;&gt;&amp;amp;&amp;amp;&lt;&#x2F;span&gt;&lt;span style=&quot;color: light-dark(#6F42C1, #B392F0);&quot;&gt; wget&lt;&#x2F;span&gt;&lt;span style=&quot;color: light-dark(#2B5581, #9DB1C5);&quot;&gt; -&lt;&#x2F;span&gt;&lt;span style=&quot;color: light-dark(#2B5581, #9DB1C5);&quot;&gt;qO-&lt;&#x2F;span&gt;&lt;span style=&quot;color: light-dark(#2B5581, #9DB1C5);&quot;&gt; https:&#x2F;&#x2F;github.com&#x2F;zdz&#x2F;ServerStatus-Rust&#x2F;releases&#x2F;download&#x2F;v1.8.1&#x2F;server-x86_64-unknown-linux-musl.zip&lt;&#x2F;span&gt;&lt;span&gt; \&lt;&#x2F;span&gt;&lt;&#x2F;span&gt;
+&lt;span class=&quot;giallo-l&quot;&gt;&lt;span style=&quot;color: light-dark(#D32F2F, #F97583);&quot;&gt;|&lt;&#x2F;span&gt;&lt;span style=&quot;color: light-dark(#6F42C1, #B392F0);&quot;&gt; unzip&lt;&#x2F;span&gt;&lt;span style=&quot;color: light-dark(#2B5581, #9DB1C5);&quot;&gt; -&lt;&#x2F;span&gt;&lt;span style=&quot;color: light-dark(#2B5581, #9DB1C5);&quot;&gt;po&lt;&#x2F;span&gt;&lt;span style=&quot;color: light-dark(#2B5581, #9DB1C5);&quot;&gt; -&lt;&#x2F;span&gt;&lt;span style=&quot;color: light-dark(#2B5581, #9DB1C5);&quot;&gt; stat_server&lt;&#x2F;span&gt;&lt;span style=&quot;color: light-dark(#D32F2F, #F97583);&quot;&gt; &amp;gt;&lt;&#x2F;span&gt;&lt;span style=&quot;color: light-dark(#2B5581, #9DB1C5);&quot;&gt; &#x2F;opt&#x2F;ssr&#x2F;ssrd&lt;&#x2F;span&gt;&lt;span&gt; \&lt;&#x2F;span&gt;&lt;&#x2F;span&gt;
+&lt;span class=&quot;giallo-l&quot;&gt;&lt;span style=&quot;color: light-dark(#212121, #BBBBBB);&quot;&gt;&amp;amp;&amp;amp;&lt;&#x2F;span&gt;&lt;span style=&quot;color: light-dark(#6F42C1, #B392F0);&quot;&gt; chmod&lt;&#x2F;span&gt;&lt;span style=&quot;color: light-dark(#2B5581, #9DB1C5);&quot;&gt; +x&lt;&#x2F;span&gt;&lt;span style=&quot;color: light-dark(#2B5581, #9DB1C5);&quot;&gt; &#x2F;opt&#x2F;ssr&#x2F;ssrd&lt;&#x2F;span&gt;&lt;span&gt; \&lt;&#x2F;span&gt;&lt;&#x2F;span&gt;
+&lt;span class=&quot;giallo-l&quot;&gt;&lt;span style=&quot;color: light-dark(#212121, #BBBBBB);&quot;&gt;&amp;amp;&amp;amp;&lt;&#x2F;span&gt;&lt;span style=&quot;color: light-dark(#6F42C1, #B392F0);&quot;&gt; chown&lt;&#x2F;span&gt;&lt;span style=&quot;color: light-dark(#2B5581, #9DB1C5);&quot;&gt; -&lt;&#x2F;span&gt;&lt;span style=&quot;color: light-dark(#2B5581, #9DB1C5);&quot;&gt;R&lt;&#x2F;span&gt;&lt;span style=&quot;color: light-dark(#2B5581, #9DB1C5);&quot;&gt; daemon:daemon&lt;&#x2F;span&gt;&lt;span style=&quot;color: light-dark(#2B5581, #9DB1C5);&quot;&gt; &#x2F;opt&#x2F;ssr&lt;&#x2F;span&gt;&lt;&#x2F;span&gt;
+&lt;span class=&quot;giallo-l&quot;&gt;&lt;&#x2F;span&gt;
+&lt;span class=&quot;giallo-l&quot;&gt;&lt;span style=&quot;color: light-dark(#6F42C1, #B392F0);&quot;&gt;cat&lt;&#x2F;span&gt;&lt;span style=&quot;color: light-dark(#D32F2F, #F97583);&quot;&gt; &amp;lt;&amp;lt;&lt;&#x2F;span&gt;&lt;span&gt; EOF&lt;&#x2F;span&gt;&lt;span style=&quot;color: light-dark(#D32F2F, #F97583);&quot;&gt; &amp;gt;&lt;&#x2F;span&gt;&lt;span style=&quot;color: light-dark(#2B5581, #9DB1C5);&quot;&gt; &#x2F;opt&#x2F;ssr&#x2F;config.toml&lt;&#x2F;span&gt;&lt;&#x2F;span&gt;
+&lt;span class=&quot;giallo-l&quot;&gt;&lt;span style=&quot;color: light-dark(#2B5581, #9DB1C5);&quot;&gt;grpc_addr = &amp;quot;[::1]:9394&amp;quot;&lt;&#x2F;span&gt;&lt;&#x2F;span&gt;
+&lt;span class=&quot;giallo-l&quot;&gt;&lt;span style=&quot;color: light-dark(#2B5581, #9DB1C5);&quot;&gt;http_addr = &amp;quot;[::1]:8080&amp;quot;&lt;&#x2F;span&gt;&lt;&#x2F;span&gt;
+&lt;span class=&quot;giallo-l&quot;&gt;&lt;&#x2F;span&gt;
+&lt;span class=&quot;giallo-l&quot;&gt;&lt;span style=&quot;color: light-dark(#2B5581, #9DB1C5);&quot;&gt;jwt_secret = &amp;quot;N&amp;quot;&lt;&#x2F;span&gt;&lt;&#x2F;span&gt;
+&lt;span class=&quot;giallo-l&quot;&gt;&lt;span style=&quot;color: light-dark(#2B5581, #9DB1C5);&quot;&gt;admin_user = &amp;quot;N&amp;quot;&lt;&#x2F;span&gt;&lt;&#x2F;span&gt;
+&lt;span class=&quot;giallo-l&quot;&gt;&lt;span style=&quot;color: light-dark(#2B5581, #9DB1C5);&quot;&gt;admin_pass = &amp;quot;N&amp;quot;&lt;&#x2F;span&gt;&lt;&#x2F;span&gt;
+&lt;span class=&quot;giallo-l&quot;&gt;&lt;&#x2F;span&gt;
+&lt;span class=&quot;giallo-l&quot;&gt;&lt;span style=&quot;color: light-dark(#2B5581, #9DB1C5);&quot;&gt;hosts_group = [&lt;&#x2F;span&gt;&lt;&#x2F;span&gt;
+&lt;span class=&quot;giallo-l&quot;&gt;&lt;span style=&quot;color: light-dark(#2B5581, #9DB1C5);&quot;&gt;  {gid = &amp;quot;N&amp;quot;, password = &amp;quot;N&amp;quot;}&lt;&#x2F;span&gt;&lt;&#x2F;span&gt;
+&lt;span class=&quot;giallo-l&quot;&gt;&lt;span style=&quot;color: light-dark(#2B5581, #9DB1C5);&quot;&gt;]&lt;&#x2F;span&gt;&lt;&#x2F;span&gt;
+&lt;span class=&quot;giallo-l&quot;&gt;&lt;&#x2F;span&gt;
+&lt;span class=&quot;giallo-l&quot;&gt;&lt;span style=&quot;color: light-dark(#2B5581, #9DB1C5);&quot;&gt;group_gc = 3600&lt;&#x2F;span&gt;&lt;&#x2F;span&gt;
+&lt;span class=&quot;giallo-l&quot;&gt;&lt;span&gt;EOF&lt;&#x2F;span&gt;&lt;&#x2F;span&gt;
+&lt;span class=&quot;giallo-l&quot;&gt;&lt;&#x2F;span&gt;
+&lt;span class=&quot;giallo-l&quot;&gt;&lt;&#x2F;span&gt;
+&lt;span class=&quot;giallo-l&quot;&gt;&lt;span style=&quot;color: light-dark(#6F42C1, #B392F0);&quot;&gt;cat&lt;&#x2F;span&gt;&lt;span style=&quot;color: light-dark(#D32F2F, #F97583);&quot;&gt; &amp;lt;&amp;lt;&lt;&#x2F;span&gt;&lt;span&gt; EOF&lt;&#x2F;span&gt;&lt;span style=&quot;color: light-dark(#D32F2F, #F97583);&quot;&gt; &amp;gt;&lt;&#x2F;span&gt;&lt;span style=&quot;color: light-dark(#2B5581, #9DB1C5);&quot;&gt; &#x2F;etc&#x2F;init.d&#x2F;ssrd&lt;&#x2F;span&gt;&lt;&#x2F;span&gt;
+&lt;span class=&quot;giallo-l&quot;&gt;&lt;span style=&quot;color: light-dark(#2B5581, #9DB1C5);&quot;&gt;#!&#x2F;sbin&#x2F;openrc-run&lt;&#x2F;span&gt;&lt;&#x2F;span&gt;
+&lt;span class=&quot;giallo-l&quot;&gt;&lt;&#x2F;span&gt;
+&lt;span class=&quot;giallo-l&quot;&gt;&lt;span style=&quot;color: light-dark(#2B5581, #9DB1C5);&quot;&gt;respawn_delay=5&lt;&#x2F;span&gt;&lt;&#x2F;span&gt;
+&lt;span class=&quot;giallo-l&quot;&gt;&lt;span style=&quot;color: light-dark(#2B5581, #9DB1C5);&quot;&gt;respawn_period=60&lt;&#x2F;span&gt;&lt;&#x2F;span&gt;
+&lt;span class=&quot;giallo-l&quot;&gt;&lt;span style=&quot;color: light-dark(#2B5581, #9DB1C5);&quot;&gt;supervisor=supervise-daemon&lt;&#x2F;span&gt;&lt;&#x2F;span&gt;
+&lt;span class=&quot;giallo-l&quot;&gt;&lt;span style=&quot;color: light-dark(#2B5581, #9DB1C5);&quot;&gt;directory=&#x2F;opt&#x2F;ssr&lt;&#x2F;span&gt;&lt;&#x2F;span&gt;
+&lt;span class=&quot;giallo-l&quot;&gt;&lt;span style=&quot;color: light-dark(#2B5581, #9DB1C5);&quot;&gt;command_user=daemon:daemon&lt;&#x2F;span&gt;&lt;&#x2F;span&gt;
+&lt;span class=&quot;giallo-l&quot;&gt;&lt;span style=&quot;color: light-dark(#2B5581, #9DB1C5);&quot;&gt;command=&#x2F;opt&#x2F;ssr&#x2F;ssrd&lt;&#x2F;span&gt;&lt;&#x2F;span&gt;
+&lt;span class=&quot;giallo-l&quot;&gt;&lt;span style=&quot;color: light-dark(#2B5581, #9DB1C5);&quot;&gt;command_args=&amp;quot;-c &#x2F;opt&#x2F;ssr&#x2F;config.toml&amp;quot;&lt;&#x2F;span&gt;&lt;&#x2F;span&gt;
+&lt;span class=&quot;giallo-l&quot;&gt;&lt;&#x2F;span&gt;
+&lt;span class=&quot;giallo-l&quot;&gt;&lt;span style=&quot;color: light-dark(#2B5581, #9DB1C5);&quot;&gt;depend() {&lt;&#x2F;span&gt;&lt;&#x2F;span&gt;
+&lt;span class=&quot;giallo-l&quot;&gt;&lt;span style=&quot;color: light-dark(#2B5581, #9DB1C5);&quot;&gt;  after net dns&lt;&#x2F;span&gt;&lt;&#x2F;span&gt;
+&lt;span class=&quot;giallo-l&quot;&gt;&lt;span style=&quot;color: light-dark(#2B5581, #9DB1C5);&quot;&gt;}&lt;&#x2F;span&gt;&lt;&#x2F;span&gt;
+&lt;span class=&quot;giallo-l&quot;&gt;&lt;span&gt;EOF&lt;&#x2F;span&gt;&lt;&#x2F;span&gt;
+&lt;span class=&quot;giallo-l&quot;&gt;&lt;&#x2F;span&gt;
+&lt;span class=&quot;giallo-l&quot;&gt;&lt;span style=&quot;color: light-dark(#6F42C1, #B392F0);&quot;&gt;chmod&lt;&#x2F;span&gt;&lt;span style=&quot;color: light-dark(#2B5581, #9DB1C5);&quot;&gt; +x&lt;&#x2F;span&gt;&lt;span style=&quot;color: light-dark(#2B5581, #9DB1C5);&quot;&gt; &#x2F;etc&#x2F;init.d&#x2F;ssrd&lt;&#x2F;span&gt;&lt;&#x2F;span&gt;
+&lt;span class=&quot;giallo-l&quot;&gt;&lt;span style=&quot;color: light-dark(#6F42C1, #B392F0);&quot;&gt;rc-service&lt;&#x2F;span&gt;&lt;span style=&quot;color: light-dark(#2B5581, #9DB1C5);&quot;&gt; ssrd&lt;&#x2F;span&gt;&lt;span style=&quot;color: light-dark(#2B5581, #9DB1C5);&quot;&gt; start&lt;&#x2F;span&gt;&lt;span style=&quot;color: light-dark(#212121, #BBBBBB);&quot;&gt; &amp;amp;&amp;amp;&lt;&#x2F;span&gt;&lt;span style=&quot;color: light-dark(#6F42C1, #B392F0);&quot;&gt; rc-update&lt;&#x2F;span&gt;&lt;span style=&quot;color: light-dark(#2B5581, #9DB1C5);&quot;&gt; add&lt;&#x2F;span&gt;&lt;span style=&quot;color: light-dark(#2B5581, #9DB1C5);&quot;&gt; ssrd&lt;&#x2F;span&gt;&lt;&#x2F;span&gt;&lt;&#x2F;code&gt;&lt;&#x2F;pre&gt;&lt;h2 id=&quot;ke-hu-duan-pei-zhi&quot;&gt;客户端配置&lt;&#x2F;h2&gt;
+&lt;p&gt;同服务端，将客户端原始二进制文件名重命名为 ssr。&lt;&#x2F;p&gt;
+&lt;p&gt;对于客户端参数的管理可以使用 .env 文件来定义客户端设置。&lt;&#x2F;p&gt;
+&lt;p&gt;要从 .env 文件中读取环境变量，我参考这篇&lt;a rel=&quot;external&quot; href=&quot;https:&#x2F;&#x2F;stackoverflow.com&#x2F;questions&#x2F;19331497&#x2F;set-environment-variables-from-file-of-key-value-pairs&quot;&gt;讨论&lt;&#x2F;a&gt;，可以在 OpenRC 脚本中使用命令 &lt;code&gt;export $(xargs &amp;lt; FILE)&lt;&#x2F;code&gt;。&lt;&#x2F;p&gt;
+&lt;pre class=&quot;giallo&quot; style=&quot;color-scheme: light dark; color: light-dark(#24292E, #B392F0); background-color: light-dark(#FFFFFF, #1F1F1F);&quot;&gt;&lt;code data-lang=&quot;shellscript&quot;&gt;&lt;span class=&quot;giallo-l&quot;&gt;&lt;span style=&quot;color: light-dark(#C2C3C5, #6B737C);&quot;&gt;#&lt;&#x2F;span&gt;&lt;span style=&quot;color: light-dark(#C2C3C5, #6B737C);&quot;&gt; some dependencies&lt;&#x2F;span&gt;&lt;&#x2F;span&gt;
+&lt;span class=&quot;giallo-l&quot;&gt;&lt;span style=&quot;color: light-dark(#6F42C1, #B392F0);&quot;&gt;apk&lt;&#x2F;span&gt;&lt;span style=&quot;color: light-dark(#2B5581, #9DB1C5);&quot;&gt; add&lt;&#x2F;span&gt;&lt;span style=&quot;color: light-dark(#2B5581, #9DB1C5);&quot;&gt; procps&lt;&#x2F;span&gt;&lt;span style=&quot;color: light-dark(#2B5581, #9DB1C5);&quot;&gt; iproute2&lt;&#x2F;span&gt;&lt;span style=&quot;color: light-dark(#2B5581, #9DB1C5);&quot;&gt; coreutils&lt;&#x2F;span&gt;&lt;span style=&quot;color: light-dark(#2B5581, #9DB1C5);&quot;&gt; vnstat&lt;&#x2F;span&gt;&lt;&#x2F;span&gt;
+&lt;span class=&quot;giallo-l&quot;&gt;&lt;span style=&quot;color: light-dark(#6F42C1, #B392F0);&quot;&gt;rc-service&lt;&#x2F;span&gt;&lt;span style=&quot;color: light-dark(#2B5581, #9DB1C5);&quot;&gt; vnstatd&lt;&#x2F;span&gt;&lt;span style=&quot;color: light-dark(#2B5581, #9DB1C5);&quot;&gt; start&lt;&#x2F;span&gt;&lt;&#x2F;span&gt;
+&lt;span class=&quot;giallo-l&quot;&gt;&lt;span style=&quot;color: light-dark(#6F42C1, #B392F0);&quot;&gt;rc-update&lt;&#x2F;span&gt;&lt;span style=&quot;color: light-dark(#2B5581, #9DB1C5);&quot;&gt; add&lt;&#x2F;span&gt;&lt;span style=&quot;color: light-dark(#2B5581, #9DB1C5);&quot;&gt; vnstatd&lt;&#x2F;span&gt;&lt;&#x2F;span&gt;
+&lt;span class=&quot;giallo-l&quot;&gt;&lt;&#x2F;span&gt;
+&lt;span class=&quot;giallo-l&quot;&gt;&lt;span style=&quot;color: light-dark(#C2C3C5, #6B737C);&quot;&gt;#&lt;&#x2F;span&gt;&lt;span style=&quot;color: light-dark(#C2C3C5, #6B737C);&quot;&gt; client environments&lt;&#x2F;span&gt;&lt;&#x2F;span&gt;
+&lt;span class=&quot;giallo-l&quot;&gt;&lt;span style=&quot;color: light-dark(#6F42C1, #B392F0);&quot;&gt;cat&lt;&#x2F;span&gt;&lt;span style=&quot;color: light-dark(#D32F2F, #F97583);&quot;&gt; &amp;lt;&amp;lt;&lt;&#x2F;span&gt;&lt;span&gt; EOF&lt;&#x2F;span&gt;&lt;span style=&quot;color: light-dark(#D32F2F, #F97583);&quot;&gt; &amp;gt;&lt;&#x2F;span&gt;&lt;span style=&quot;color: light-dark(#2B5581, #9DB1C5);&quot;&gt; &#x2F;opt&#x2F;ssr&#x2F;.env&lt;&#x2F;span&gt;&lt;&#x2F;span&gt;
+&lt;span class=&quot;giallo-l&quot;&gt;&lt;span style=&quot;color: light-dark(#2B5581, #9DB1C5);&quot;&gt;SSR_GID=N&lt;&#x2F;span&gt;&lt;&#x2F;span&gt;
+&lt;span class=&quot;giallo-l&quot;&gt;&lt;span style=&quot;color: light-dark(#2B5581, #9DB1C5);&quot;&gt;SSR_PASS=N&lt;&#x2F;span&gt;&lt;&#x2F;span&gt;
+&lt;span class=&quot;giallo-l&quot;&gt;&lt;span style=&quot;color: light-dark(#2B5581, #9DB1C5);&quot;&gt;SSR_LOC=us&lt;&#x2F;span&gt;&lt;&#x2F;span&gt;
+&lt;span class=&quot;giallo-l&quot;&gt;&lt;span style=&quot;color: light-dark(#2B5581, #9DB1C5);&quot;&gt;SSR_TYPE=kvm&lt;&#x2F;span&gt;&lt;&#x2F;span&gt;
+&lt;span class=&quot;giallo-l&quot;&gt;&lt;span style=&quot;color: light-dark(#2B5581, #9DB1C5);&quot;&gt;SSR_VNSTAT=true&lt;&#x2F;span&gt;&lt;&#x2F;span&gt;
+&lt;span class=&quot;giallo-l&quot;&gt;&lt;span style=&quot;color: light-dark(#2B5581, #9DB1C5);&quot;&gt;SSR_VNSTAT_MR=10&lt;&#x2F;span&gt;&lt;&#x2F;span&gt;
+&lt;span class=&quot;giallo-l&quot;&gt;&lt;span style=&quot;color: light-dark(#2B5581, #9DB1C5);&quot;&gt;SSR_ALIAS=N&lt;&#x2F;span&gt;&lt;&#x2F;span&gt;
+&lt;span class=&quot;giallo-l&quot;&gt;&lt;span style=&quot;color: light-dark(#2B5581, #9DB1C5);&quot;&gt;SSR_ADDR=N&lt;&#x2F;span&gt;&lt;&#x2F;span&gt;
+&lt;span class=&quot;giallo-l&quot;&gt;&lt;span&gt;EOF&lt;&#x2F;span&gt;&lt;&#x2F;span&gt;
+&lt;span class=&quot;giallo-l&quot;&gt;&lt;&#x2F;span&gt;
+&lt;span class=&quot;giallo-l&quot;&gt;&lt;span style=&quot;color: light-dark(#C2C3C5, #6B737C);&quot;&gt;#&lt;&#x2F;span&gt;&lt;span style=&quot;color: light-dark(#C2C3C5, #6B737C);&quot;&gt; client binary&lt;&#x2F;span&gt;&lt;&#x2F;span&gt;
+&lt;span class=&quot;giallo-l&quot;&gt;&lt;span style=&quot;color: light-dark(#6F42C1, #B392F0);&quot;&gt;mkdir&lt;&#x2F;span&gt;&lt;span style=&quot;color: light-dark(#2B5581, #9DB1C5);&quot;&gt; -&lt;&#x2F;span&gt;&lt;span style=&quot;color: light-dark(#2B5581, #9DB1C5);&quot;&gt;p&lt;&#x2F;span&gt;&lt;span style=&quot;color: light-dark(#2B5581, #9DB1C5);&quot;&gt; &#x2F;opt&#x2F;ssr&lt;&#x2F;span&gt;&lt;span&gt; \&lt;&#x2F;span&gt;&lt;&#x2F;span&gt;
+&lt;span class=&quot;giallo-l&quot;&gt;&lt;span&gt;wget&lt;&#x2F;span&gt;&lt;span style=&quot;color: light-dark(#2B5581, #9DB1C5);&quot;&gt; -&lt;&#x2F;span&gt;&lt;span style=&quot;color: light-dark(#2B5581, #9DB1C5);&quot;&gt;qO-&lt;&#x2F;span&gt;&lt;span style=&quot;color: light-dark(#2B5581, #9DB1C5);&quot;&gt; https:&#x2F;&#x2F;github.com&#x2F;zdz&#x2F;ServerStatus-Rust&#x2F;releases&#x2F;download&#x2F;v1.8.1&#x2F;client-x86_64-unknown-linux-musl.zip&lt;&#x2F;span&gt;&lt;span&gt; \&lt;&#x2F;span&gt;&lt;&#x2F;span&gt;
+&lt;span class=&quot;giallo-l&quot;&gt;&lt;span style=&quot;color: light-dark(#D32F2F, #F97583);&quot;&gt;|&lt;&#x2F;span&gt;&lt;span style=&quot;color: light-dark(#6F42C1, #B392F0);&quot;&gt; unzip&lt;&#x2F;span&gt;&lt;span style=&quot;color: light-dark(#2B5581, #9DB1C5);&quot;&gt; -&lt;&#x2F;span&gt;&lt;span style=&quot;color: light-dark(#2B5581, #9DB1C5);&quot;&gt;po&lt;&#x2F;span&gt;&lt;span style=&quot;color: light-dark(#2B5581, #9DB1C5);&quot;&gt; -&lt;&#x2F;span&gt;&lt;span style=&quot;color: light-dark(#2B5581, #9DB1C5);&quot;&gt; stat_client&lt;&#x2F;span&gt;&lt;span style=&quot;color: light-dark(#D32F2F, #F97583);&quot;&gt; &amp;gt;&lt;&#x2F;span&gt;&lt;span style=&quot;color: light-dark(#2B5581, #9DB1C5);&quot;&gt; &#x2F;opt&#x2F;ssr&#x2F;ssr&lt;&#x2F;span&gt;&lt;span&gt; \&lt;&#x2F;span&gt;&lt;&#x2F;span&gt;
+&lt;span class=&quot;giallo-l&quot;&gt;&lt;span style=&quot;color: light-dark(#212121, #BBBBBB);&quot;&gt;&amp;amp;&amp;amp;&lt;&#x2F;span&gt;&lt;span style=&quot;color: light-dark(#6F42C1, #B392F0);&quot;&gt; chmod&lt;&#x2F;span&gt;&lt;span style=&quot;color: light-dark(#2B5581, #9DB1C5);&quot;&gt; +x&lt;&#x2F;span&gt;&lt;span style=&quot;color: light-dark(#2B5581, #9DB1C5);&quot;&gt; &#x2F;opt&#x2F;ssr&#x2F;ssr&lt;&#x2F;span&gt;&lt;span&gt; \&lt;&#x2F;span&gt;&lt;&#x2F;span&gt;
+&lt;span class=&quot;giallo-l&quot;&gt;&lt;span style=&quot;color: light-dark(#212121, #BBBBBB);&quot;&gt;&amp;amp;&amp;amp;&lt;&#x2F;span&gt;&lt;span style=&quot;color: light-dark(#6F42C1, #B392F0);&quot;&gt; chown&lt;&#x2F;span&gt;&lt;span style=&quot;color: light-dark(#2B5581, #9DB1C5);&quot;&gt; -&lt;&#x2F;span&gt;&lt;span style=&quot;color: light-dark(#2B5581, #9DB1C5);&quot;&gt;R&lt;&#x2F;span&gt;&lt;span style=&quot;color: light-dark(#2B5581, #9DB1C5);&quot;&gt; daemon:daemon&lt;&#x2F;span&gt;&lt;span style=&quot;color: light-dark(#2B5581, #9DB1C5);&quot;&gt; &#x2F;opt&#x2F;ssr&lt;&#x2F;span&gt;&lt;&#x2F;span&gt;
+&lt;span class=&quot;giallo-l&quot;&gt;&lt;&#x2F;span&gt;
+&lt;span class=&quot;giallo-l&quot;&gt;&lt;span style=&quot;color: light-dark(#6F42C1, #B392F0);&quot;&gt;cat&lt;&#x2F;span&gt;&lt;span style=&quot;color: light-dark(#D32F2F, #F97583);&quot;&gt; &amp;lt;&amp;lt;&lt;&#x2F;span&gt;&lt;span&gt; &amp;#39;&lt;&#x2F;span&gt;&lt;span&gt;EOF&lt;&#x2F;span&gt;&lt;span&gt;&amp;#39;&lt;&#x2F;span&gt;&lt;span style=&quot;color: light-dark(#D32F2F, #F97583);&quot;&gt; &amp;gt;&lt;&#x2F;span&gt;&lt;span style=&quot;color: light-dark(#2B5581, #9DB1C5);&quot;&gt; &#x2F;etc&#x2F;init.d&#x2F;ssr&lt;&#x2F;span&gt;&lt;&#x2F;span&gt;
+&lt;span class=&quot;giallo-l&quot;&gt;&lt;span style=&quot;color: light-dark(#22863A, #FFAB70);&quot;&gt;#!&#x2F;sbin&#x2F;openrc-run&lt;&#x2F;span&gt;&lt;&#x2F;span&gt;
+&lt;span class=&quot;giallo-l&quot;&gt;&lt;&#x2F;span&gt;
+&lt;span class=&quot;giallo-l&quot;&gt;&lt;span style=&quot;color: light-dark(#22863A, #FFAB70);&quot;&gt;export RUST_BACKTRACE=1 $(xargs&amp;lt;&#x2F;opt&#x2F;ssr&#x2F;.env)&lt;&#x2F;span&gt;&lt;&#x2F;span&gt;
+&lt;span class=&quot;giallo-l&quot;&gt;&lt;&#x2F;span&gt;
+&lt;span class=&quot;giallo-l&quot;&gt;&lt;span style=&quot;color: light-dark(#22863A, #FFAB70);&quot;&gt;respawn_delay=5&lt;&#x2F;span&gt;&lt;&#x2F;span&gt;
+&lt;span class=&quot;giallo-l&quot;&gt;&lt;span style=&quot;color: light-dark(#22863A, #FFAB70);&quot;&gt;respawn_period=60&lt;&#x2F;span&gt;&lt;&#x2F;span&gt;
+&lt;span class=&quot;giallo-l&quot;&gt;&lt;span style=&quot;color: light-dark(#22863A, #FFAB70);&quot;&gt;supervisor=supervise-daemon&lt;&#x2F;span&gt;&lt;&#x2F;span&gt;
+&lt;span class=&quot;giallo-l&quot;&gt;&lt;span style=&quot;color: light-dark(#22863A, #FFAB70);&quot;&gt;directory=&#x2F;opt&#x2F;ssr&lt;&#x2F;span&gt;&lt;&#x2F;span&gt;
+&lt;span class=&quot;giallo-l&quot;&gt;&lt;span style=&quot;color: light-dark(#22863A, #FFAB70);&quot;&gt;command=&#x2F;opt&#x2F;ssr&#x2F;ssr&lt;&#x2F;span&gt;&lt;&#x2F;span&gt;
+&lt;span class=&quot;giallo-l&quot;&gt;&lt;span style=&quot;color: light-dark(#22863A, #FFAB70);&quot;&gt;command_user=daemon:daemon&lt;&#x2F;span&gt;&lt;&#x2F;span&gt;
+&lt;span class=&quot;giallo-l&quot;&gt;&lt;&#x2F;span&gt;
+&lt;span class=&quot;giallo-l&quot;&gt;&lt;span style=&quot;color: light-dark(#22863A, #FFAB70);&quot;&gt;depend() {&lt;&#x2F;span&gt;&lt;&#x2F;span&gt;
+&lt;span class=&quot;giallo-l&quot;&gt;&lt;span style=&quot;color: light-dark(#22863A, #FFAB70);&quot;&gt;  after net dns&lt;&#x2F;span&gt;&lt;&#x2F;span&gt;
+&lt;span class=&quot;giallo-l&quot;&gt;&lt;span style=&quot;color: light-dark(#22863A, #FFAB70);&quot;&gt;}&lt;&#x2F;span&gt;&lt;&#x2F;span&gt;
+&lt;span class=&quot;giallo-l&quot;&gt;&lt;span&gt;EOF&lt;&#x2F;span&gt;&lt;&#x2F;span&gt;
+&lt;span class=&quot;giallo-l&quot;&gt;&lt;&#x2F;span&gt;
+&lt;span class=&quot;giallo-l&quot;&gt;&lt;span style=&quot;color: light-dark(#6F42C1, #B392F0);&quot;&gt;chmod&lt;&#x2F;span&gt;&lt;span style=&quot;color: light-dark(#2B5581, #9DB1C5);&quot;&gt; +x&lt;&#x2F;span&gt;&lt;span style=&quot;color: light-dark(#2B5581, #9DB1C5);&quot;&gt; &#x2F;etc&#x2F;init.d&#x2F;ssr&lt;&#x2F;span&gt;&lt;&#x2F;span&gt;
+&lt;span class=&quot;giallo-l&quot;&gt;&lt;span style=&quot;color: light-dark(#6F42C1, #B392F0);&quot;&gt;rc-service&lt;&#x2F;span&gt;&lt;span style=&quot;color: light-dark(#2B5581, #9DB1C5);&quot;&gt; ssr&lt;&#x2F;span&gt;&lt;span style=&quot;color: light-dark(#2B5581, #9DB1C5);&quot;&gt; start&lt;&#x2F;span&gt;&lt;span style=&quot;color: light-dark(#212121, #BBBBBB);&quot;&gt; &amp;amp;&amp;amp;&lt;&#x2F;span&gt;&lt;span style=&quot;color: light-dark(#6F42C1, #B392F0);&quot;&gt; rc-update&lt;&#x2F;span&gt;&lt;span style=&quot;color: light-dark(#2B5581, #9DB1C5);&quot;&gt; add&lt;&#x2F;span&gt;&lt;span style=&quot;color: light-dark(#2B5581, #9DB1C5);&quot;&gt; ssr&lt;&#x2F;span&gt;&lt;&#x2F;span&gt;&lt;&#x2F;code&gt;&lt;&#x2F;pre&gt;</content>
+        
+    </entry>
+    <entry xml:lang="en">
+        <title>在 Docker 中使用 unix 域套接字</title>
+        <published>2024-08-31T00:00:00+00:00</published>
+        <updated>2024-08-31T00:00:00+00:00</updated>
+        
+        <author>
+          <name>
+            
+              Unknown
+            
+          </name>
+        </author>
+        
+        <link rel="alternate" type="text/html" href="/gists/blog/docker-unix/"/>
+        <id>/gists/blog/docker-unix/</id>
+        
+        <content type="html" xml:base="/gists/blog/docker-unix/">&lt;p&gt;&lt;em&gt;&lt;code&gt;曾经部署的一些自托管服务，用了一些不太寻常的方法让每个容器用上了域名套接字。这样做的好处有每个应用都可得到一个非常清晰的套接字名称并且避免了占用主机端口，但缺点是需要一个额外的容器及额外的资源开销。&lt;&#x2F;code&gt;&lt;&#x2F;em&gt;&lt;&#x2F;p&gt;
+&lt;h2 id=&quot;unix-domain-socket&quot;&gt;unix domain socket&lt;&#x2F;h2&gt;
+&lt;p&gt;以下是基本的 compose 模板，主要参考了这篇&lt;a rel=&quot;external&quot; href=&quot;https:&#x2F;&#x2F;serverfault.com&#x2F;questions&#x2F;1156554&#x2F;bind-a-host-unix-socket-to-a-container-port&quot;&gt;讨论&lt;&#x2F;a&gt;.&lt;&#x2F;p&gt;
+&lt;pre class=&quot;giallo&quot; style=&quot;color-scheme: light dark; color: light-dark(#24292E, #B392F0); background-color: light-dark(#FFFFFF, #1F1F1F);&quot;&gt;&lt;code data-lang=&quot;yaml&quot;&gt;&lt;span class=&quot;giallo-l&quot;&gt;&lt;span style=&quot;color: light-dark(#D32F2F, #F8F8F8);&quot;&gt;s&lt;&#x2F;span&gt;&lt;span style=&quot;color: light-dark(#D32F2F, #F8F8F8);&quot;&gt;ervices&lt;&#x2F;span&gt;&lt;span style=&quot;color: light-dark(#D32F2F, #F97583);&quot;&gt;:&lt;&#x2F;span&gt;&lt;&#x2F;span&gt;
+&lt;span class=&quot;giallo-l&quot;&gt;&lt;span style=&quot;color: light-dark(#D32F2F, #F8F8F8);&quot;&gt;  a&lt;&#x2F;span&gt;&lt;span style=&quot;color: light-dark(#D32F2F, #F8F8F8);&quot;&gt;pp&lt;&#x2F;span&gt;&lt;span style=&quot;color: light-dark(#D32F2F, #F97583);&quot;&gt;:&lt;&#x2F;span&gt;&lt;&#x2F;span&gt;
+&lt;span class=&quot;giallo-l&quot;&gt;&lt;span style=&quot;color: light-dark(#D32F2F, #F8F8F8);&quot;&gt;    i&lt;&#x2F;span&gt;&lt;span style=&quot;color: light-dark(#D32F2F, #F8F8F8);&quot;&gt;mage&lt;&#x2F;span&gt;&lt;span style=&quot;color: light-dark(#D32F2F, #F97583);&quot;&gt;:&lt;&#x2F;span&gt;&lt;span style=&quot;color: light-dark(#22863A, #FFAB70);&quot;&gt; s&lt;&#x2F;span&gt;&lt;span style=&quot;color: light-dark(#22863A, #FFAB70);&quot;&gt;omeapp&lt;&#x2F;span&gt;&lt;&#x2F;span&gt;
+&lt;span class=&quot;giallo-l&quot;&gt;&lt;span style=&quot;color: light-dark(#D32F2F, #F8F8F8);&quot;&gt;  w&lt;&#x2F;span&gt;&lt;span style=&quot;color: light-dark(#D32F2F, #F8F8F8);&quot;&gt;eb&lt;&#x2F;span&gt;&lt;span style=&quot;color: light-dark(#D32F2F, #F97583);&quot;&gt;:&lt;&#x2F;span&gt;&lt;&#x2F;span&gt;
+&lt;span class=&quot;giallo-l&quot;&gt;&lt;span style=&quot;color: light-dark(#D32F2F, #F8F8F8);&quot;&gt;    i&lt;&#x2F;span&gt;&lt;span style=&quot;color: light-dark(#D32F2F, #F8F8F8);&quot;&gt;mage&lt;&#x2F;span&gt;&lt;span style=&quot;color: light-dark(#D32F2F, #F97583);&quot;&gt;:&lt;&#x2F;span&gt;&lt;span style=&quot;color: light-dark(#22863A, #FFAB70);&quot;&gt; a&lt;&#x2F;span&gt;&lt;span style=&quot;color: light-dark(#22863A, #FFAB70);&quot;&gt;lpine&#x2F;socat&lt;&#x2F;span&gt;&lt;&#x2F;span&gt;
+&lt;span class=&quot;giallo-l&quot;&gt;&lt;span style=&quot;color: light-dark(#D32F2F, #F8F8F8);&quot;&gt;    n&lt;&#x2F;span&gt;&lt;span style=&quot;color: light-dark(#D32F2F, #F8F8F8);&quot;&gt;etwork_mode&lt;&#x2F;span&gt;&lt;span style=&quot;color: light-dark(#D32F2F, #F97583);&quot;&gt;:&lt;&#x2F;span&gt;&lt;span style=&quot;color: light-dark(#22863A, #FFAB70);&quot;&gt; s&lt;&#x2F;span&gt;&lt;span style=&quot;color: light-dark(#22863A, #FFAB70);&quot;&gt;ervice:app&lt;&#x2F;span&gt;&lt;&#x2F;span&gt;
+&lt;span class=&quot;giallo-l&quot;&gt;&lt;span style=&quot;color: light-dark(#D32F2F, #F8F8F8);&quot;&gt;    r&lt;&#x2F;span&gt;&lt;span style=&quot;color: light-dark(#D32F2F, #F8F8F8);&quot;&gt;estart&lt;&#x2F;span&gt;&lt;span style=&quot;color: light-dark(#D32F2F, #F97583);&quot;&gt;:&lt;&#x2F;span&gt;&lt;span style=&quot;color: light-dark(#22863A, #FFAB70);&quot;&gt; a&lt;&#x2F;span&gt;&lt;span style=&quot;color: light-dark(#22863A, #FFAB70);&quot;&gt;lways&lt;&#x2F;span&gt;&lt;&#x2F;span&gt;
+&lt;span class=&quot;giallo-l&quot;&gt;&lt;span style=&quot;color: light-dark(#D32F2F, #F8F8F8);&quot;&gt;    c&lt;&#x2F;span&gt;&lt;span style=&quot;color: light-dark(#D32F2F, #F8F8F8);&quot;&gt;ommand&lt;&#x2F;span&gt;&lt;span style=&quot;color: light-dark(#D32F2F, #F97583);&quot;&gt;:&lt;&#x2F;span&gt;&lt;&#x2F;span&gt;
+&lt;span class=&quot;giallo-l&quot;&gt;&lt;span&gt;      -&lt;&#x2F;span&gt;&lt;span style=&quot;color: light-dark(#22863A, #FFAB70);&quot;&gt; u&lt;&#x2F;span&gt;&lt;span style=&quot;color: light-dark(#22863A, #FFAB70);&quot;&gt;nix-listen:&#x2F;run&#x2F;web.sock,fork,reuseaddr,mode=666&lt;&#x2F;span&gt;&lt;&#x2F;span&gt;
+&lt;span class=&quot;giallo-l&quot;&gt;&lt;span&gt;      -&lt;&#x2F;span&gt;&lt;span style=&quot;color: light-dark(#22863A, #FFAB70);&quot;&gt; t&lt;&#x2F;span&gt;&lt;span style=&quot;color: light-dark(#22863A, #FFAB70);&quot;&gt;cp-connect:localhost:PORT&lt;&#x2F;span&gt;&lt;span style=&quot;color: light-dark(#C2C3C5, #6B737C);&quot;&gt; #&lt;&#x2F;span&gt;&lt;span style=&quot;color: light-dark(#C2C3C5, #6B737C);&quot;&gt; or udp-connect:localhost:PORT&lt;&#x2F;span&gt;&lt;&#x2F;span&gt;
+&lt;span class=&quot;giallo-l&quot;&gt;&lt;span style=&quot;color: light-dark(#D32F2F, #F8F8F8);&quot;&gt;    v&lt;&#x2F;span&gt;&lt;span style=&quot;color: light-dark(#D32F2F, #F8F8F8);&quot;&gt;olumes&lt;&#x2F;span&gt;&lt;span style=&quot;color: light-dark(#D32F2F, #F97583);&quot;&gt;:&lt;&#x2F;span&gt;&lt;&#x2F;span&gt;
+&lt;span class=&quot;giallo-l&quot;&gt;&lt;span&gt;      -&lt;&#x2F;span&gt;&lt;span style=&quot;color: light-dark(#22863A, #FFAB70);&quot;&gt; .&lt;&#x2F;span&gt;&lt;span style=&quot;color: light-dark(#22863A, #FFAB70);&quot;&gt;:&#x2F;run&lt;&#x2F;span&gt;&lt;&#x2F;span&gt;&lt;&#x2F;code&gt;&lt;&#x2F;pre&gt;&lt;h2 id=&quot;uptime-kuma&quot;&gt;uptime kuma&lt;&#x2F;h2&gt;
+&lt;pre class=&quot;giallo&quot; style=&quot;color-scheme: light dark; color: light-dark(#24292E, #B392F0); background-color: light-dark(#FFFFFF, #1F1F1F);&quot;&gt;&lt;code data-lang=&quot;yaml&quot;&gt;&lt;span class=&quot;giallo-l&quot;&gt;&lt;span style=&quot;color: light-dark(#D32F2F, #F8F8F8);&quot;&gt;s&lt;&#x2F;span&gt;&lt;span style=&quot;color: light-dark(#D32F2F, #F8F8F8);&quot;&gt;ervices&lt;&#x2F;span&gt;&lt;span style=&quot;color: light-dark(#D32F2F, #F97583);&quot;&gt;:&lt;&#x2F;span&gt;&lt;&#x2F;span&gt;
+&lt;span class=&quot;giallo-l&quot;&gt;&lt;span style=&quot;color: light-dark(#D32F2F, #F8F8F8);&quot;&gt;  a&lt;&#x2F;span&gt;&lt;span style=&quot;color: light-dark(#D32F2F, #F8F8F8);&quot;&gt;pp&lt;&#x2F;span&gt;&lt;span style=&quot;color: light-dark(#D32F2F, #F97583);&quot;&gt;:&lt;&#x2F;span&gt;&lt;&#x2F;span&gt;
+&lt;span class=&quot;giallo-l&quot;&gt;&lt;span style=&quot;color: light-dark(#D32F2F, #F8F8F8);&quot;&gt;    i&lt;&#x2F;span&gt;&lt;span style=&quot;color: light-dark(#D32F2F, #F8F8F8);&quot;&gt;mage&lt;&#x2F;span&gt;&lt;span style=&quot;color: light-dark(#D32F2F, #F97583);&quot;&gt;:&lt;&#x2F;span&gt;&lt;span style=&quot;color: light-dark(#22863A, #FFAB70);&quot;&gt; l&lt;&#x2F;span&gt;&lt;span style=&quot;color: light-dark(#22863A, #FFAB70);&quot;&gt;ouislam&#x2F;uptime-kuma:1&lt;&#x2F;span&gt;&lt;&#x2F;span&gt;
+&lt;span class=&quot;giallo-l&quot;&gt;&lt;span style=&quot;color: light-dark(#D32F2F, #F8F8F8);&quot;&gt;    n&lt;&#x2F;span&gt;&lt;span style=&quot;color: light-dark(#D32F2F, #F8F8F8);&quot;&gt;etwork_mode&lt;&#x2F;span&gt;&lt;span style=&quot;color: light-dark(#D32F2F, #F97583);&quot;&gt;:&lt;&#x2F;span&gt;&lt;span style=&quot;color: light-dark(#22863A, #FFAB70);&quot;&gt; b&lt;&#x2F;span&gt;&lt;span style=&quot;color: light-dark(#22863A, #FFAB70);&quot;&gt;ridge&lt;&#x2F;span&gt;&lt;&#x2F;span&gt;
+&lt;span class=&quot;giallo-l&quot;&gt;&lt;span style=&quot;color: light-dark(#D32F2F, #F8F8F8);&quot;&gt;    r&lt;&#x2F;span&gt;&lt;span style=&quot;color: light-dark(#D32F2F, #F8F8F8);&quot;&gt;estart&lt;&#x2F;span&gt;&lt;span style=&quot;color: light-dark(#D32F2F, #F97583);&quot;&gt;:&lt;&#x2F;span&gt;&lt;span style=&quot;color: light-dark(#22863A, #FFAB70);&quot;&gt; a&lt;&#x2F;span&gt;&lt;span style=&quot;color: light-dark(#22863A, #FFAB70);&quot;&gt;lways&lt;&#x2F;span&gt;&lt;&#x2F;span&gt;
+&lt;span class=&quot;giallo-l&quot;&gt;&lt;span style=&quot;color: light-dark(#D32F2F, #F8F8F8);&quot;&gt;    v&lt;&#x2F;span&gt;&lt;span style=&quot;color: light-dark(#D32F2F, #F8F8F8);&quot;&gt;olumes&lt;&#x2F;span&gt;&lt;span style=&quot;color: light-dark(#D32F2F, #F97583);&quot;&gt;:&lt;&#x2F;span&gt;&lt;&#x2F;span&gt;
+&lt;span class=&quot;giallo-l&quot;&gt;&lt;span&gt;      -&lt;&#x2F;span&gt;&lt;span style=&quot;color: light-dark(#22863A, #FFAB70);&quot;&gt; .&lt;&#x2F;span&gt;&lt;span style=&quot;color: light-dark(#22863A, #FFAB70);&quot;&gt;:&#x2F;app&#x2F;data&lt;&#x2F;span&gt;&lt;&#x2F;span&gt;
+&lt;span class=&quot;giallo-l&quot;&gt;&lt;span style=&quot;color: light-dark(#D32F2F, #F8F8F8);&quot;&gt;  w&lt;&#x2F;span&gt;&lt;span style=&quot;color: light-dark(#D32F2F, #F8F8F8);&quot;&gt;eb&lt;&#x2F;span&gt;&lt;span style=&quot;color: light-dark(#D32F2F, #F97583);&quot;&gt;:&lt;&#x2F;span&gt;&lt;&#x2F;span&gt;
+&lt;span class=&quot;giallo-l&quot;&gt;&lt;span style=&quot;color: light-dark(#D32F2F, #F8F8F8);&quot;&gt;    i&lt;&#x2F;span&gt;&lt;span style=&quot;color: light-dark(#D32F2F, #F8F8F8);&quot;&gt;mage&lt;&#x2F;span&gt;&lt;span style=&quot;color: light-dark(#D32F2F, #F97583);&quot;&gt;:&lt;&#x2F;span&gt;&lt;span style=&quot;color: light-dark(#22863A, #FFAB70);&quot;&gt; a&lt;&#x2F;span&gt;&lt;span style=&quot;color: light-dark(#22863A, #FFAB70);&quot;&gt;lpine&#x2F;socat&lt;&#x2F;span&gt;&lt;&#x2F;span&gt;
+&lt;span class=&quot;giallo-l&quot;&gt;&lt;span style=&quot;color: light-dark(#D32F2F, #F8F8F8);&quot;&gt;    n&lt;&#x2F;span&gt;&lt;span style=&quot;color: light-dark(#D32F2F, #F8F8F8);&quot;&gt;etwork_mode&lt;&#x2F;span&gt;&lt;span style=&quot;color: light-dark(#D32F2F, #F97583);&quot;&gt;:&lt;&#x2F;span&gt;&lt;span style=&quot;color: light-dark(#22863A, #FFAB70);&quot;&gt; s&lt;&#x2F;span&gt;&lt;span style=&quot;color: light-dark(#22863A, #FFAB70);&quot;&gt;ervice:app&lt;&#x2F;span&gt;&lt;&#x2F;span&gt;
+&lt;span class=&quot;giallo-l&quot;&gt;&lt;span style=&quot;color: light-dark(#D32F2F, #F8F8F8);&quot;&gt;    r&lt;&#x2F;span&gt;&lt;span style=&quot;color: light-dark(#D32F2F, #F8F8F8);&quot;&gt;estart&lt;&#x2F;span&gt;&lt;span style=&quot;color: light-dark(#D32F2F, #F97583);&quot;&gt;:&lt;&#x2F;span&gt;&lt;span style=&quot;color: light-dark(#22863A, #FFAB70);&quot;&gt; a&lt;&#x2F;span&gt;&lt;span style=&quot;color: light-dark(#22863A, #FFAB70);&quot;&gt;lways&lt;&#x2F;span&gt;&lt;&#x2F;span&gt;
+&lt;span class=&quot;giallo-l&quot;&gt;&lt;span style=&quot;color: light-dark(#D32F2F, #F8F8F8);&quot;&gt;    c&lt;&#x2F;span&gt;&lt;span style=&quot;color: light-dark(#D32F2F, #F8F8F8);&quot;&gt;ommand&lt;&#x2F;span&gt;&lt;span style=&quot;color: light-dark(#D32F2F, #F97583);&quot;&gt;:&lt;&#x2F;span&gt;&lt;&#x2F;span&gt;
+&lt;span class=&quot;giallo-l&quot;&gt;&lt;span&gt;      -&lt;&#x2F;span&gt;&lt;span style=&quot;color: light-dark(#22863A, #FFAB70);&quot;&gt; u&lt;&#x2F;span&gt;&lt;span style=&quot;color: light-dark(#22863A, #FFAB70);&quot;&gt;nix-listen:&#x2F;run&#x2F;web.sock,fork,reuseaddr,mode=666&lt;&#x2F;span&gt;&lt;&#x2F;span&gt;
+&lt;span class=&quot;giallo-l&quot;&gt;&lt;span&gt;      -&lt;&#x2F;span&gt;&lt;span style=&quot;color: light-dark(#22863A, #FFAB70);&quot;&gt; t&lt;&#x2F;span&gt;&lt;span style=&quot;color: light-dark(#22863A, #FFAB70);&quot;&gt;cp-connect:localhost:3001&lt;&#x2F;span&gt;&lt;&#x2F;span&gt;
+&lt;span class=&quot;giallo-l&quot;&gt;&lt;span style=&quot;color: light-dark(#D32F2F, #F8F8F8);&quot;&gt;    v&lt;&#x2F;span&gt;&lt;span style=&quot;color: light-dark(#D32F2F, #F8F8F8);&quot;&gt;olumes&lt;&#x2F;span&gt;&lt;span style=&quot;color: light-dark(#D32F2F, #F97583);&quot;&gt;:&lt;&#x2F;span&gt;&lt;&#x2F;span&gt;
+&lt;span class=&quot;giallo-l&quot;&gt;&lt;span&gt;      -&lt;&#x2F;span&gt;&lt;span style=&quot;color: light-dark(#22863A, #FFAB70);&quot;&gt; .&lt;&#x2F;span&gt;&lt;span style=&quot;color: light-dark(#22863A, #FFAB70);&quot;&gt;:&#x2F;run&lt;&#x2F;span&gt;&lt;&#x2F;span&gt;&lt;&#x2F;code&gt;&lt;&#x2F;pre&gt;&lt;h2 id=&quot;librespeed&quot;&gt;librespeed&lt;&#x2F;h2&gt;
+&lt;pre class=&quot;giallo&quot; style=&quot;color-scheme: light dark; color: light-dark(#24292E, #B392F0); background-color: light-dark(#FFFFFF, #1F1F1F);&quot;&gt;&lt;code data-lang=&quot;yaml&quot;&gt;&lt;span class=&quot;giallo-l&quot;&gt;&lt;span style=&quot;color: light-dark(#D32F2F, #F8F8F8);&quot;&gt;s&lt;&#x2F;span&gt;&lt;span style=&quot;color: light-dark(#D32F2F, #F8F8F8);&quot;&gt;ervices&lt;&#x2F;span&gt;&lt;span style=&quot;color: light-dark(#D32F2F, #F97583);&quot;&gt;:&lt;&#x2F;span&gt;&lt;&#x2F;span&gt;
+&lt;span class=&quot;giallo-l&quot;&gt;&lt;span style=&quot;color: light-dark(#D32F2F, #F8F8F8);&quot;&gt;  a&lt;&#x2F;span&gt;&lt;span style=&quot;color: light-dark(#D32F2F, #F8F8F8);&quot;&gt;pp&lt;&#x2F;span&gt;&lt;span style=&quot;color: light-dark(#D32F2F, #F97583);&quot;&gt;:&lt;&#x2F;span&gt;&lt;&#x2F;span&gt;
+&lt;span class=&quot;giallo-l&quot;&gt;&lt;span style=&quot;color: light-dark(#D32F2F, #F8F8F8);&quot;&gt;    i&lt;&#x2F;span&gt;&lt;span style=&quot;color: light-dark(#D32F2F, #F8F8F8);&quot;&gt;mage&lt;&#x2F;span&gt;&lt;span style=&quot;color: light-dark(#D32F2F, #F97583);&quot;&gt;:&lt;&#x2F;span&gt;&lt;span style=&quot;color: light-dark(#22863A, #FFAB70);&quot;&gt; l&lt;&#x2F;span&gt;&lt;span style=&quot;color: light-dark(#22863A, #FFAB70);&quot;&gt;scr.io&#x2F;linuxserver&#x2F;librespeed:latest&lt;&#x2F;span&gt;&lt;&#x2F;span&gt;
+&lt;span class=&quot;giallo-l&quot;&gt;&lt;span style=&quot;color: light-dark(#D32F2F, #F8F8F8);&quot;&gt;    n&lt;&#x2F;span&gt;&lt;span style=&quot;color: light-dark(#D32F2F, #F8F8F8);&quot;&gt;etwork_mode&lt;&#x2F;span&gt;&lt;span style=&quot;color: light-dark(#D32F2F, #F97583);&quot;&gt;:&lt;&#x2F;span&gt;&lt;span style=&quot;color: light-dark(#22863A, #FFAB70);&quot;&gt; b&lt;&#x2F;span&gt;&lt;span style=&quot;color: light-dark(#22863A, #FFAB70);&quot;&gt;ridge&lt;&#x2F;span&gt;&lt;&#x2F;span&gt;
+&lt;span class=&quot;giallo-l&quot;&gt;&lt;span style=&quot;color: light-dark(#D32F2F, #F8F8F8);&quot;&gt;    r&lt;&#x2F;span&gt;&lt;span style=&quot;color: light-dark(#D32F2F, #F8F8F8);&quot;&gt;estart&lt;&#x2F;span&gt;&lt;span style=&quot;color: light-dark(#D32F2F, #F97583);&quot;&gt;:&lt;&#x2F;span&gt;&lt;span style=&quot;color: light-dark(#22863A, #FFAB70);&quot;&gt; a&lt;&#x2F;span&gt;&lt;span style=&quot;color: light-dark(#22863A, #FFAB70);&quot;&gt;lways&lt;&#x2F;span&gt;&lt;&#x2F;span&gt;
+&lt;span class=&quot;giallo-l&quot;&gt;&lt;span style=&quot;color: light-dark(#D32F2F, #F8F8F8);&quot;&gt;    e&lt;&#x2F;span&gt;&lt;span style=&quot;color: light-dark(#D32F2F, #F8F8F8);&quot;&gt;nvironment&lt;&#x2F;span&gt;&lt;span style=&quot;color: light-dark(#D32F2F, #F97583);&quot;&gt;:&lt;&#x2F;span&gt;&lt;&#x2F;span&gt;
+&lt;span class=&quot;giallo-l&quot;&gt;&lt;span&gt;      -&lt;&#x2F;span&gt;&lt;span style=&quot;color: light-dark(#22863A, #FFAB70);&quot;&gt; P&lt;&#x2F;span&gt;&lt;span style=&quot;color: light-dark(#22863A, #FFAB70);&quot;&gt;UID=1000&lt;&#x2F;span&gt;&lt;&#x2F;span&gt;
+&lt;span class=&quot;giallo-l&quot;&gt;&lt;span&gt;      -&lt;&#x2F;span&gt;&lt;span style=&quot;color: light-dark(#22863A, #FFAB70);&quot;&gt; P&lt;&#x2F;span&gt;&lt;span style=&quot;color: light-dark(#22863A, #FFAB70);&quot;&gt;GID=1000&lt;&#x2F;span&gt;&lt;&#x2F;span&gt;
+&lt;span class=&quot;giallo-l&quot;&gt;&lt;span&gt;      -&lt;&#x2F;span&gt;&lt;span style=&quot;color: light-dark(#22863A, #FFAB70);&quot;&gt; T&lt;&#x2F;span&gt;&lt;span style=&quot;color: light-dark(#22863A, #FFAB70);&quot;&gt;Z=Asia&#x2F;Shanghai&lt;&#x2F;span&gt;&lt;&#x2F;span&gt;
+&lt;span class=&quot;giallo-l&quot;&gt;&lt;span style=&quot;color: light-dark(#D32F2F, #F8F8F8);&quot;&gt;    v&lt;&#x2F;span&gt;&lt;span style=&quot;color: light-dark(#D32F2F, #F8F8F8);&quot;&gt;olumes&lt;&#x2F;span&gt;&lt;span style=&quot;color: light-dark(#D32F2F, #F97583);&quot;&gt;:&lt;&#x2F;span&gt;&lt;&#x2F;span&gt;
+&lt;span class=&quot;giallo-l&quot;&gt;&lt;span&gt;      -&lt;&#x2F;span&gt;&lt;span style=&quot;color: light-dark(#22863A, #FFAB70);&quot;&gt; .&lt;&#x2F;span&gt;&lt;span style=&quot;color: light-dark(#22863A, #FFAB70);&quot;&gt;&#x2F;config:&#x2F;config&lt;&#x2F;span&gt;&lt;&#x2F;span&gt;
+&lt;span class=&quot;giallo-l&quot;&gt;&lt;span style=&quot;color: light-dark(#D32F2F, #F8F8F8);&quot;&gt;  w&lt;&#x2F;span&gt;&lt;span style=&quot;color: light-dark(#D32F2F, #F8F8F8);&quot;&gt;eb&lt;&#x2F;span&gt;&lt;span style=&quot;color: light-dark(#D32F2F, #F97583);&quot;&gt;:&lt;&#x2F;span&gt;&lt;&#x2F;span&gt;
+&lt;span class=&quot;giallo-l&quot;&gt;&lt;span style=&quot;color: light-dark(#D32F2F, #F8F8F8);&quot;&gt;    i&lt;&#x2F;span&gt;&lt;span style=&quot;color: light-dark(#D32F2F, #F8F8F8);&quot;&gt;mage&lt;&#x2F;span&gt;&lt;span style=&quot;color: light-dark(#D32F2F, #F97583);&quot;&gt;:&lt;&#x2F;span&gt;&lt;span style=&quot;color: light-dark(#22863A, #FFAB70);&quot;&gt; a&lt;&#x2F;span&gt;&lt;span style=&quot;color: light-dark(#22863A, #FFAB70);&quot;&gt;lpine&#x2F;socat&lt;&#x2F;span&gt;&lt;&#x2F;span&gt;
+&lt;span class=&quot;giallo-l&quot;&gt;&lt;span style=&quot;color: light-dark(#D32F2F, #F8F8F8);&quot;&gt;    n&lt;&#x2F;span&gt;&lt;span style=&quot;color: light-dark(#D32F2F, #F8F8F8);&quot;&gt;etwork_mode&lt;&#x2F;span&gt;&lt;span style=&quot;color: light-dark(#D32F2F, #F97583);&quot;&gt;:&lt;&#x2F;span&gt;&lt;span style=&quot;color: light-dark(#22863A, #FFAB70);&quot;&gt; s&lt;&#x2F;span&gt;&lt;span style=&quot;color: light-dark(#22863A, #FFAB70);&quot;&gt;ervice:app&lt;&#x2F;span&gt;&lt;&#x2F;span&gt;
+&lt;span class=&quot;giallo-l&quot;&gt;&lt;span style=&quot;color: light-dark(#D32F2F, #F8F8F8);&quot;&gt;    r&lt;&#x2F;span&gt;&lt;span style=&quot;color: light-dark(#D32F2F, #F8F8F8);&quot;&gt;estart&lt;&#x2F;span&gt;&lt;span style=&quot;color: light-dark(#D32F2F, #F97583);&quot;&gt;:&lt;&#x2F;span&gt;&lt;span style=&quot;color: light-dark(#22863A, #FFAB70);&quot;&gt; a&lt;&#x2F;span&gt;&lt;span style=&quot;color: light-dark(#22863A, #FFAB70);&quot;&gt;lways&lt;&#x2F;span&gt;&lt;&#x2F;span&gt;
+&lt;span class=&quot;giallo-l&quot;&gt;&lt;span style=&quot;color: light-dark(#D32F2F, #F8F8F8);&quot;&gt;    c&lt;&#x2F;span&gt;&lt;span style=&quot;color: light-dark(#D32F2F, #F8F8F8);&quot;&gt;ommand&lt;&#x2F;span&gt;&lt;span style=&quot;color: light-dark(#D32F2F, #F97583);&quot;&gt;:&lt;&#x2F;span&gt;&lt;&#x2F;span&gt;
+&lt;span class=&quot;giallo-l&quot;&gt;&lt;span&gt;      -&lt;&#x2F;span&gt;&lt;span style=&quot;color: light-dark(#22863A, #FFAB70);&quot;&gt; u&lt;&#x2F;span&gt;&lt;span style=&quot;color: light-dark(#22863A, #FFAB70);&quot;&gt;nix-listen:&#x2F;run&#x2F;web.sock,fork,reuseaddr,mode=666&lt;&#x2F;span&gt;&lt;&#x2F;span&gt;
+&lt;span class=&quot;giallo-l&quot;&gt;&lt;span&gt;      -&lt;&#x2F;span&gt;&lt;span style=&quot;color: light-dark(#22863A, #FFAB70);&quot;&gt; t&lt;&#x2F;span&gt;&lt;span style=&quot;color: light-dark(#22863A, #FFAB70);&quot;&gt;cp-connect:localhost:80&lt;&#x2F;span&gt;&lt;&#x2F;span&gt;
+&lt;span class=&quot;giallo-l&quot;&gt;&lt;span style=&quot;color: light-dark(#D32F2F, #F8F8F8);&quot;&gt;    v&lt;&#x2F;span&gt;&lt;span style=&quot;color: light-dark(#D32F2F, #F8F8F8);&quot;&gt;olumes&lt;&#x2F;span&gt;&lt;span style=&quot;color: light-dark(#D32F2F, #F97583);&quot;&gt;:&lt;&#x2F;span&gt;&lt;&#x2F;span&gt;
+&lt;span class=&quot;giallo-l&quot;&gt;&lt;span&gt;      -&lt;&#x2F;span&gt;&lt;span style=&quot;color: light-dark(#22863A, #FFAB70);&quot;&gt; .&lt;&#x2F;span&gt;&lt;span style=&quot;color: light-dark(#22863A, #FFAB70);&quot;&gt;:&#x2F;run&lt;&#x2F;span&gt;&lt;&#x2F;span&gt;&lt;&#x2F;code&gt;&lt;&#x2F;pre&gt;&lt;h2 id=&quot;caddy&quot;&gt;caddy&lt;&#x2F;h2&gt;
+&lt;pre class=&quot;giallo&quot; style=&quot;color-scheme: light dark; color: light-dark(#24292E, #B392F0); background-color: light-dark(#FFFFFF, #1F1F1F);&quot;&gt;&lt;code data-lang=&quot;yaml&quot;&gt;&lt;span class=&quot;giallo-l&quot;&gt;&lt;span style=&quot;color: light-dark(#D32F2F, #F8F8F8);&quot;&gt;s&lt;&#x2F;span&gt;&lt;span style=&quot;color: light-dark(#D32F2F, #F8F8F8);&quot;&gt;ervices&lt;&#x2F;span&gt;&lt;span style=&quot;color: light-dark(#D32F2F, #F97583);&quot;&gt;:&lt;&#x2F;span&gt;&lt;&#x2F;span&gt;
+&lt;span class=&quot;giallo-l&quot;&gt;&lt;span style=&quot;color: light-dark(#D32F2F, #F8F8F8);&quot;&gt;  a&lt;&#x2F;span&gt;&lt;span style=&quot;color: light-dark(#D32F2F, #F8F8F8);&quot;&gt;pp&lt;&#x2F;span&gt;&lt;span style=&quot;color: light-dark(#D32F2F, #F97583);&quot;&gt;:&lt;&#x2F;span&gt;&lt;&#x2F;span&gt;
+&lt;span class=&quot;giallo-l&quot;&gt;&lt;span style=&quot;color: light-dark(#D32F2F, #F8F8F8);&quot;&gt;    i&lt;&#x2F;span&gt;&lt;span style=&quot;color: light-dark(#D32F2F, #F8F8F8);&quot;&gt;mage&lt;&#x2F;span&gt;&lt;span style=&quot;color: light-dark(#D32F2F, #F97583);&quot;&gt;:&lt;&#x2F;span&gt;&lt;span style=&quot;color: light-dark(#22863A, #FFAB70);&quot;&gt; c&lt;&#x2F;span&gt;&lt;span style=&quot;color: light-dark(#22863A, #FFAB70);&quot;&gt;addy&lt;&#x2F;span&gt;&lt;&#x2F;span&gt;
+&lt;span class=&quot;giallo-l&quot;&gt;&lt;span style=&quot;color: light-dark(#D32F2F, #F8F8F8);&quot;&gt;    n&lt;&#x2F;span&gt;&lt;span style=&quot;color: light-dark(#D32F2F, #F8F8F8);&quot;&gt;etwork_mode&lt;&#x2F;span&gt;&lt;span style=&quot;color: light-dark(#D32F2F, #F97583);&quot;&gt;:&lt;&#x2F;span&gt;&lt;span style=&quot;color: light-dark(#22863A, #FFAB70);&quot;&gt; h&lt;&#x2F;span&gt;&lt;span style=&quot;color: light-dark(#22863A, #FFAB70);&quot;&gt;ost&lt;&#x2F;span&gt;&lt;&#x2F;span&gt;
+&lt;span class=&quot;giallo-l&quot;&gt;&lt;span style=&quot;color: light-dark(#D32F2F, #F8F8F8);&quot;&gt;    r&lt;&#x2F;span&gt;&lt;span style=&quot;color: light-dark(#D32F2F, #F8F8F8);&quot;&gt;estart&lt;&#x2F;span&gt;&lt;span style=&quot;color: light-dark(#D32F2F, #F97583);&quot;&gt;:&lt;&#x2F;span&gt;&lt;span style=&quot;color: light-dark(#22863A, #FFAB70);&quot;&gt; a&lt;&#x2F;span&gt;&lt;span style=&quot;color: light-dark(#22863A, #FFAB70);&quot;&gt;lways&lt;&#x2F;span&gt;&lt;&#x2F;span&gt;
+&lt;span class=&quot;giallo-l&quot;&gt;&lt;span style=&quot;color: light-dark(#D32F2F, #F8F8F8);&quot;&gt;    v&lt;&#x2F;span&gt;&lt;span style=&quot;color: light-dark(#D32F2F, #F8F8F8);&quot;&gt;olumes&lt;&#x2F;span&gt;&lt;span style=&quot;color: light-dark(#D32F2F, #F97583);&quot;&gt;:&lt;&#x2F;span&gt;&lt;&#x2F;span&gt;
+&lt;span class=&quot;giallo-l&quot;&gt;&lt;span&gt;      -&lt;&#x2F;span&gt;&lt;span style=&quot;color: light-dark(#22863A, #FFAB70);&quot;&gt; .&lt;&#x2F;span&gt;&lt;span style=&quot;color: light-dark(#22863A, #FFAB70);&quot;&gt;&#x2F;Caddyfile:&#x2F;etc&#x2F;caddy&#x2F;Caddyfile&lt;&#x2F;span&gt;&lt;&#x2F;span&gt;
+&lt;span class=&quot;giallo-l&quot;&gt;&lt;span&gt;      -&lt;&#x2F;span&gt;&lt;span style=&quot;color: light-dark(#22863A, #FFAB70);&quot;&gt; d&lt;&#x2F;span&gt;&lt;span style=&quot;color: light-dark(#22863A, #FFAB70);&quot;&gt;ata:&#x2F;data&lt;&#x2F;span&gt;&lt;&#x2F;span&gt;
+&lt;span class=&quot;giallo-l&quot;&gt;&lt;span&gt;      -&lt;&#x2F;span&gt;&lt;span style=&quot;color: light-dark(#22863A, #FFAB70);&quot;&gt; c&lt;&#x2F;span&gt;&lt;span style=&quot;color: light-dark(#22863A, #FFAB70);&quot;&gt;onf:&#x2F;config&lt;&#x2F;span&gt;&lt;&#x2F;span&gt;
+&lt;span class=&quot;giallo-l&quot;&gt;&lt;span&gt;      -&lt;&#x2F;span&gt;&lt;span style=&quot;color: light-dark(#22863A, #FFAB70);&quot;&gt; &#x2F;&lt;&#x2F;span&gt;&lt;span style=&quot;color: light-dark(#22863A, #FFAB70);&quot;&gt;opt&#x2F;cert:&#x2F;cert&lt;&#x2F;span&gt;&lt;&#x2F;span&gt;
+&lt;span class=&quot;giallo-l&quot;&gt;&lt;span&gt;      -&lt;&#x2F;span&gt;&lt;span style=&quot;color: light-dark(#22863A, #FFAB70);&quot;&gt; &#x2F;&lt;&#x2F;span&gt;&lt;span style=&quot;color: light-dark(#22863A, #FFAB70);&quot;&gt;srv:&#x2F;srv&lt;&#x2F;span&gt;&lt;&#x2F;span&gt;
+&lt;span class=&quot;giallo-l&quot;&gt;&lt;span&gt;      -&lt;&#x2F;span&gt;&lt;span style=&quot;color: light-dark(#22863A, #FFAB70);&quot;&gt; &#x2F;&lt;&#x2F;span&gt;&lt;span style=&quot;color: light-dark(#22863A, #FFAB70);&quot;&gt;run:&#x2F;run&lt;&#x2F;span&gt;&lt;&#x2F;span&gt;
+&lt;span class=&quot;giallo-l&quot;&gt;&lt;span style=&quot;color: light-dark(#D32F2F, #F8F8F8);&quot;&gt;v&lt;&#x2F;span&gt;&lt;span style=&quot;color: light-dark(#D32F2F, #F8F8F8);&quot;&gt;olumes&lt;&#x2F;span&gt;&lt;span style=&quot;color: light-dark(#D32F2F, #F97583);&quot;&gt;:&lt;&#x2F;span&gt;&lt;&#x2F;span&gt;
+&lt;span class=&quot;giallo-l&quot;&gt;&lt;span style=&quot;color: light-dark(#D32F2F, #F8F8F8);&quot;&gt;  d&lt;&#x2F;span&gt;&lt;span style=&quot;color: light-dark(#D32F2F, #F8F8F8);&quot;&gt;ata&lt;&#x2F;span&gt;&lt;span style=&quot;color: light-dark(#D32F2F, #F97583);&quot;&gt;:&lt;&#x2F;span&gt;&lt;&#x2F;span&gt;
+&lt;span class=&quot;giallo-l&quot;&gt;&lt;span style=&quot;color: light-dark(#D32F2F, #F8F8F8);&quot;&gt;  c&lt;&#x2F;span&gt;&lt;span style=&quot;color: light-dark(#D32F2F, #F8F8F8);&quot;&gt;onf&lt;&#x2F;span&gt;&lt;span style=&quot;color: light-dark(#D32F2F, #F97583);&quot;&gt;:&lt;&#x2F;span&gt;&lt;&#x2F;span&gt;&lt;&#x2F;code&gt;&lt;&#x2F;pre&gt;
+&lt;p&gt;&lt;em&gt;Caddyfile Example&lt;&#x2F;em&gt;&lt;&#x2F;p&gt;
+&lt;pre class=&quot;giallo&quot; style=&quot;color-scheme: light dark; color: light-dark(#24292E, #B392F0); background-color: light-dark(#FFFFFF, #1F1F1F);&quot;&gt;&lt;code data-lang=&quot;plain&quot;&gt;&lt;span class=&quot;giallo-l&quot;&gt;&lt;span&gt;example.com,&lt;&#x2F;span&gt;&lt;&#x2F;span&gt;
+&lt;span class=&quot;giallo-l&quot;&gt;&lt;span&gt;*.example.com {&lt;&#x2F;span&gt;&lt;&#x2F;span&gt;
+&lt;span class=&quot;giallo-l&quot;&gt;&lt;span&gt;    tls _CERT_ _KEY_&lt;&#x2F;span&gt;&lt;&#x2F;span&gt;
+&lt;span class=&quot;giallo-l&quot;&gt;&lt;span&gt;    encode zstd gzip&lt;&#x2F;span&gt;&lt;&#x2F;span&gt;
+&lt;span class=&quot;giallo-l&quot;&gt;&lt;&#x2F;span&gt;
+&lt;span class=&quot;giallo-l&quot;&gt;&lt;span&gt;    @api host api.example.com&lt;&#x2F;span&gt;&lt;&#x2F;span&gt;
+&lt;span class=&quot;giallo-l&quot;&gt;&lt;span&gt;    handle @api {&lt;&#x2F;span&gt;&lt;&#x2F;span&gt;
+&lt;span class=&quot;giallo-l&quot;&gt;&lt;span&gt;        reverse_proxy [::1]:8080&lt;&#x2F;span&gt;&lt;&#x2F;span&gt;
+&lt;span class=&quot;giallo-l&quot;&gt;&lt;span&gt;    }&lt;&#x2F;span&gt;&lt;&#x2F;span&gt;
+&lt;span class=&quot;giallo-l&quot;&gt;&lt;&#x2F;span&gt;
+&lt;span class=&quot;giallo-l&quot;&gt;&lt;span&gt;    # other sites&lt;&#x2F;span&gt;&lt;&#x2F;span&gt;
+&lt;span class=&quot;giallo-l&quot;&gt;&lt;&#x2F;span&gt;
+&lt;span class=&quot;giallo-l&quot;&gt;&lt;&#x2F;span&gt;
+&lt;span class=&quot;giallo-l&quot;&gt;&lt;span&gt;    # fallback site&lt;&#x2F;span&gt;&lt;&#x2F;span&gt;
+&lt;span class=&quot;giallo-l&quot;&gt;&lt;span&gt;    handle {&lt;&#x2F;span&gt;&lt;&#x2F;span&gt;
+&lt;span class=&quot;giallo-l&quot;&gt;&lt;span&gt;        root * &#x2F;usr&#x2F;share&#x2F;caddy&lt;&#x2F;span&gt;&lt;&#x2F;span&gt;
+&lt;span class=&quot;giallo-l&quot;&gt;&lt;span&gt;        file_server&lt;&#x2F;span&gt;&lt;&#x2F;span&gt;
+&lt;span class=&quot;giallo-l&quot;&gt;&lt;span&gt;    }&lt;&#x2F;span&gt;&lt;&#x2F;span&gt;
+&lt;span class=&quot;giallo-l&quot;&gt;&lt;span&gt;}&lt;&#x2F;span&gt;&lt;&#x2F;span&gt;&lt;&#x2F;code&gt;&lt;&#x2F;pre&gt;&lt;h2 id=&quot;memos&quot;&gt;memos&lt;&#x2F;h2&gt;
+&lt;pre class=&quot;giallo&quot; style=&quot;color-scheme: light dark; color: light-dark(#24292E, #B392F0); background-color: light-dark(#FFFFFF, #1F1F1F);&quot;&gt;&lt;code data-lang=&quot;yaml&quot;&gt;&lt;span class=&quot;giallo-l&quot;&gt;&lt;span style=&quot;color: light-dark(#D32F2F, #F8F8F8);&quot;&gt;s&lt;&#x2F;span&gt;&lt;span style=&quot;color: light-dark(#D32F2F, #F8F8F8);&quot;&gt;ervices&lt;&#x2F;span&gt;&lt;span style=&quot;color: light-dark(#D32F2F, #F97583);&quot;&gt;:&lt;&#x2F;span&gt;&lt;&#x2F;span&gt;
+&lt;span class=&quot;giallo-l&quot;&gt;&lt;span style=&quot;color: light-dark(#D32F2F, #F8F8F8);&quot;&gt;  a&lt;&#x2F;span&gt;&lt;span style=&quot;color: light-dark(#D32F2F, #F8F8F8);&quot;&gt;pp&lt;&#x2F;span&gt;&lt;span style=&quot;color: light-dark(#D32F2F, #F97583);&quot;&gt;:&lt;&#x2F;span&gt;&lt;&#x2F;span&gt;
+&lt;span class=&quot;giallo-l&quot;&gt;&lt;span style=&quot;color: light-dark(#D32F2F, #F8F8F8);&quot;&gt;    i&lt;&#x2F;span&gt;&lt;span style=&quot;color: light-dark(#D32F2F, #F8F8F8);&quot;&gt;mage&lt;&#x2F;span&gt;&lt;span style=&quot;color: light-dark(#D32F2F, #F97583);&quot;&gt;:&lt;&#x2F;span&gt;&lt;span style=&quot;color: light-dark(#22863A, #FFAB70);&quot;&gt; n&lt;&#x2F;span&gt;&lt;span style=&quot;color: light-dark(#22863A, #FFAB70);&quot;&gt;eosmemo&#x2F;memos:stable&lt;&#x2F;span&gt;&lt;&#x2F;span&gt;
+&lt;span class=&quot;giallo-l&quot;&gt;&lt;span style=&quot;color: light-dark(#D32F2F, #F8F8F8);&quot;&gt;    n&lt;&#x2F;span&gt;&lt;span style=&quot;color: light-dark(#D32F2F, #F8F8F8);&quot;&gt;etwork_mode&lt;&#x2F;span&gt;&lt;span style=&quot;color: light-dark(#D32F2F, #F97583);&quot;&gt;:&lt;&#x2F;span&gt;&lt;span style=&quot;color: light-dark(#22863A, #FFAB70);&quot;&gt; n&lt;&#x2F;span&gt;&lt;span style=&quot;color: light-dark(#22863A, #FFAB70);&quot;&gt;one&lt;&#x2F;span&gt;&lt;&#x2F;span&gt;
+&lt;span class=&quot;giallo-l&quot;&gt;&lt;span style=&quot;color: light-dark(#D32F2F, #F8F8F8);&quot;&gt;    r&lt;&#x2F;span&gt;&lt;span style=&quot;color: light-dark(#D32F2F, #F8F8F8);&quot;&gt;estart&lt;&#x2F;span&gt;&lt;span style=&quot;color: light-dark(#D32F2F, #F97583);&quot;&gt;:&lt;&#x2F;span&gt;&lt;span style=&quot;color: light-dark(#22863A, #FFAB70);&quot;&gt; a&lt;&#x2F;span&gt;&lt;span style=&quot;color: light-dark(#22863A, #FFAB70);&quot;&gt;lways&lt;&#x2F;span&gt;&lt;&#x2F;span&gt;
+&lt;span class=&quot;giallo-l&quot;&gt;&lt;span style=&quot;color: light-dark(#D32F2F, #F8F8F8);&quot;&gt;    v&lt;&#x2F;span&gt;&lt;span style=&quot;color: light-dark(#D32F2F, #F8F8F8);&quot;&gt;olumes&lt;&#x2F;span&gt;&lt;span style=&quot;color: light-dark(#D32F2F, #F97583);&quot;&gt;:&lt;&#x2F;span&gt;&lt;&#x2F;span&gt;
+&lt;span class=&quot;giallo-l&quot;&gt;&lt;span&gt;      -&lt;&#x2F;span&gt;&lt;span style=&quot;color: light-dark(#22863A, #FFAB70);&quot;&gt; .&lt;&#x2F;span&gt;&lt;span style=&quot;color: light-dark(#22863A, #FFAB70);&quot;&gt;&#x2F;memos&#x2F;:&#x2F;var&#x2F;opt&#x2F;memos&lt;&#x2F;span&gt;&lt;&#x2F;span&gt;
+&lt;span class=&quot;giallo-l&quot;&gt;&lt;span style=&quot;color: light-dark(#D32F2F, #F8F8F8);&quot;&gt;  w&lt;&#x2F;span&gt;&lt;span style=&quot;color: light-dark(#D32F2F, #F8F8F8);&quot;&gt;eb&lt;&#x2F;span&gt;&lt;span style=&quot;color: light-dark(#D32F2F, #F97583);&quot;&gt;:&lt;&#x2F;span&gt;&lt;&#x2F;span&gt;
+&lt;span class=&quot;giallo-l&quot;&gt;&lt;span style=&quot;color: light-dark(#D32F2F, #F8F8F8);&quot;&gt;    i&lt;&#x2F;span&gt;&lt;span style=&quot;color: light-dark(#D32F2F, #F8F8F8);&quot;&gt;mage&lt;&#x2F;span&gt;&lt;span style=&quot;color: light-dark(#D32F2F, #F97583);&quot;&gt;:&lt;&#x2F;span&gt;&lt;span style=&quot;color: light-dark(#22863A, #FFAB70);&quot;&gt; a&lt;&#x2F;span&gt;&lt;span style=&quot;color: light-dark(#22863A, #FFAB70);&quot;&gt;lpine&#x2F;socat&lt;&#x2F;span&gt;&lt;&#x2F;span&gt;
+&lt;span class=&quot;giallo-l&quot;&gt;&lt;span style=&quot;color: light-dark(#D32F2F, #F8F8F8);&quot;&gt;    n&lt;&#x2F;span&gt;&lt;span style=&quot;color: light-dark(#D32F2F, #F8F8F8);&quot;&gt;etwork_mode&lt;&#x2F;span&gt;&lt;span style=&quot;color: light-dark(#D32F2F, #F97583);&quot;&gt;:&lt;&#x2F;span&gt;&lt;span style=&quot;color: light-dark(#22863A, #FFAB70);&quot;&gt; s&lt;&#x2F;span&gt;&lt;span style=&quot;color: light-dark(#22863A, #FFAB70);&quot;&gt;ervice:app&lt;&#x2F;span&gt;&lt;&#x2F;span&gt;
+&lt;span class=&quot;giallo-l&quot;&gt;&lt;span style=&quot;color: light-dark(#D32F2F, #F8F8F8);&quot;&gt;    r&lt;&#x2F;span&gt;&lt;span style=&quot;color: light-dark(#D32F2F, #F8F8F8);&quot;&gt;estart&lt;&#x2F;span&gt;&lt;span style=&quot;color: light-dark(#D32F2F, #F97583);&quot;&gt;:&lt;&#x2F;span&gt;&lt;span style=&quot;color: light-dark(#22863A, #FFAB70);&quot;&gt; a&lt;&#x2F;span&gt;&lt;span style=&quot;color: light-dark(#22863A, #FFAB70);&quot;&gt;lways&lt;&#x2F;span&gt;&lt;&#x2F;span&gt;
+&lt;span class=&quot;giallo-l&quot;&gt;&lt;span style=&quot;color: light-dark(#D32F2F, #F8F8F8);&quot;&gt;    c&lt;&#x2F;span&gt;&lt;span style=&quot;color: light-dark(#D32F2F, #F8F8F8);&quot;&gt;ommand&lt;&#x2F;span&gt;&lt;span style=&quot;color: light-dark(#D32F2F, #F97583);&quot;&gt;:&lt;&#x2F;span&gt;&lt;&#x2F;span&gt;
+&lt;span class=&quot;giallo-l&quot;&gt;&lt;span&gt;      -&lt;&#x2F;span&gt;&lt;span style=&quot;color: light-dark(#22863A, #FFAB70);&quot;&gt; u&lt;&#x2F;span&gt;&lt;span style=&quot;color: light-dark(#22863A, #FFAB70);&quot;&gt;nix-listen:&#x2F;run&#x2F;web.sock,fork,reuseaddr,mode=666&lt;&#x2F;span&gt;&lt;&#x2F;span&gt;
+&lt;span class=&quot;giallo-l&quot;&gt;&lt;span&gt;      -&lt;&#x2F;span&gt;&lt;span style=&quot;color: light-dark(#22863A, #FFAB70);&quot;&gt; t&lt;&#x2F;span&gt;&lt;span style=&quot;color: light-dark(#22863A, #FFAB70);&quot;&gt;cp-connect:localhost:5230&lt;&#x2F;span&gt;&lt;&#x2F;span&gt;
+&lt;span class=&quot;giallo-l&quot;&gt;&lt;span style=&quot;color: light-dark(#D32F2F, #F8F8F8);&quot;&gt;    v&lt;&#x2F;span&gt;&lt;span style=&quot;color: light-dark(#D32F2F, #F8F8F8);&quot;&gt;olumes&lt;&#x2F;span&gt;&lt;span style=&quot;color: light-dark(#D32F2F, #F97583);&quot;&gt;:&lt;&#x2F;span&gt;&lt;&#x2F;span&gt;
+&lt;span class=&quot;giallo-l&quot;&gt;&lt;span&gt;      -&lt;&#x2F;span&gt;&lt;span style=&quot;color: light-dark(#22863A, #FFAB70);&quot;&gt; .&lt;&#x2F;span&gt;&lt;span style=&quot;color: light-dark(#22863A, #FFAB70);&quot;&gt;:&#x2F;run&lt;&#x2F;span&gt;&lt;&#x2F;span&gt;&lt;&#x2F;code&gt;&lt;&#x2F;pre&gt;</content>
+        
+    </entry>
+    <entry xml:lang="en">
+        <title>废弃的配置和代码片段</title>
+        <published>2024-08-20T00:00:00+00:00</published>
+        <updated>2024-08-20T00:00:00+00:00</updated>
+        
+        <author>
+          <name>
+            
+              Unknown
+            
+          </name>
+        </author>
+        
+        <link rel="alternate" type="text/html" href="/gists/blog/snippets/"/>
+        <id>/gists/blog/snippets/</id>
+        
+        <summary type="html">&lt;p&gt;&lt;em&gt;&lt;code&gt;Just some snippets.&lt;&#x2F;code&gt;&lt;&#x2F;em&gt;&lt;&#x2F;p&gt;</summary>
+        
+    </entry>
+    <entry xml:lang="en">
+        <title>Markdown 测试</title>
+        <published>2021-07-30T00:00:00+00:00</published>
+        <updated>2021-07-30T00:00:00+00:00</updated>
+        
+        <author>
+          <name>
+            
+              Unknown
+            
+          </name>
+        </author>
+        
+        <link rel="alternate" type="text/html" href="/gists/blog/markdown/"/>
+        <id>/gists/blog/markdown/</id>
+        
+        <content type="html" xml:base="/gists/blog/markdown/">&lt;p&gt;This post is a markdown example.&lt;&#x2F;p&gt;
+&lt;p&gt;Here is &lt;a rel=&quot;external&quot; href=&quot;http:&#x2F;&#x2F;example.com&quot;&gt;a link&lt;&#x2F;a&gt;.&lt;&#x2F;p&gt;
+&lt;p&gt;Some &lt;em&gt;italic text&lt;&#x2F;em&gt; and &lt;strong&gt;bold text&lt;&#x2F;strong&gt; and &lt;del&gt;strikethrough text&lt;&#x2F;del&gt; and &lt;code&gt;inline code&lt;&#x2F;code&gt;. &lt;sup class=&quot;footnote-reference&quot; id=&quot;fr-1-1&quot;&gt;&lt;a href=&quot;#fn-1&quot;&gt;1&lt;&#x2F;a&gt;&lt;&#x2F;sup&gt;&lt;&#x2F;p&gt;
+&lt;pre class=&quot;giallo&quot; style=&quot;color-scheme: light dark; color: light-dark(#24292E, #B392F0); background-color: light-dark(#FFFFFF, #1F1F1F);&quot;&gt;&lt;code data-lang=&quot;rust&quot;&gt;&lt;span class=&quot;giallo-l&quot;&gt;&lt;span style=&quot;color: light-dark(#C2C3C5, #6B737C);&quot;&gt;&#x2F;&#x2F;&lt;&#x2F;span&gt;&lt;span style=&quot;color: light-dark(#C2C3C5, #6B737C);&quot;&gt; Here is a code block&lt;&#x2F;span&gt;&lt;&#x2F;span&gt;
+&lt;span class=&quot;giallo-l&quot;&gt;&lt;&#x2F;span&gt;
+&lt;span class=&quot;giallo-l&quot;&gt;&lt;span style=&quot;color: light-dark(#D32F2F, #F97583);&quot;&gt;fn&lt;&#x2F;span&gt;&lt;span style=&quot;color: light-dark(#6F42C1, #B392F0);&quot;&gt; main&lt;&#x2F;span&gt;&lt;span&gt;(&lt;&#x2F;span&gt;&lt;span&gt;)&lt;&#x2F;span&gt;&lt;span&gt; {&lt;&#x2F;span&gt;&lt;&#x2F;span&gt;
+&lt;span class=&quot;giallo-l&quot;&gt;&lt;span style=&quot;color: light-dark(#6F42C1, #B392F0);&quot;&gt;    println!&lt;&#x2F;span&gt;&lt;span&gt;(&lt;&#x2F;span&gt;&lt;span style=&quot;color: light-dark(#22863A, #FFAB70);&quot;&gt;&amp;quot;&lt;&#x2F;span&gt;&lt;span style=&quot;color: light-dark(#22863A, #FFAB70);&quot;&gt;Hello world!&lt;&#x2F;span&gt;&lt;span style=&quot;color: light-dark(#22863A, #FFAB70);&quot;&gt;&amp;quot;&lt;&#x2F;span&gt;&lt;span&gt;)&lt;&#x2F;span&gt;&lt;span&gt;;&lt;&#x2F;span&gt;&lt;&#x2F;span&gt;
+&lt;span class=&quot;giallo-l&quot;&gt;&lt;span&gt;}&lt;&#x2F;span&gt;&lt;&#x2F;span&gt;&lt;&#x2F;code&gt;&lt;&#x2F;pre&gt;
+&lt;p&gt;Unordered list: &lt;sup class=&quot;footnote-reference&quot; id=&quot;fr-2-1&quot;&gt;&lt;a href=&quot;#fn-2&quot;&gt;2&lt;&#x2F;a&gt;&lt;&#x2F;sup&gt;&lt;&#x2F;p&gt;
+&lt;ul&gt;
+&lt;li&gt;An unordered,&lt;&#x2F;li&gt;
+&lt;li&gt;bulleted list&lt;&#x2F;li&gt;
+&lt;li&gt;of items&lt;&#x2F;li&gt;
+&lt;&#x2F;ul&gt;
+&lt;p&gt;Ordered list:&lt;&#x2F;p&gt;
+&lt;ol&gt;
+&lt;li&gt;An ordered,&lt;&#x2F;li&gt;
+&lt;li&gt;numbered list&lt;&#x2F;li&gt;
+&lt;li&gt;of items&lt;&#x2F;li&gt;
+&lt;&#x2F;ol&gt;
+&lt;blockquote&gt;
+&lt;p&gt;A quote.&lt;&#x2F;p&gt;
+&lt;p&gt;It contains multiple paragraphs.&lt;&#x2F;p&gt;
+&lt;&#x2F;blockquote&gt;
+&lt;h1 id=&quot;heading-1&quot;&gt;Heading 1&lt;&#x2F;h1&gt;
+&lt;h2 id=&quot;heading-2&quot;&gt;Heading 2&lt;&#x2F;h2&gt;
+&lt;h3 id=&quot;heading-3&quot;&gt;Heading 3&lt;&#x2F;h3&gt;
+&lt;h4 id=&quot;heading-4&quot;&gt;Heading 4&lt;&#x2F;h4&gt;
+&lt;h5 id=&quot;heading-5&quot;&gt;Heading 5&lt;&#x2F;h5&gt;
+&lt;h6 id=&quot;heading-6&quot;&gt;Heading 6&lt;&#x2F;h6&gt;
+&lt;p&gt;&lt;img src=&quot;https:&#x2F;&#x2F;plchldr.co&#x2F;i&#x2F;480x360?bg=EB6361&quot; alt=&quot;An example image&quot; &#x2F;&gt;&lt;&#x2F;p&gt;
+&lt;p&gt;&lt;img src=&quot;https:&#x2F;&#x2F;plchldr.co&#x2F;i&#x2F;1280x720?bg=3D8EB9&quot; alt=&quot;A large image&quot; &#x2F;&gt;&lt;&#x2F;p&gt;
+&lt;table&gt;&lt;thead&gt;&lt;tr&gt;&lt;th&gt;Hello world!&lt;&#x2F;th&gt;&lt;th&gt;This is a table.&lt;&#x2F;th&gt;&lt;th&gt;Tables are also supported.&lt;&#x2F;th&gt;&lt;&#x2F;tr&gt;&lt;&#x2F;thead&gt;&lt;tbody&gt;
+&lt;tr&gt;&lt;td&gt;They even&lt;&#x2F;td&gt;&lt;td&gt;have alternating&lt;&#x2F;td&gt;&lt;td&gt;row colors!&lt;&#x2F;td&gt;&lt;&#x2F;tr&gt;
+&lt;tr&gt;&lt;td&gt;Let me add&lt;&#x2F;td&gt;&lt;td&gt;another row so&lt;&#x2F;td&gt;&lt;td&gt;it&#x27;s easier to see.&lt;&#x2F;td&gt;&lt;&#x2F;tr&gt;
+&lt;&#x2F;tbody&gt;&lt;&#x2F;table&gt;
+&lt;section class=&quot;footnotes&quot;&gt;
+&lt;ol class=&quot;footnotes-list&quot;&gt;
+&lt;li id=&quot;fn-1&quot;&gt;
+&lt;p&gt;A footnote. Footnotes can be used for things that could have explanation or extra context, but
+for which the explanation is not relevant or otherwise desirable to have inline. &lt;a href=&quot;#fr-1-1&quot;&gt;↩&lt;&#x2F;a&gt;&lt;&#x2F;p&gt;
+&lt;&#x2F;li&gt;
+&lt;li id=&quot;fn-2&quot;&gt;
+&lt;p&gt;Another footnote. &lt;a href=&quot;#fr-2-1&quot;&gt;↩&lt;&#x2F;a&gt;&lt;&#x2F;p&gt;
+&lt;&#x2F;li&gt;
+&lt;&#x2F;ol&gt;
+&lt;&#x2F;section&gt;
+</content>
+        
+    </entry>
+</feed>

@@ -1,0 +1,120 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="description" content="Github user anosora233&amp;#x27;s gists">
+    <title>Anosora233 | 为 Windows 的 ssh 连接用上 socks 代理</title>
+    
+    <link rel="stylesheet" href="/gists/style.css?h=dd0032accb6b0c821e25">
+    
+    
+        
+            
+                
+                    
+                        <link rel="alternate" type="application/atom+xml" title="Anosora233 - Atom Feed" href="/gists/atom.xml">
+                    
+                
+            
+        
+    
+</head>
+<body>
+    
+<header class="space">
+    <a href="&#x2F;gists">&LeftArrow; Home</a>
+</header>
+
+    
+<main>
+    <h1>为 Windows 的 ssh 连接用上 socks 代理</h1>
+    
+    <p class="secondary small">
+        12 April, 2025
+
+        
+        
+        
+        
+        
+
+        
+        
+        
+        - Tags:
+        
+        
+        <a href="&#x2F;gists&#x2F;tags&#x2F;ssh&#x2F;">ssh</a>,
+        
+        
+        <a href="&#x2F;gists&#x2F;tags&#x2F;proxy&#x2F;">proxy</a>,
+        
+        
+        <a href="&#x2F;gists&#x2F;tags&#x2F;windows&#x2F;">windows</a>
+        
+        
+    </p>
+    
+    <div class="space"></div>
+    <p><em><code>为了远程一些直连网络质量不太好的服务器，希望在 Windows 下透过 socks5 代理建立连接。</code></em></p>
+<h2 id="qian-yan">前言</h2>
+<p>ssh 客户端支持透过代理进行连接，关键是配置 ProxyCommand 参数。这需要一个外部程序来建立 tcp 连接，支持这种行为的程序在 Windows 平台下有 <code>ncat</code> (<code>nmap</code> 的子程序) 和 <code>connect</code>。</p>
+<h2 id="ncat-fang-an">ncat 方案</h2>
+<p>安装 nmap 即可拥有 ncat，推荐使用 scoop 安装：<code>scoop install nmap</code>。</p>
+<pre class="giallo" style="color-scheme: light dark; color: light-dark(#24292E, #B392F0); background-color: light-dark(#FFFFFF, #1F1F1F);"><code data-lang="shellscript"><span class="giallo-l"><span style="color: light-dark(#6F42C1, #B392F0);">ssh</span><span style="color: light-dark(#2B5581, #9DB1C5);"> -</span><span style="color: light-dark(#2B5581, #9DB1C5);">o</span><span style="color: light-dark(#2B5581, #9DB1C5);"> ProxyCommand=</span><span style="color: light-dark(#22863A, #FFAB70);">&quot;</span><span style="color: light-dark(#22863A, #FFAB70);">ncat --proxy 127.0.0.1:8080 %h %p</span><span style="color: light-dark(#22863A, #FFAB70);">&quot;</span><span style="color: light-dark(#D32F2F, #F97583);"> &lt;</span><span style="color: light-dark(#2B5581, #9DB1C5);">hos</span><span>t</span><span style="color: light-dark(#D32F2F, #F97583);">&gt;</span></span></code></pre>
+<p>虽然不确定具体原因，但在我的使用场景下透过 ncat 建立的连接有可能在终端输出过长内容时断开连接。</p>
+<h2 id="connect-fang-an">connect 方案</h2>
+<p>同样推荐使用 scoop 安装：<code>scoop install connect</code>。</p>
+<pre class="giallo" style="color-scheme: light dark; color: light-dark(#24292E, #B392F0); background-color: light-dark(#FFFFFF, #1F1F1F);"><code data-lang="shellscript"><span class="giallo-l"><span style="color: light-dark(#6F42C1, #B392F0);">ssh</span><span style="color: light-dark(#2B5581, #9DB1C5);"> -</span><span style="color: light-dark(#2B5581, #9DB1C5);">o</span><span style="color: light-dark(#2B5581, #9DB1C5);"> ProxyCommand=</span><span style="color: light-dark(#22863A, #FFAB70);">&quot;</span><span style="color: light-dark(#22863A, #FFAB70);">connect -S 127.0.0.1:8080 %h %p</span><span style="color: light-dark(#22863A, #FFAB70);">&quot;</span><span style="color: light-dark(#D32F2F, #F97583);"> &lt;</span><span style="color: light-dark(#2B5581, #9DB1C5);">hos</span><span>t</span><span style="color: light-dark(#D32F2F, #F97583);">&gt;</span></span></code></pre><h2 id="tong-guo-ssh-config-yu-xian-ding-yi-xing-wei">通过 .ssh/config 预先定义行为</h2>
+<p>我们可以在主机名前定义一个是否需要代理的标记，在这里我用 <strong>+</strong> 代表需要代理。具体配置如下：</p>
+<pre class="giallo" style="color-scheme: light dark; color: light-dark(#24292E, #B392F0); background-color: light-dark(#FFFFFF, #1F1F1F);"><code data-lang="plain"><span class="giallo-l"><span># +[HOST]:PROXY, _[HOST]:DIRECT.</span></span>
+<span class="giallo-l"><span>Host +*</span></span>
+<span class="giallo-l"><span>  ProxyCommand connect -S 127.0.0.1:8080 %h %p</span></span></code></pre>
+<p>这样，在连接远程服务器时只需要在主机名前加上 <strong>+</strong> 标记即可透过代理连接服务器。</p>
+
+</main>
+
+    <div class="dark-mode-buttons">
+        <button class="dark-mode-button" id="dark-mode-on"><img src="/gists/dark_mode.svg" width="24" height="24" alt="Dark mode" aria-label="dark mode toggle" title="Dark mode"></button>
+        <button class="dark-mode-button" id="dark-mode-off"><img src="/gists/light_mode.svg" width="24" height="24" alt="Light mode" aria-label="light mode toggle" title="Light mode"></button>
+    </div>
+    <script>
+        const cls = document.querySelector("html").classList;
+        const sessionTheme = sessionStorage.getItem("theme");
+
+        function setDark() {
+            cls.add("dark-mode");
+            cls.remove("light-mode");
+            sessionStorage.setItem("theme", "dark");
+        }
+        function setLight() {
+            cls.add("light-mode");
+            cls.remove("dark-mode");
+            sessionStorage.setItem("theme", "light");
+        }
+
+        if (sessionTheme === "dark") {
+            setDark();
+        } else if (sessionTheme === "light") {
+            setLight();
+        } else if (window.matchMedia("(prefers-color-scheme: dark)").matches) {
+            setDark();
+        }
+
+        document.getElementById("dark-mode-on").addEventListener("click", function(e) {
+            setDark();
+        });
+        document.getElementById("dark-mode-off").addEventListener("click", function(e) {
+            setLight();
+        });
+    </script>
+    <noscript>
+        <style>
+            .dark-mode-buttons {
+                display: none;
+            }
+        </style>
+    </noscript>
+</body>
+</html>

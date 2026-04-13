@@ -1,0 +1,203 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="description" content="Github user anosora233&amp;#x27;s gists">
+    <title>Anosora233 | 在 Docker 中使用 unix 域套接字</title>
+    
+    <link rel="stylesheet" href="/gists/style.css?h=dd0032accb6b0c821e25">
+    
+    
+        
+            
+                
+                    
+                        <link rel="alternate" type="application/atom+xml" title="Anosora233 - Atom Feed" href="/gists/atom.xml">
+                    
+                
+            
+        
+    
+</head>
+<body>
+    
+<header class="space">
+    <a href="&#x2F;gists">&LeftArrow; Home</a>
+</header>
+
+    
+<main>
+    <h1>在 Docker 中使用 unix 域套接字</h1>
+    
+    <p class="secondary small">
+        31 August, 2024
+
+        
+        
+        
+        
+        
+
+        
+        
+        
+        - Tags:
+        
+        
+        <a href="&#x2F;gists&#x2F;tags&#x2F;docker&#x2F;">docker</a>,
+        
+        
+        <a href="&#x2F;gists&#x2F;tags&#x2F;unix-domain-socket&#x2F;">unix-domain-socket</a>
+        
+        
+    </p>
+    
+    <div class="space"></div>
+    <p><em><code>曾经部署的一些自托管服务，用了一些不太寻常的方法让每个容器用上了域名套接字。这样做的好处有每个应用都可得到一个非常清晰的套接字名称并且避免了占用主机端口，但缺点是需要一个额外的容器及额外的资源开销。</code></em></p>
+<h2 id="unix-domain-socket">unix domain socket</h2>
+<p>以下是基本的 compose 模板，主要参考了这篇<a rel="external" href="https://serverfault.com/questions/1156554/bind-a-host-unix-socket-to-a-container-port">讨论</a>.</p>
+<pre class="giallo" style="color-scheme: light dark; color: light-dark(#24292E, #B392F0); background-color: light-dark(#FFFFFF, #1F1F1F);"><code data-lang="yaml"><span class="giallo-l"><span style="color: light-dark(#D32F2F, #F8F8F8);">s</span><span style="color: light-dark(#D32F2F, #F8F8F8);">ervices</span><span style="color: light-dark(#D32F2F, #F97583);">:</span></span>
+<span class="giallo-l"><span style="color: light-dark(#D32F2F, #F8F8F8);">  a</span><span style="color: light-dark(#D32F2F, #F8F8F8);">pp</span><span style="color: light-dark(#D32F2F, #F97583);">:</span></span>
+<span class="giallo-l"><span style="color: light-dark(#D32F2F, #F8F8F8);">    i</span><span style="color: light-dark(#D32F2F, #F8F8F8);">mage</span><span style="color: light-dark(#D32F2F, #F97583);">:</span><span style="color: light-dark(#22863A, #FFAB70);"> s</span><span style="color: light-dark(#22863A, #FFAB70);">omeapp</span></span>
+<span class="giallo-l"><span style="color: light-dark(#D32F2F, #F8F8F8);">  w</span><span style="color: light-dark(#D32F2F, #F8F8F8);">eb</span><span style="color: light-dark(#D32F2F, #F97583);">:</span></span>
+<span class="giallo-l"><span style="color: light-dark(#D32F2F, #F8F8F8);">    i</span><span style="color: light-dark(#D32F2F, #F8F8F8);">mage</span><span style="color: light-dark(#D32F2F, #F97583);">:</span><span style="color: light-dark(#22863A, #FFAB70);"> a</span><span style="color: light-dark(#22863A, #FFAB70);">lpine/socat</span></span>
+<span class="giallo-l"><span style="color: light-dark(#D32F2F, #F8F8F8);">    n</span><span style="color: light-dark(#D32F2F, #F8F8F8);">etwork_mode</span><span style="color: light-dark(#D32F2F, #F97583);">:</span><span style="color: light-dark(#22863A, #FFAB70);"> s</span><span style="color: light-dark(#22863A, #FFAB70);">ervice:app</span></span>
+<span class="giallo-l"><span style="color: light-dark(#D32F2F, #F8F8F8);">    r</span><span style="color: light-dark(#D32F2F, #F8F8F8);">estart</span><span style="color: light-dark(#D32F2F, #F97583);">:</span><span style="color: light-dark(#22863A, #FFAB70);"> a</span><span style="color: light-dark(#22863A, #FFAB70);">lways</span></span>
+<span class="giallo-l"><span style="color: light-dark(#D32F2F, #F8F8F8);">    c</span><span style="color: light-dark(#D32F2F, #F8F8F8);">ommand</span><span style="color: light-dark(#D32F2F, #F97583);">:</span></span>
+<span class="giallo-l"><span>      -</span><span style="color: light-dark(#22863A, #FFAB70);"> u</span><span style="color: light-dark(#22863A, #FFAB70);">nix-listen:/run/web.sock,fork,reuseaddr,mode=666</span></span>
+<span class="giallo-l"><span>      -</span><span style="color: light-dark(#22863A, #FFAB70);"> t</span><span style="color: light-dark(#22863A, #FFAB70);">cp-connect:localhost:PORT</span><span style="color: light-dark(#C2C3C5, #6B737C);"> #</span><span style="color: light-dark(#C2C3C5, #6B737C);"> or udp-connect:localhost:PORT</span></span>
+<span class="giallo-l"><span style="color: light-dark(#D32F2F, #F8F8F8);">    v</span><span style="color: light-dark(#D32F2F, #F8F8F8);">olumes</span><span style="color: light-dark(#D32F2F, #F97583);">:</span></span>
+<span class="giallo-l"><span>      -</span><span style="color: light-dark(#22863A, #FFAB70);"> .</span><span style="color: light-dark(#22863A, #FFAB70);">:/run</span></span></code></pre><h2 id="uptime-kuma">uptime kuma</h2>
+<pre class="giallo" style="color-scheme: light dark; color: light-dark(#24292E, #B392F0); background-color: light-dark(#FFFFFF, #1F1F1F);"><code data-lang="yaml"><span class="giallo-l"><span style="color: light-dark(#D32F2F, #F8F8F8);">s</span><span style="color: light-dark(#D32F2F, #F8F8F8);">ervices</span><span style="color: light-dark(#D32F2F, #F97583);">:</span></span>
+<span class="giallo-l"><span style="color: light-dark(#D32F2F, #F8F8F8);">  a</span><span style="color: light-dark(#D32F2F, #F8F8F8);">pp</span><span style="color: light-dark(#D32F2F, #F97583);">:</span></span>
+<span class="giallo-l"><span style="color: light-dark(#D32F2F, #F8F8F8);">    i</span><span style="color: light-dark(#D32F2F, #F8F8F8);">mage</span><span style="color: light-dark(#D32F2F, #F97583);">:</span><span style="color: light-dark(#22863A, #FFAB70);"> l</span><span style="color: light-dark(#22863A, #FFAB70);">ouislam/uptime-kuma:1</span></span>
+<span class="giallo-l"><span style="color: light-dark(#D32F2F, #F8F8F8);">    n</span><span style="color: light-dark(#D32F2F, #F8F8F8);">etwork_mode</span><span style="color: light-dark(#D32F2F, #F97583);">:</span><span style="color: light-dark(#22863A, #FFAB70);"> b</span><span style="color: light-dark(#22863A, #FFAB70);">ridge</span></span>
+<span class="giallo-l"><span style="color: light-dark(#D32F2F, #F8F8F8);">    r</span><span style="color: light-dark(#D32F2F, #F8F8F8);">estart</span><span style="color: light-dark(#D32F2F, #F97583);">:</span><span style="color: light-dark(#22863A, #FFAB70);"> a</span><span style="color: light-dark(#22863A, #FFAB70);">lways</span></span>
+<span class="giallo-l"><span style="color: light-dark(#D32F2F, #F8F8F8);">    v</span><span style="color: light-dark(#D32F2F, #F8F8F8);">olumes</span><span style="color: light-dark(#D32F2F, #F97583);">:</span></span>
+<span class="giallo-l"><span>      -</span><span style="color: light-dark(#22863A, #FFAB70);"> .</span><span style="color: light-dark(#22863A, #FFAB70);">:/app/data</span></span>
+<span class="giallo-l"><span style="color: light-dark(#D32F2F, #F8F8F8);">  w</span><span style="color: light-dark(#D32F2F, #F8F8F8);">eb</span><span style="color: light-dark(#D32F2F, #F97583);">:</span></span>
+<span class="giallo-l"><span style="color: light-dark(#D32F2F, #F8F8F8);">    i</span><span style="color: light-dark(#D32F2F, #F8F8F8);">mage</span><span style="color: light-dark(#D32F2F, #F97583);">:</span><span style="color: light-dark(#22863A, #FFAB70);"> a</span><span style="color: light-dark(#22863A, #FFAB70);">lpine/socat</span></span>
+<span class="giallo-l"><span style="color: light-dark(#D32F2F, #F8F8F8);">    n</span><span style="color: light-dark(#D32F2F, #F8F8F8);">etwork_mode</span><span style="color: light-dark(#D32F2F, #F97583);">:</span><span style="color: light-dark(#22863A, #FFAB70);"> s</span><span style="color: light-dark(#22863A, #FFAB70);">ervice:app</span></span>
+<span class="giallo-l"><span style="color: light-dark(#D32F2F, #F8F8F8);">    r</span><span style="color: light-dark(#D32F2F, #F8F8F8);">estart</span><span style="color: light-dark(#D32F2F, #F97583);">:</span><span style="color: light-dark(#22863A, #FFAB70);"> a</span><span style="color: light-dark(#22863A, #FFAB70);">lways</span></span>
+<span class="giallo-l"><span style="color: light-dark(#D32F2F, #F8F8F8);">    c</span><span style="color: light-dark(#D32F2F, #F8F8F8);">ommand</span><span style="color: light-dark(#D32F2F, #F97583);">:</span></span>
+<span class="giallo-l"><span>      -</span><span style="color: light-dark(#22863A, #FFAB70);"> u</span><span style="color: light-dark(#22863A, #FFAB70);">nix-listen:/run/web.sock,fork,reuseaddr,mode=666</span></span>
+<span class="giallo-l"><span>      -</span><span style="color: light-dark(#22863A, #FFAB70);"> t</span><span style="color: light-dark(#22863A, #FFAB70);">cp-connect:localhost:3001</span></span>
+<span class="giallo-l"><span style="color: light-dark(#D32F2F, #F8F8F8);">    v</span><span style="color: light-dark(#D32F2F, #F8F8F8);">olumes</span><span style="color: light-dark(#D32F2F, #F97583);">:</span></span>
+<span class="giallo-l"><span>      -</span><span style="color: light-dark(#22863A, #FFAB70);"> .</span><span style="color: light-dark(#22863A, #FFAB70);">:/run</span></span></code></pre><h2 id="librespeed">librespeed</h2>
+<pre class="giallo" style="color-scheme: light dark; color: light-dark(#24292E, #B392F0); background-color: light-dark(#FFFFFF, #1F1F1F);"><code data-lang="yaml"><span class="giallo-l"><span style="color: light-dark(#D32F2F, #F8F8F8);">s</span><span style="color: light-dark(#D32F2F, #F8F8F8);">ervices</span><span style="color: light-dark(#D32F2F, #F97583);">:</span></span>
+<span class="giallo-l"><span style="color: light-dark(#D32F2F, #F8F8F8);">  a</span><span style="color: light-dark(#D32F2F, #F8F8F8);">pp</span><span style="color: light-dark(#D32F2F, #F97583);">:</span></span>
+<span class="giallo-l"><span style="color: light-dark(#D32F2F, #F8F8F8);">    i</span><span style="color: light-dark(#D32F2F, #F8F8F8);">mage</span><span style="color: light-dark(#D32F2F, #F97583);">:</span><span style="color: light-dark(#22863A, #FFAB70);"> l</span><span style="color: light-dark(#22863A, #FFAB70);">scr.io/linuxserver/librespeed:latest</span></span>
+<span class="giallo-l"><span style="color: light-dark(#D32F2F, #F8F8F8);">    n</span><span style="color: light-dark(#D32F2F, #F8F8F8);">etwork_mode</span><span style="color: light-dark(#D32F2F, #F97583);">:</span><span style="color: light-dark(#22863A, #FFAB70);"> b</span><span style="color: light-dark(#22863A, #FFAB70);">ridge</span></span>
+<span class="giallo-l"><span style="color: light-dark(#D32F2F, #F8F8F8);">    r</span><span style="color: light-dark(#D32F2F, #F8F8F8);">estart</span><span style="color: light-dark(#D32F2F, #F97583);">:</span><span style="color: light-dark(#22863A, #FFAB70);"> a</span><span style="color: light-dark(#22863A, #FFAB70);">lways</span></span>
+<span class="giallo-l"><span style="color: light-dark(#D32F2F, #F8F8F8);">    e</span><span style="color: light-dark(#D32F2F, #F8F8F8);">nvironment</span><span style="color: light-dark(#D32F2F, #F97583);">:</span></span>
+<span class="giallo-l"><span>      -</span><span style="color: light-dark(#22863A, #FFAB70);"> P</span><span style="color: light-dark(#22863A, #FFAB70);">UID=1000</span></span>
+<span class="giallo-l"><span>      -</span><span style="color: light-dark(#22863A, #FFAB70);"> P</span><span style="color: light-dark(#22863A, #FFAB70);">GID=1000</span></span>
+<span class="giallo-l"><span>      -</span><span style="color: light-dark(#22863A, #FFAB70);"> T</span><span style="color: light-dark(#22863A, #FFAB70);">Z=Asia/Shanghai</span></span>
+<span class="giallo-l"><span style="color: light-dark(#D32F2F, #F8F8F8);">    v</span><span style="color: light-dark(#D32F2F, #F8F8F8);">olumes</span><span style="color: light-dark(#D32F2F, #F97583);">:</span></span>
+<span class="giallo-l"><span>      -</span><span style="color: light-dark(#22863A, #FFAB70);"> .</span><span style="color: light-dark(#22863A, #FFAB70);">/config:/config</span></span>
+<span class="giallo-l"><span style="color: light-dark(#D32F2F, #F8F8F8);">  w</span><span style="color: light-dark(#D32F2F, #F8F8F8);">eb</span><span style="color: light-dark(#D32F2F, #F97583);">:</span></span>
+<span class="giallo-l"><span style="color: light-dark(#D32F2F, #F8F8F8);">    i</span><span style="color: light-dark(#D32F2F, #F8F8F8);">mage</span><span style="color: light-dark(#D32F2F, #F97583);">:</span><span style="color: light-dark(#22863A, #FFAB70);"> a</span><span style="color: light-dark(#22863A, #FFAB70);">lpine/socat</span></span>
+<span class="giallo-l"><span style="color: light-dark(#D32F2F, #F8F8F8);">    n</span><span style="color: light-dark(#D32F2F, #F8F8F8);">etwork_mode</span><span style="color: light-dark(#D32F2F, #F97583);">:</span><span style="color: light-dark(#22863A, #FFAB70);"> s</span><span style="color: light-dark(#22863A, #FFAB70);">ervice:app</span></span>
+<span class="giallo-l"><span style="color: light-dark(#D32F2F, #F8F8F8);">    r</span><span style="color: light-dark(#D32F2F, #F8F8F8);">estart</span><span style="color: light-dark(#D32F2F, #F97583);">:</span><span style="color: light-dark(#22863A, #FFAB70);"> a</span><span style="color: light-dark(#22863A, #FFAB70);">lways</span></span>
+<span class="giallo-l"><span style="color: light-dark(#D32F2F, #F8F8F8);">    c</span><span style="color: light-dark(#D32F2F, #F8F8F8);">ommand</span><span style="color: light-dark(#D32F2F, #F97583);">:</span></span>
+<span class="giallo-l"><span>      -</span><span style="color: light-dark(#22863A, #FFAB70);"> u</span><span style="color: light-dark(#22863A, #FFAB70);">nix-listen:/run/web.sock,fork,reuseaddr,mode=666</span></span>
+<span class="giallo-l"><span>      -</span><span style="color: light-dark(#22863A, #FFAB70);"> t</span><span style="color: light-dark(#22863A, #FFAB70);">cp-connect:localhost:80</span></span>
+<span class="giallo-l"><span style="color: light-dark(#D32F2F, #F8F8F8);">    v</span><span style="color: light-dark(#D32F2F, #F8F8F8);">olumes</span><span style="color: light-dark(#D32F2F, #F97583);">:</span></span>
+<span class="giallo-l"><span>      -</span><span style="color: light-dark(#22863A, #FFAB70);"> .</span><span style="color: light-dark(#22863A, #FFAB70);">:/run</span></span></code></pre><h2 id="caddy">caddy</h2>
+<pre class="giallo" style="color-scheme: light dark; color: light-dark(#24292E, #B392F0); background-color: light-dark(#FFFFFF, #1F1F1F);"><code data-lang="yaml"><span class="giallo-l"><span style="color: light-dark(#D32F2F, #F8F8F8);">s</span><span style="color: light-dark(#D32F2F, #F8F8F8);">ervices</span><span style="color: light-dark(#D32F2F, #F97583);">:</span></span>
+<span class="giallo-l"><span style="color: light-dark(#D32F2F, #F8F8F8);">  a</span><span style="color: light-dark(#D32F2F, #F8F8F8);">pp</span><span style="color: light-dark(#D32F2F, #F97583);">:</span></span>
+<span class="giallo-l"><span style="color: light-dark(#D32F2F, #F8F8F8);">    i</span><span style="color: light-dark(#D32F2F, #F8F8F8);">mage</span><span style="color: light-dark(#D32F2F, #F97583);">:</span><span style="color: light-dark(#22863A, #FFAB70);"> c</span><span style="color: light-dark(#22863A, #FFAB70);">addy</span></span>
+<span class="giallo-l"><span style="color: light-dark(#D32F2F, #F8F8F8);">    n</span><span style="color: light-dark(#D32F2F, #F8F8F8);">etwork_mode</span><span style="color: light-dark(#D32F2F, #F97583);">:</span><span style="color: light-dark(#22863A, #FFAB70);"> h</span><span style="color: light-dark(#22863A, #FFAB70);">ost</span></span>
+<span class="giallo-l"><span style="color: light-dark(#D32F2F, #F8F8F8);">    r</span><span style="color: light-dark(#D32F2F, #F8F8F8);">estart</span><span style="color: light-dark(#D32F2F, #F97583);">:</span><span style="color: light-dark(#22863A, #FFAB70);"> a</span><span style="color: light-dark(#22863A, #FFAB70);">lways</span></span>
+<span class="giallo-l"><span style="color: light-dark(#D32F2F, #F8F8F8);">    v</span><span style="color: light-dark(#D32F2F, #F8F8F8);">olumes</span><span style="color: light-dark(#D32F2F, #F97583);">:</span></span>
+<span class="giallo-l"><span>      -</span><span style="color: light-dark(#22863A, #FFAB70);"> .</span><span style="color: light-dark(#22863A, #FFAB70);">/Caddyfile:/etc/caddy/Caddyfile</span></span>
+<span class="giallo-l"><span>      -</span><span style="color: light-dark(#22863A, #FFAB70);"> d</span><span style="color: light-dark(#22863A, #FFAB70);">ata:/data</span></span>
+<span class="giallo-l"><span>      -</span><span style="color: light-dark(#22863A, #FFAB70);"> c</span><span style="color: light-dark(#22863A, #FFAB70);">onf:/config</span></span>
+<span class="giallo-l"><span>      -</span><span style="color: light-dark(#22863A, #FFAB70);"> /</span><span style="color: light-dark(#22863A, #FFAB70);">opt/cert:/cert</span></span>
+<span class="giallo-l"><span>      -</span><span style="color: light-dark(#22863A, #FFAB70);"> /</span><span style="color: light-dark(#22863A, #FFAB70);">srv:/srv</span></span>
+<span class="giallo-l"><span>      -</span><span style="color: light-dark(#22863A, #FFAB70);"> /</span><span style="color: light-dark(#22863A, #FFAB70);">run:/run</span></span>
+<span class="giallo-l"><span style="color: light-dark(#D32F2F, #F8F8F8);">v</span><span style="color: light-dark(#D32F2F, #F8F8F8);">olumes</span><span style="color: light-dark(#D32F2F, #F97583);">:</span></span>
+<span class="giallo-l"><span style="color: light-dark(#D32F2F, #F8F8F8);">  d</span><span style="color: light-dark(#D32F2F, #F8F8F8);">ata</span><span style="color: light-dark(#D32F2F, #F97583);">:</span></span>
+<span class="giallo-l"><span style="color: light-dark(#D32F2F, #F8F8F8);">  c</span><span style="color: light-dark(#D32F2F, #F8F8F8);">onf</span><span style="color: light-dark(#D32F2F, #F97583);">:</span></span></code></pre>
+<p><em>Caddyfile Example</em></p>
+<pre class="giallo" style="color-scheme: light dark; color: light-dark(#24292E, #B392F0); background-color: light-dark(#FFFFFF, #1F1F1F);"><code data-lang="plain"><span class="giallo-l"><span>example.com,</span></span>
+<span class="giallo-l"><span>*.example.com {</span></span>
+<span class="giallo-l"><span>    tls _CERT_ _KEY_</span></span>
+<span class="giallo-l"><span>    encode zstd gzip</span></span>
+<span class="giallo-l"></span>
+<span class="giallo-l"><span>    @api host api.example.com</span></span>
+<span class="giallo-l"><span>    handle @api {</span></span>
+<span class="giallo-l"><span>        reverse_proxy [::1]:8080</span></span>
+<span class="giallo-l"><span>    }</span></span>
+<span class="giallo-l"></span>
+<span class="giallo-l"><span>    # other sites</span></span>
+<span class="giallo-l"></span>
+<span class="giallo-l"></span>
+<span class="giallo-l"><span>    # fallback site</span></span>
+<span class="giallo-l"><span>    handle {</span></span>
+<span class="giallo-l"><span>        root * /usr/share/caddy</span></span>
+<span class="giallo-l"><span>        file_server</span></span>
+<span class="giallo-l"><span>    }</span></span>
+<span class="giallo-l"><span>}</span></span></code></pre><h2 id="memos">memos</h2>
+<pre class="giallo" style="color-scheme: light dark; color: light-dark(#24292E, #B392F0); background-color: light-dark(#FFFFFF, #1F1F1F);"><code data-lang="yaml"><span class="giallo-l"><span style="color: light-dark(#D32F2F, #F8F8F8);">s</span><span style="color: light-dark(#D32F2F, #F8F8F8);">ervices</span><span style="color: light-dark(#D32F2F, #F97583);">:</span></span>
+<span class="giallo-l"><span style="color: light-dark(#D32F2F, #F8F8F8);">  a</span><span style="color: light-dark(#D32F2F, #F8F8F8);">pp</span><span style="color: light-dark(#D32F2F, #F97583);">:</span></span>
+<span class="giallo-l"><span style="color: light-dark(#D32F2F, #F8F8F8);">    i</span><span style="color: light-dark(#D32F2F, #F8F8F8);">mage</span><span style="color: light-dark(#D32F2F, #F97583);">:</span><span style="color: light-dark(#22863A, #FFAB70);"> n</span><span style="color: light-dark(#22863A, #FFAB70);">eosmemo/memos:stable</span></span>
+<span class="giallo-l"><span style="color: light-dark(#D32F2F, #F8F8F8);">    n</span><span style="color: light-dark(#D32F2F, #F8F8F8);">etwork_mode</span><span style="color: light-dark(#D32F2F, #F97583);">:</span><span style="color: light-dark(#22863A, #FFAB70);"> n</span><span style="color: light-dark(#22863A, #FFAB70);">one</span></span>
+<span class="giallo-l"><span style="color: light-dark(#D32F2F, #F8F8F8);">    r</span><span style="color: light-dark(#D32F2F, #F8F8F8);">estart</span><span style="color: light-dark(#D32F2F, #F97583);">:</span><span style="color: light-dark(#22863A, #FFAB70);"> a</span><span style="color: light-dark(#22863A, #FFAB70);">lways</span></span>
+<span class="giallo-l"><span style="color: light-dark(#D32F2F, #F8F8F8);">    v</span><span style="color: light-dark(#D32F2F, #F8F8F8);">olumes</span><span style="color: light-dark(#D32F2F, #F97583);">:</span></span>
+<span class="giallo-l"><span>      -</span><span style="color: light-dark(#22863A, #FFAB70);"> .</span><span style="color: light-dark(#22863A, #FFAB70);">/memos/:/var/opt/memos</span></span>
+<span class="giallo-l"><span style="color: light-dark(#D32F2F, #F8F8F8);">  w</span><span style="color: light-dark(#D32F2F, #F8F8F8);">eb</span><span style="color: light-dark(#D32F2F, #F97583);">:</span></span>
+<span class="giallo-l"><span style="color: light-dark(#D32F2F, #F8F8F8);">    i</span><span style="color: light-dark(#D32F2F, #F8F8F8);">mage</span><span style="color: light-dark(#D32F2F, #F97583);">:</span><span style="color: light-dark(#22863A, #FFAB70);"> a</span><span style="color: light-dark(#22863A, #FFAB70);">lpine/socat</span></span>
+<span class="giallo-l"><span style="color: light-dark(#D32F2F, #F8F8F8);">    n</span><span style="color: light-dark(#D32F2F, #F8F8F8);">etwork_mode</span><span style="color: light-dark(#D32F2F, #F97583);">:</span><span style="color: light-dark(#22863A, #FFAB70);"> s</span><span style="color: light-dark(#22863A, #FFAB70);">ervice:app</span></span>
+<span class="giallo-l"><span style="color: light-dark(#D32F2F, #F8F8F8);">    r</span><span style="color: light-dark(#D32F2F, #F8F8F8);">estart</span><span style="color: light-dark(#D32F2F, #F97583);">:</span><span style="color: light-dark(#22863A, #FFAB70);"> a</span><span style="color: light-dark(#22863A, #FFAB70);">lways</span></span>
+<span class="giallo-l"><span style="color: light-dark(#D32F2F, #F8F8F8);">    c</span><span style="color: light-dark(#D32F2F, #F8F8F8);">ommand</span><span style="color: light-dark(#D32F2F, #F97583);">:</span></span>
+<span class="giallo-l"><span>      -</span><span style="color: light-dark(#22863A, #FFAB70);"> u</span><span style="color: light-dark(#22863A, #FFAB70);">nix-listen:/run/web.sock,fork,reuseaddr,mode=666</span></span>
+<span class="giallo-l"><span>      -</span><span style="color: light-dark(#22863A, #FFAB70);"> t</span><span style="color: light-dark(#22863A, #FFAB70);">cp-connect:localhost:5230</span></span>
+<span class="giallo-l"><span style="color: light-dark(#D32F2F, #F8F8F8);">    v</span><span style="color: light-dark(#D32F2F, #F8F8F8);">olumes</span><span style="color: light-dark(#D32F2F, #F97583);">:</span></span>
+<span class="giallo-l"><span>      -</span><span style="color: light-dark(#22863A, #FFAB70);"> .</span><span style="color: light-dark(#22863A, #FFAB70);">:/run</span></span></code></pre>
+</main>
+
+    <div class="dark-mode-buttons">
+        <button class="dark-mode-button" id="dark-mode-on"><img src="/gists/dark_mode.svg" width="24" height="24" alt="Dark mode" aria-label="dark mode toggle" title="Dark mode"></button>
+        <button class="dark-mode-button" id="dark-mode-off"><img src="/gists/light_mode.svg" width="24" height="24" alt="Light mode" aria-label="light mode toggle" title="Light mode"></button>
+    </div>
+    <script>
+        const cls = document.querySelector("html").classList;
+        const sessionTheme = sessionStorage.getItem("theme");
+
+        function setDark() {
+            cls.add("dark-mode");
+            cls.remove("light-mode");
+            sessionStorage.setItem("theme", "dark");
+        }
+        function setLight() {
+            cls.add("light-mode");
+            cls.remove("dark-mode");
+            sessionStorage.setItem("theme", "light");
+        }
+
+        if (sessionTheme === "dark") {
+            setDark();
+        } else if (sessionTheme === "light") {
+            setLight();
+        } else if (window.matchMedia("(prefers-color-scheme: dark)").matches) {
+            setDark();
+        }
+
+        document.getElementById("dark-mode-on").addEventListener("click", function(e) {
+            setDark();
+        });
+        document.getElementById("dark-mode-off").addEventListener("click", function(e) {
+            setLight();
+        });
+    </script>
+    <noscript>
+        <style>
+            .dark-mode-buttons {
+                display: none;
+            }
+        </style>
+    </noscript>
+</body>
+</html>

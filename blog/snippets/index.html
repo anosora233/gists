@@ -1,0 +1,265 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="description" content="Github user anosora233&amp;#x27;s gists">
+    <title>Anosora233 | 废弃的配置和代码片段</title>
+    
+    <link rel="stylesheet" href="/gists/style.css?h=dd0032accb6b0c821e25">
+    
+    
+        
+            
+                
+                    
+                        <link rel="alternate" type="application/atom+xml" title="Anosora233 - Atom Feed" href="/gists/atom.xml">
+                    
+                
+            
+        
+    
+</head>
+<body>
+    
+<header class="space">
+    <a href="&#x2F;gists">&LeftArrow; Home</a>
+</header>
+
+    
+<main>
+    <h1>废弃的配置和代码片段</h1>
+    
+    <p class="secondary small">
+        20 August, 2024
+
+        
+        
+        
+        
+        
+
+        
+        
+        
+        - Tags:
+        
+        
+        <a href="&#x2F;gists&#x2F;tags&#x2F;wsl&#x2F;">wsl</a>,
+        
+        
+        <a href="&#x2F;gists&#x2F;tags&#x2F;zsh&#x2F;">zsh</a>,
+        
+        
+        <a href="&#x2F;gists&#x2F;tags&#x2F;ndp&#x2F;">ndp</a>,
+        
+        
+        <a href="&#x2F;gists&#x2F;tags&#x2F;ipv6&#x2F;">ipv6</a>,
+        
+        
+        <a href="&#x2F;gists&#x2F;tags&#x2F;fish&#x2F;">fish</a>
+        
+        
+    </p>
+    
+    <div class="space"></div>
+    <p><em><code>Just some snippets.</code></em></p>
+<span id="continue-reading"></span>
+<h2 id="wsl">wsl</h2>
+<ul>
+<li>locale</li>
+</ul>
+<pre class="giallo" style="color-scheme: light dark; color: light-dark(#24292E, #B392F0); background-color: light-dark(#FFFFFF, #1F1F1F);"><code data-lang="shellscript"><span class="giallo-l"><span style="color: light-dark(#6F42C1, #B392F0);">localectl</span><span style="color: light-dark(#2B5581, #9DB1C5);"> set-locale</span><span style="color: light-dark(#2B5581, #9DB1C5);"> LANG=en_US.UTF-8</span></span>
+<span class="giallo-l"><span style="color: light-dark(#C2C3C5, #6B737C);">#</span><span style="color: light-dark(#C2C3C5, #6B737C);"> localectl set-locale LANG=zh_CN.UTF-8</span></span></code></pre>
+<ul>
+<li>tun mode <code>resolv.conf</code></li>
+</ul>
+<pre class="giallo" style="color-scheme: light dark; color: light-dark(#24292E, #B392F0); background-color: light-dark(#FFFFFF, #1F1F1F);"><code data-lang="shellscript"><span class="giallo-l"><span style="color: light-dark(#6F42C1, #B392F0);">sudo</span><span style="color: light-dark(#2B5581, #9DB1C5);"> rm</span><span style="color: light-dark(#2B5581, #9DB1C5);"> /etc/resolv.conf</span></span>
+<span class="giallo-l"><span style="color: light-dark(#6F42C1, #B392F0);">echo</span><span style="color: light-dark(#22863A, #FFAB70);"> &quot;</span><span style="color: light-dark(#22863A, #FFAB70);">nameserver 1.0.0.1</span><span style="color: light-dark(#22863A, #FFAB70);">&quot;</span><span style="color: light-dark(#D32F2F, #F97583);"> |</span><span style="color: light-dark(#6F42C1, #B392F0);"> sudo</span><span style="color: light-dark(#2B5581, #9DB1C5);"> tee</span><span style="color: light-dark(#2B5581, #9DB1C5);"> /etc/resolv.conf</span></span>
+<span class="giallo-l"><span style="color: light-dark(#C2C3C5, #6B737C);">#</span><span style="color: light-dark(#C2C3C5, #6B737C);"> immutable filesystem attribute</span></span>
+<span class="giallo-l"><span style="color: light-dark(#6F42C1, #B392F0);">sudo</span><span style="color: light-dark(#2B5581, #9DB1C5);"> chattr</span><span style="color: light-dark(#2B5581, #9DB1C5);"> +i</span><span style="color: light-dark(#2B5581, #9DB1C5);"> /etc/resolv.conf</span></span></code></pre><h2 id="zsh">zsh</h2>
+<p>use antidote as zsh plugin manager</p>
+<ul>
+<li>clone antidote</li>
+</ul>
+<pre class="giallo" style="color-scheme: light dark; color: light-dark(#24292E, #B392F0); background-color: light-dark(#FFFFFF, #1F1F1F);"><code data-lang="shellscript"><span class="giallo-l"><span style="color: light-dark(#6F42C1, #B392F0);">git</span><span style="color: light-dark(#2B5581, #9DB1C5);"> clone</span><span style="color: light-dark(#2B5581, #9DB1C5);"> -</span><span style="color: light-dark(#2B5581, #9DB1C5);">-depth=1</span><span style="color: light-dark(#2B5581, #9DB1C5);"> https://github.com/mattmc3/antidote.git</span><span> $</span><span>{</span><span>ZDOTDIR</span><span style="color: light-dark(#D32F2F, #F97583);">:-</span><span>$</span><span>HOME</span><span>}</span><span style="color: light-dark(#2B5581, #9DB1C5);">/.antidote</span></span></code></pre>
+<ul>
+<li>configuration</li>
+</ul>
+<pre class="giallo" style="color-scheme: light dark; color: light-dark(#24292E, #B392F0); background-color: light-dark(#FFFFFF, #1F1F1F);"><code data-lang="shellscript"><span class="giallo-l"><span style="color: light-dark(#6F42C1, #B392F0);">cat</span><span style="color: light-dark(#D32F2F, #F97583);"> &lt;&lt;</span><span> &#39;</span><span>EOF</span><span>&#39;</span><span style="color: light-dark(#D32F2F, #F97583);"> &gt;</span><span style="color: light-dark(#2B5581, #9DB1C5);"> .zshrc</span></span>
+<span class="giallo-l"><span style="color: light-dark(#22863A, #FFAB70);"># Lines configured by zsh-newuser-install</span></span>
+<span class="giallo-l"><span style="color: light-dark(#22863A, #FFAB70);">HISTFILE=~/.histfile</span></span>
+<span class="giallo-l"><span style="color: light-dark(#22863A, #FFAB70);">HISTSIZE=1000</span></span>
+<span class="giallo-l"><span style="color: light-dark(#22863A, #FFAB70);">SAVEHIST=1000</span></span>
+<span class="giallo-l"><span style="color: light-dark(#22863A, #FFAB70);"># End of lines configured by zsh-newuser-install</span></span>
+<span class="giallo-l"><span style="color: light-dark(#22863A, #FFAB70);"># The following lines were added by compinstall</span></span>
+<span class="giallo-l"><span style="color: light-dark(#22863A, #FFAB70);">zstyle :compinstall filename ${HOME}/.zshrc</span></span>
+<span class="giallo-l"></span>
+<span class="giallo-l"><span style="color: light-dark(#22863A, #FFAB70);">autoload -Uz compinit</span></span>
+<span class="giallo-l"><span style="color: light-dark(#22863A, #FFAB70);">compinit</span></span>
+<span class="giallo-l"><span style="color: light-dark(#22863A, #FFAB70);"># End of lines added by compinstall</span></span>
+<span class="giallo-l"><span style="color: light-dark(#22863A, #FFAB70);"># antidote</span></span>
+<span class="giallo-l"><span style="color: light-dark(#22863A, #FFAB70);">source ${ZDOTDIR:-$HOME}/.antidote/antidote.zsh</span></span>
+<span class="giallo-l"><span style="color: light-dark(#22863A, #FFAB70);">antidote load ${ZDOTDIR:-$HOME}/.zsh_plugins.txt</span></span>
+<span class="giallo-l"></span>
+<span class="giallo-l"><span style="color: light-dark(#22863A, #FFAB70);">if [ -d &quot;${HOME}/.acme.sh&quot; ]; then</span></span>
+<span class="giallo-l"><span style="color: light-dark(#22863A, #FFAB70);">. &quot;${HOME}/.acme.sh/acme.sh.env&quot;</span></span>
+<span class="giallo-l"><span style="color: light-dark(#22863A, #FFAB70);">fi</span></span>
+<span class="giallo-l"></span>
+<span class="giallo-l"><span style="color: light-dark(#22863A, #FFAB70);">zstyle &#39;:prompt:pure:path&#39; color yellow</span></span>
+<span class="giallo-l"><span style="color: light-dark(#22863A, #FFAB70);">zstyle &#39;:prompt:pure:prompt:success&#39; color cyan</span></span>
+<span class="giallo-l"><span style="color: light-dark(#22863A, #FFAB70);">zstyle &#39;:completion:*&#39; rehash true</span></span>
+<span class="giallo-l"></span>
+<span class="giallo-l"><span style="color: light-dark(#22863A, #FFAB70);">bindkey &#39;^H&#39; backward-kill-word</span></span>
+<span class="giallo-l"><span>EOF</span></span>
+<span class="giallo-l"></span>
+<span class="giallo-l"><span style="color: light-dark(#6F42C1, #B392F0);">cat</span><span style="color: light-dark(#D32F2F, #F97583);"> &lt;&lt;</span><span> EOF</span><span style="color: light-dark(#D32F2F, #F97583);"> &gt;</span><span style="color: light-dark(#2B5581, #9DB1C5);"> .zsh_plugins.txt</span></span>
+<span class="giallo-l"><span style="color: light-dark(#2B5581, #9DB1C5);"># .zsh_plugins.txt</span></span>
+<span class="giallo-l"><span style="color: light-dark(#2B5581, #9DB1C5);">rupa/z              # some bash plugins work too</span></span>
+<span class="giallo-l"><span style="color: light-dark(#2B5581, #9DB1C5);">sindresorhus/pure   # enhance your prompt</span></span>
+<span class="giallo-l"></span>
+<span class="giallo-l"><span style="color: light-dark(#2B5581, #9DB1C5);"># you can even use Oh My Zsh plugins</span></span>
+<span class="giallo-l"><span style="color: light-dark(#2B5581, #9DB1C5);">getantidote/use-omz</span></span>
+<span class="giallo-l"><span style="color: light-dark(#2B5581, #9DB1C5);">ohmyzsh/ohmyzsh path:lib</span></span>
+<span class="giallo-l"><span style="color: light-dark(#2B5581, #9DB1C5);">ohmyzsh/ohmyzsh path:plugins/extract</span></span>
+<span class="giallo-l"></span>
+<span class="giallo-l"><span style="color: light-dark(#2B5581, #9DB1C5);"># add fish-like features</span></span>
+<span class="giallo-l"><span style="color: light-dark(#2B5581, #9DB1C5);">zsh-users/zsh-syntax-highlighting</span></span>
+<span class="giallo-l"><span style="color: light-dark(#2B5581, #9DB1C5);">zsh-users/zsh-autosuggestions</span></span>
+<span class="giallo-l"><span style="color: light-dark(#2B5581, #9DB1C5);">zsh-users/zsh-history-substring-search</span></span>
+<span class="giallo-l"><span>EOF</span></span></code></pre><h2 id="ndppd">ndppd</h2>
+<ol>
+<li>Install</li>
+</ol>
+<pre class="giallo" style="color-scheme: light dark; color: light-dark(#24292E, #B392F0); background-color: light-dark(#FFFFFF, #1F1F1F);"><code data-lang="shellscript"><span class="giallo-l"><span style="color: light-dark(#6F42C1, #B392F0);">sudo</span><span style="color: light-dark(#2B5581, #9DB1C5);"> apt</span><span style="color: light-dark(#2B5581, #9DB1C5);"> install</span><span style="color: light-dark(#2B5581, #9DB1C5);"> ndppd</span></span></code></pre>
+<ol start="2">
+<li>Configuration</li>
+</ol>
+<pre class="giallo" style="color-scheme: light dark; color: light-dark(#24292E, #B392F0); background-color: light-dark(#FFFFFF, #1F1F1F);"><code data-lang="shellscript"><span class="giallo-l"><span style="color: light-dark(#C2C3C5, #6B737C);">#</span><span style="color: light-dark(#C2C3C5, #6B737C);"> replace `2001:ff::/64` with yours</span></span>
+<span class="giallo-l"><span style="color: light-dark(#6F42C1, #B392F0);">cat</span><span style="color: light-dark(#D32F2F, #F97583);"> &lt;&lt;</span><span> EOF</span><span style="color: light-dark(#D32F2F, #F97583);"> &gt;</span><span style="color: light-dark(#2B5581, #9DB1C5);"> /etc/ndppd.conf</span></span>
+<span class="giallo-l"><span style="color: light-dark(#2B5581, #9DB1C5);">route-ttl 30000</span></span>
+<span class="giallo-l"><span style="color: light-dark(#2B5581, #9DB1C5);">proxy eth0 {</span></span>
+<span class="giallo-l"><span style="color: light-dark(#2B5581, #9DB1C5);">    router no</span></span>
+<span class="giallo-l"><span style="color: light-dark(#2B5581, #9DB1C5);">    timeout 500</span></span>
+<span class="giallo-l"><span style="color: light-dark(#2B5581, #9DB1C5);">    ttl 30000</span></span>
+<span class="giallo-l"><span style="color: light-dark(#2B5581, #9DB1C5);">    rule 2001:ff::/64 {</span></span>
+<span class="giallo-l"><span style="color: light-dark(#2B5581, #9DB1C5);">        static</span></span>
+<span class="giallo-l"><span style="color: light-dark(#2B5581, #9DB1C5);">    }</span></span>
+<span class="giallo-l"><span style="color: light-dark(#2B5581, #9DB1C5);">}</span></span>
+<span class="giallo-l"><span>EOF</span></span>
+<span class="giallo-l"></span>
+<span class="giallo-l"><span style="color: light-dark(#6F42C1, #B392F0);">ip</span><span style="color: light-dark(#2B5581, #9DB1C5);"> route</span><span style="color: light-dark(#2B5581, #9DB1C5);"> add</span><span style="color: light-dark(#2B5581, #9DB1C5);"> local</span><span style="color: light-dark(#2B5581, #9DB1C5);"> 2001:ff::/64</span><span style="color: light-dark(#2B5581, #9DB1C5);"> dev</span><span style="color: light-dark(#2B5581, #9DB1C5);"> lo</span></span>
+<span class="giallo-l"><span style="color: light-dark(#6F42C1, #B392F0);">ip</span><span style="color: light-dark(#2B5581, #9DB1C5);"> route</span><span style="color: light-dark(#2B5581, #9DB1C5);"> del</span><span style="color: light-dark(#2B5581, #9DB1C5);"> local</span><span style="color: light-dark(#2B5581, #9DB1C5);"> 2001:ff::/64</span><span style="color: light-dark(#2B5581, #9DB1C5);"> dev</span><span style="color: light-dark(#2B5581, #9DB1C5);"> lo</span></span></code></pre><h2 id="color-os-13">color os 13</h2>
+<pre class="giallo" style="color-scheme: light dark; color: light-dark(#24292E, #B392F0); background-color: light-dark(#FFFFFF, #1F1F1F);"><code data-lang="shellscript"><span class="giallo-l"><span style="color: light-dark(#C2C3C5, #6B737C);">#</span><span style="color: light-dark(#C2C3C5, #6B737C);"> adb shell pm unsuspend &lt;package&gt;</span></span>
+<span class="giallo-l"><span style="color: light-dark(#6F42C1, #B392F0);">adb</span><span style="color: light-dark(#2B5581, #9DB1C5);"> shell</span><span style="color: light-dark(#2B5581, #9DB1C5);"> pm</span><span style="color: light-dark(#2B5581, #9DB1C5);"> suspend</span><span style="color: light-dark(#2B5581, #9DB1C5);"> com.oplus.ota</span></span>
+<span class="giallo-l"></span>
+<span class="giallo-l"><span style="color: light-dark(#C2C3C5, #6B737C);">#</span><span style="color: light-dark(#C2C3C5, #6B737C);"> adb shell pm install-existing --user 0 &lt;package&gt;</span></span>
+<span class="giallo-l"><span style="color: light-dark(#6F42C1, #B392F0);">adb</span><span style="color: light-dark(#2B5581, #9DB1C5);"> shell</span><span style="color: light-dark(#2B5581, #9DB1C5);"> pm</span><span style="color: light-dark(#2B5581, #9DB1C5);"> disable-user</span><span style="color: light-dark(#2B5581, #9DB1C5);"> com.opos.ads</span></span>
+<span class="giallo-l"><span style="color: light-dark(#6F42C1, #B392F0);">adb</span><span style="color: light-dark(#2B5581, #9DB1C5);"> shell</span><span style="color: light-dark(#2B5581, #9DB1C5);"> pm</span><span style="color: light-dark(#2B5581, #9DB1C5);"> disable-user</span><span style="color: light-dark(#2B5581, #9DB1C5);"> com.heytap.yoli</span></span>
+<span class="giallo-l"><span style="color: light-dark(#6F42C1, #B392F0);">adb</span><span style="color: light-dark(#2B5581, #9DB1C5);"> shell</span><span style="color: light-dark(#2B5581, #9DB1C5);"> pm</span><span style="color: light-dark(#2B5581, #9DB1C5);"> disable-user</span><span style="color: light-dark(#2B5581, #9DB1C5);"> com.heytap.music</span></span>
+<span class="giallo-l"></span>
+<span class="giallo-l"><span style="color: light-dark(#6F42C1, #B392F0);">adb</span><span style="color: light-dark(#2B5581, #9DB1C5);"> shell</span><span style="color: light-dark(#2B5581, #9DB1C5);"> pm</span><span style="color: light-dark(#2B5581, #9DB1C5);"> uninstall</span><span style="color: light-dark(#2B5581, #9DB1C5);"> -</span><span style="color: light-dark(#2B5581, #9DB1C5);">-user</span><span style="color: light-dark(#1976D2, #F8F8F8);"> 0</span><span style="color: light-dark(#2B5581, #9DB1C5);"> com.heytap.browser</span></span>
+<span class="giallo-l"><span style="color: light-dark(#6F42C1, #B392F0);">adb</span><span style="color: light-dark(#2B5581, #9DB1C5);"> shell</span><span style="color: light-dark(#2B5581, #9DB1C5);"> pm</span><span style="color: light-dark(#2B5581, #9DB1C5);"> uninstall</span><span style="color: light-dark(#2B5581, #9DB1C5);"> -</span><span style="color: light-dark(#2B5581, #9DB1C5);">-user</span><span style="color: light-dark(#1976D2, #F8F8F8);"> 0</span><span style="color: light-dark(#2B5581, #9DB1C5);"> com.opuls.appdetail</span></span>
+<span class="giallo-l"><span style="color: light-dark(#6F42C1, #B392F0);">adb</span><span style="color: light-dark(#2B5581, #9DB1C5);"> shell</span><span style="color: light-dark(#2B5581, #9DB1C5);"> pm</span><span style="color: light-dark(#2B5581, #9DB1C5);"> uninstall</span><span style="color: light-dark(#2B5581, #9DB1C5);"> -</span><span style="color: light-dark(#2B5581, #9DB1C5);">-user</span><span style="color: light-dark(#1976D2, #F8F8F8);"> 0</span><span style="color: light-dark(#2B5581, #9DB1C5);"> com.nearme.instant.platform</span></span></code></pre><h2 id="sync-ssl-cert">sync ssl cert</h2>
+<p><em><code>Deprecated</code></em></p>
+<ul>
+<li>Server Side</li>
+</ul>
+<pre class="giallo" style="color-scheme: light dark; color: light-dark(#24292E, #B392F0); background-color: light-dark(#FFFFFF, #1F1F1F);"><code data-lang="shellscript"><span class="giallo-l"><span style="color: light-dark(#6F42C1, #B392F0);">sudo</span><span style="color: light-dark(#2B5581, #9DB1C5);"> apt</span><span style="color: light-dark(#2B5581, #9DB1C5);"> install</span><span style="color: light-dark(#2B5581, #9DB1C5);"> rsync</span></span>
+<span class="giallo-l"></span>
+<span class="giallo-l"><span style="color: light-dark(#6F42C1, #B392F0);">echo</span><span style="color: light-dark(#22863A, #FFAB70);"> &quot;</span><span style="color: light-dark(#22863A, #FFAB70);">USER:PASSWORD</span><span style="color: light-dark(#22863A, #FFAB70);">&quot;</span><span style="color: light-dark(#D32F2F, #F97583);"> &gt;</span><span style="color: light-dark(#2B5581, #9DB1C5);"> /etc/rsyncd.secrets</span></span>
+<span class="giallo-l"><span style="color: light-dark(#6F42C1, #B392F0);">chmod</span><span style="color: light-dark(#1976D2, #F8F8F8);"> 600</span><span style="color: light-dark(#2B5581, #9DB1C5);"> /etc/rsyncd.secrets</span></span>
+<span class="giallo-l"></span>
+<span class="giallo-l"><span style="color: light-dark(#6F42C1, #B392F0);">cat</span><span style="color: light-dark(#D32F2F, #F97583);"> &lt;&lt;</span><span> EOF</span><span style="color: light-dark(#D32F2F, #F97583);"> &gt;</span><span style="color: light-dark(#2B5581, #9DB1C5);"> /etc/rsyncd.conf</span></span>
+<span class="giallo-l"><span style="color: light-dark(#2B5581, #9DB1C5);">uid = 0</span></span>
+<span class="giallo-l"><span style="color: light-dark(#2B5581, #9DB1C5);">gid = 0</span></span>
+<span class="giallo-l"><span style="color: light-dark(#2B5581, #9DB1C5);">read only = yes</span></span>
+<span class="giallo-l"><span style="color: light-dark(#2B5581, #9DB1C5);">secrets file = /etc/rsyncd.secrets</span></span>
+<span class="giallo-l"><span style="color: light-dark(#2B5581, #9DB1C5);">[cert]</span></span>
+<span class="giallo-l"><span style="color: light-dark(#2B5581, #9DB1C5);">path = /root/cert</span></span>
+<span class="giallo-l"><span style="color: light-dark(#2B5581, #9DB1C5);">auth users = cert</span></span>
+<span class="giallo-l"><span>EOF</span></span>
+<span class="giallo-l"></span>
+<span class="giallo-l"><span style="color: light-dark(#6F42C1, #B392F0);">sudo</span><span style="color: light-dark(#2B5581, #9DB1C5);"> systemctl</span><span style="color: light-dark(#2B5581, #9DB1C5);"> enable</span><span style="color: light-dark(#2B5581, #9DB1C5);"> -</span><span style="color: light-dark(#2B5581, #9DB1C5);">-now</span><span style="color: light-dark(#2B5581, #9DB1C5);"> rsync</span></span>
+<span class="giallo-l"><span style="color: light-dark(#6F42C1, #B392F0);">sudo</span><span style="color: light-dark(#2B5581, #9DB1C5);"> systemctl</span><span style="color: light-dark(#2B5581, #9DB1C5);"> status</span><span style="color: light-dark(#2B5581, #9DB1C5);"> rsync</span></span></code></pre>
+<ul>
+<li>Client Side</li>
+</ul>
+<pre class="giallo" style="color-scheme: light dark; color: light-dark(#24292E, #B392F0); background-color: light-dark(#FFFFFF, #1F1F1F);"><code data-lang="shellscript"><span class="giallo-l"><span style="color: light-dark(#6F42C1, #B392F0);">sudo</span><span style="color: light-dark(#2B5581, #9DB1C5);"> apt</span><span style="color: light-dark(#2B5581, #9DB1C5);"> install</span><span style="color: light-dark(#2B5581, #9DB1C5);"> rsync</span></span>
+<span class="giallo-l"></span>
+<span class="giallo-l"><span style="color: light-dark(#6F42C1, #B392F0);">echo</span><span style="color: light-dark(#22863A, #FFAB70);"> &quot;</span><span style="color: light-dark(#22863A, #FFAB70);">PASSWORD</span><span style="color: light-dark(#22863A, #FFAB70);">&quot;</span><span style="color: light-dark(#D32F2F, #F97583);"> &gt;</span><span style="color: light-dark(#2B5581, #9DB1C5);"> /root/syncpass</span></span>
+<span class="giallo-l"><span style="color: light-dark(#6F42C1, #B392F0);">chmod</span><span style="color: light-dark(#1976D2, #F8F8F8);"> 600</span><span style="color: light-dark(#2B5581, #9DB1C5);"> /root/syncpass</span></span>
+<span class="giallo-l"></span>
+<span class="giallo-l"><span style="color: light-dark(#6F42C1, #B392F0);">cat</span><span style="color: light-dark(#D32F2F, #F97583);"> &lt;&lt;</span><span> EOF</span><span style="color: light-dark(#D32F2F, #F97583);"> &gt;</span><span style="color: light-dark(#2B5581, #9DB1C5);"> /root/sync.sh</span></span>
+<span class="giallo-l"><span style="color: light-dark(#2B5581, #9DB1C5);">#!/bin/bash</span></span>
+<span class="giallo-l"><span style="color: light-dark(#2B5581, #9DB1C5);">rsync -avz --password-file=/root/syncpass cert@SERVER::cert /root/cert</span></span>
+<span class="giallo-l"><span>EOF</span></span>
+<span class="giallo-l"></span>
+<span class="giallo-l"><span style="color: light-dark(#C2C3C5, #6B737C);">#</span><span style="color: light-dark(#C2C3C5, #6B737C);"> crontab -e then add a new line</span></span>
+<span class="giallo-l"><span style="color: light-dark(#6F42C1, #B392F0);">@monthly</span><span style="color: light-dark(#2B5581, #9DB1C5);"> bash</span><span style="color: light-dark(#2B5581, #9DB1C5);"> /root/sync.sh</span></span></code></pre><h2 id="hurricane-electric-ipv6-tunnel">hurricane electric ipv6 tunnel</h2>
+<p>edit <code>/etc/network/interfaces</code></p>
+<pre class="giallo" style="color-scheme: light dark; color: light-dark(#24292E, #B392F0); background-color: light-dark(#FFFFFF, #1F1F1F);"><code data-lang="shellscript"><span class="giallo-l"><span style="color: light-dark(#6F42C1, #B392F0);"> auto</span><span style="color: light-dark(#2B5581, #9DB1C5);"> he6</span></span>
+<span class="giallo-l"><span style="color: light-dark(#6F42C1, #B392F0);">  iface</span><span style="color: light-dark(#2B5581, #9DB1C5);"> he6</span><span style="color: light-dark(#2B5581, #9DB1C5);"> inet6</span><span style="color: light-dark(#2B5581, #9DB1C5);"> v4tunnel</span></span>
+<span class="giallo-l"><span style="color: light-dark(#6F42C1, #B392F0);">    address</span><span style="color: light-dark(#2B5581, #9DB1C5);"> YOURS</span></span>
+<span class="giallo-l"><span style="color: light-dark(#6F42C1, #B392F0);">    netmask</span><span style="color: light-dark(#2B5581, #9DB1C5);"> YOURS</span></span>
+<span class="giallo-l"><span style="color: light-dark(#6F42C1, #B392F0);">    endpoint</span><span style="color: light-dark(#2B5581, #9DB1C5);"> YOURS</span></span>
+<span class="giallo-l"><span style="color: light-dark(#D32F2F, #F97583);">    local</span><span> YOUR</span></span>
+<span class="giallo-l"><span style="color: light-dark(#6F42C1, #B392F0);">    ttl</span><span style="color: light-dark(#1976D2, #F8F8F8);"> 255</span></span>
+<span class="giallo-l"><span style="color: light-dark(#6F42C1, #B392F0);">    up</span><span style="color: light-dark(#2B5581, #9DB1C5);"> ip</span><span style="color: light-dark(#2B5581, #9DB1C5);"> -</span><span style="color: light-dark(#2B5581, #9DB1C5);">6</span><span style="color: light-dark(#2B5581, #9DB1C5);"> route</span><span style="color: light-dark(#2B5581, #9DB1C5);"> add</span><span style="color: light-dark(#2B5581, #9DB1C5);"> default</span><span style="color: light-dark(#2B5581, #9DB1C5);"> via</span><span style="color: light-dark(#2B5581, #9DB1C5);"> YOURS</span><span style="color: light-dark(#2B5581, #9DB1C5);"> dev</span><span style="color: light-dark(#2B5581, #9DB1C5);"> he6</span><span style="color: light-dark(#2B5581, #9DB1C5);"> table</span><span style="color: light-dark(#1976D2, #F8F8F8);"> 51666</span></span>
+<span class="giallo-l"><span style="color: light-dark(#6F42C1, #B392F0);">    up</span><span style="color: light-dark(#2B5581, #9DB1C5);"> ip</span><span style="color: light-dark(#2B5581, #9DB1C5);"> -</span><span style="color: light-dark(#2B5581, #9DB1C5);">6</span><span style="color: light-dark(#2B5581, #9DB1C5);"> rule</span><span style="color: light-dark(#2B5581, #9DB1C5);"> add</span><span style="color: light-dark(#2B5581, #9DB1C5);"> from</span><span style="color: light-dark(#2B5581, #9DB1C5);"> 2001:470::/32</span><span style="color: light-dark(#2B5581, #9DB1C5);"> lookup</span><span style="color: light-dark(#1976D2, #F8F8F8);"> 51666</span></span>
+<span class="giallo-l"><span style="color: light-dark(#6F42C1, #B392F0);">    down</span><span style="color: light-dark(#2B5581, #9DB1C5);"> ip</span><span style="color: light-dark(#2B5581, #9DB1C5);"> -</span><span style="color: light-dark(#2B5581, #9DB1C5);">6</span><span style="color: light-dark(#2B5581, #9DB1C5);"> route</span><span style="color: light-dark(#2B5581, #9DB1C5);"> del</span><span style="color: light-dark(#2B5581, #9DB1C5);"> default</span><span style="color: light-dark(#2B5581, #9DB1C5);"> table</span><span style="color: light-dark(#1976D2, #F8F8F8);"> 51666</span></span>
+<span class="giallo-l"><span style="color: light-dark(#6F42C1, #B392F0);">    down</span><span style="color: light-dark(#2B5581, #9DB1C5);"> ip</span><span style="color: light-dark(#2B5581, #9DB1C5);"> -</span><span style="color: light-dark(#2B5581, #9DB1C5);">6</span><span style="color: light-dark(#2B5581, #9DB1C5);"> rule</span><span style="color: light-dark(#2B5581, #9DB1C5);"> del</span><span style="color: light-dark(#2B5581, #9DB1C5);"> lookup</span><span style="color: light-dark(#1976D2, #F8F8F8);"> 51666</span></span></code></pre><h2 id="fish">fish</h2>
+<pre class="giallo" style="color-scheme: light dark; color: light-dark(#24292E, #B392F0); background-color: light-dark(#FFFFFF, #1F1F1F);"><code data-lang="shellscript"><span class="giallo-l"><span style="color: light-dark(#6F42C1, #B392F0);">curl</span><span style="color: light-dark(#2B5581, #9DB1C5);"> -</span><span style="color: light-dark(#2B5581, #9DB1C5);">sL</span><span style="color: light-dark(#2B5581, #9DB1C5);"> https://raw.githubusercontent.com/jorgebucaran/fisher/main/functions/fisher.fish</span><span style="color: light-dark(#D32F2F, #F97583);"> |</span><span> \</span></span>
+<span class="giallo-l"><span style="color: light-dark(#6F42C1, #B392F0);"> source</span><span style="color: light-dark(#212121, #BBBBBB);"> &amp;&amp;</span><span style="color: light-dark(#6F42C1, #B392F0);"> fisher</span><span style="color: light-dark(#2B5581, #9DB1C5);"> install</span><span style="color: light-dark(#2B5581, #9DB1C5);"> jorgebucaran/fisher</span></span>
+<span class="giallo-l"></span>
+<span class="giallo-l"><span style="color: light-dark(#6F42C1, #B392F0);">fisher</span><span style="color: light-dark(#2B5581, #9DB1C5);"> install</span><span style="color: light-dark(#2B5581, #9DB1C5);"> pure-fish/pure</span></span>
+<span class="giallo-l"></span>
+<span class="giallo-l"><span style="color: light-dark(#6F42C1, #B392F0);">echo</span><span style="color: light-dark(#22863A, #FFAB70);"> &quot;</span><span style="color: light-dark(#22863A, #FFAB70);">\</span></span>
+<span class="giallo-l"><span style="color: light-dark(#22863A, #FFAB70);">set -x EDITOR nano</span></span>
+<span class="giallo-l"><span style="color: light-dark(#22863A, #FFAB70);">bind \b backward-kill-word</span><span style="color: light-dark(#22863A, #FFAB70);">\</span></span>
+<span class="giallo-l"><span style="color: light-dark(#22863A, #FFAB70);">&quot;</span><span style="color: light-dark(#D32F2F, #F97583);">&gt;</span><span style="color: light-dark(#2B5581, #9DB1C5);"> ~/.config/fish/conf.d/xtom.fish</span></span></code></pre>
+</main>
+
+    <div class="dark-mode-buttons">
+        <button class="dark-mode-button" id="dark-mode-on"><img src="/gists/dark_mode.svg" width="24" height="24" alt="Dark mode" aria-label="dark mode toggle" title="Dark mode"></button>
+        <button class="dark-mode-button" id="dark-mode-off"><img src="/gists/light_mode.svg" width="24" height="24" alt="Light mode" aria-label="light mode toggle" title="Light mode"></button>
+    </div>
+    <script>
+        const cls = document.querySelector("html").classList;
+        const sessionTheme = sessionStorage.getItem("theme");
+
+        function setDark() {
+            cls.add("dark-mode");
+            cls.remove("light-mode");
+            sessionStorage.setItem("theme", "dark");
+        }
+        function setLight() {
+            cls.add("light-mode");
+            cls.remove("dark-mode");
+            sessionStorage.setItem("theme", "light");
+        }
+
+        if (sessionTheme === "dark") {
+            setDark();
+        } else if (sessionTheme === "light") {
+            setLight();
+        } else if (window.matchMedia("(prefers-color-scheme: dark)").matches) {
+            setDark();
+        }
+
+        document.getElementById("dark-mode-on").addEventListener("click", function(e) {
+            setDark();
+        });
+        document.getElementById("dark-mode-off").addEventListener("click", function(e) {
+            setLight();
+        });
+    </script>
+    <noscript>
+        <style>
+            .dark-mode-buttons {
+                display: none;
+            }
+        </style>
+    </noscript>
+</body>
+</html>

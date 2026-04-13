@@ -1,0 +1,196 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="description" content="Github user anosora233&amp;#x27;s gists">
+    <title>Anosora233 | 在 Alpine 系统上配置 ServerStatus</title>
+    
+    <link rel="stylesheet" href="/gists/style.css?h=dd0032accb6b0c821e25">
+    
+    
+        
+            
+                
+                    
+                        <link rel="alternate" type="application/atom+xml" title="Anosora233 - Atom Feed" href="/gists/atom.xml">
+                    
+                
+            
+        
+    
+</head>
+<body>
+    
+<header class="space">
+    <a href="&#x2F;gists">&LeftArrow; Home</a>
+</header>
+
+    
+<main>
+    <h1>在 Alpine 系统上配置 ServerStatus</h1>
+    
+    <p class="secondary small">
+        22 March, 2025
+
+        
+        
+        
+        
+        
+
+        
+        
+        
+        - Tags:
+        
+        
+        <a href="&#x2F;gists&#x2F;tags&#x2F;openrc&#x2F;">openrc</a>,
+        
+        
+        <a href="&#x2F;gists&#x2F;tags&#x2F;alpine&#x2F;">alpine</a>,
+        
+        
+        <a href="&#x2F;gists&#x2F;tags&#x2F;serverstatus&#x2F;">serverstatus</a>
+        
+        
+    </p>
+    
+    <div class="space"></div>
+    <p><em><code>为了监控运行 Alpine 发行版的小型服务器使用情况，折腾学习了一下 OpenRC 服务的编写。</code></em></p>
+<h2 id="fu-wu-qi-duan-pei-zhi">服务器端配置</h2>
+<p>由于原始二进制文件名较冗长，在此将其重命名为 ssrd。</p>
+<blockquote>
+<p>警告：请记得将所有 N 替换为你的配置。</p>
+</blockquote>
+<pre class="giallo" style="color-scheme: light dark; color: light-dark(#24292E, #B392F0); background-color: light-dark(#FFFFFF, #1F1F1F);"><code data-lang="shellscript"><span class="giallo-l"><span style="color: light-dark(#6F42C1, #B392F0);">mkdir</span><span style="color: light-dark(#2B5581, #9DB1C5);"> -</span><span style="color: light-dark(#2B5581, #9DB1C5);">p</span><span style="color: light-dark(#2B5581, #9DB1C5);"> /opt/ssr</span><span> \</span></span>
+<span class="giallo-l"><span style="color: light-dark(#212121, #BBBBBB);">&amp;&amp;</span><span style="color: light-dark(#6F42C1, #B392F0);"> wget</span><span style="color: light-dark(#2B5581, #9DB1C5);"> -</span><span style="color: light-dark(#2B5581, #9DB1C5);">qO-</span><span style="color: light-dark(#2B5581, #9DB1C5);"> https://github.com/zdz/ServerStatus-Rust/releases/download/v1.8.1/server-x86_64-unknown-linux-musl.zip</span><span> \</span></span>
+<span class="giallo-l"><span style="color: light-dark(#D32F2F, #F97583);">|</span><span style="color: light-dark(#6F42C1, #B392F0);"> unzip</span><span style="color: light-dark(#2B5581, #9DB1C5);"> -</span><span style="color: light-dark(#2B5581, #9DB1C5);">po</span><span style="color: light-dark(#2B5581, #9DB1C5);"> -</span><span style="color: light-dark(#2B5581, #9DB1C5);"> stat_server</span><span style="color: light-dark(#D32F2F, #F97583);"> &gt;</span><span style="color: light-dark(#2B5581, #9DB1C5);"> /opt/ssr/ssrd</span><span> \</span></span>
+<span class="giallo-l"><span style="color: light-dark(#212121, #BBBBBB);">&amp;&amp;</span><span style="color: light-dark(#6F42C1, #B392F0);"> chmod</span><span style="color: light-dark(#2B5581, #9DB1C5);"> +x</span><span style="color: light-dark(#2B5581, #9DB1C5);"> /opt/ssr/ssrd</span><span> \</span></span>
+<span class="giallo-l"><span style="color: light-dark(#212121, #BBBBBB);">&amp;&amp;</span><span style="color: light-dark(#6F42C1, #B392F0);"> chown</span><span style="color: light-dark(#2B5581, #9DB1C5);"> -</span><span style="color: light-dark(#2B5581, #9DB1C5);">R</span><span style="color: light-dark(#2B5581, #9DB1C5);"> daemon:daemon</span><span style="color: light-dark(#2B5581, #9DB1C5);"> /opt/ssr</span></span>
+<span class="giallo-l"></span>
+<span class="giallo-l"><span style="color: light-dark(#6F42C1, #B392F0);">cat</span><span style="color: light-dark(#D32F2F, #F97583);"> &lt;&lt;</span><span> EOF</span><span style="color: light-dark(#D32F2F, #F97583);"> &gt;</span><span style="color: light-dark(#2B5581, #9DB1C5);"> /opt/ssr/config.toml</span></span>
+<span class="giallo-l"><span style="color: light-dark(#2B5581, #9DB1C5);">grpc_addr = &quot;[::1]:9394&quot;</span></span>
+<span class="giallo-l"><span style="color: light-dark(#2B5581, #9DB1C5);">http_addr = &quot;[::1]:8080&quot;</span></span>
+<span class="giallo-l"></span>
+<span class="giallo-l"><span style="color: light-dark(#2B5581, #9DB1C5);">jwt_secret = &quot;N&quot;</span></span>
+<span class="giallo-l"><span style="color: light-dark(#2B5581, #9DB1C5);">admin_user = &quot;N&quot;</span></span>
+<span class="giallo-l"><span style="color: light-dark(#2B5581, #9DB1C5);">admin_pass = &quot;N&quot;</span></span>
+<span class="giallo-l"></span>
+<span class="giallo-l"><span style="color: light-dark(#2B5581, #9DB1C5);">hosts_group = [</span></span>
+<span class="giallo-l"><span style="color: light-dark(#2B5581, #9DB1C5);">  {gid = &quot;N&quot;, password = &quot;N&quot;}</span></span>
+<span class="giallo-l"><span style="color: light-dark(#2B5581, #9DB1C5);">]</span></span>
+<span class="giallo-l"></span>
+<span class="giallo-l"><span style="color: light-dark(#2B5581, #9DB1C5);">group_gc = 3600</span></span>
+<span class="giallo-l"><span>EOF</span></span>
+<span class="giallo-l"></span>
+<span class="giallo-l"></span>
+<span class="giallo-l"><span style="color: light-dark(#6F42C1, #B392F0);">cat</span><span style="color: light-dark(#D32F2F, #F97583);"> &lt;&lt;</span><span> EOF</span><span style="color: light-dark(#D32F2F, #F97583);"> &gt;</span><span style="color: light-dark(#2B5581, #9DB1C5);"> /etc/init.d/ssrd</span></span>
+<span class="giallo-l"><span style="color: light-dark(#2B5581, #9DB1C5);">#!/sbin/openrc-run</span></span>
+<span class="giallo-l"></span>
+<span class="giallo-l"><span style="color: light-dark(#2B5581, #9DB1C5);">respawn_delay=5</span></span>
+<span class="giallo-l"><span style="color: light-dark(#2B5581, #9DB1C5);">respawn_period=60</span></span>
+<span class="giallo-l"><span style="color: light-dark(#2B5581, #9DB1C5);">supervisor=supervise-daemon</span></span>
+<span class="giallo-l"><span style="color: light-dark(#2B5581, #9DB1C5);">directory=/opt/ssr</span></span>
+<span class="giallo-l"><span style="color: light-dark(#2B5581, #9DB1C5);">command_user=daemon:daemon</span></span>
+<span class="giallo-l"><span style="color: light-dark(#2B5581, #9DB1C5);">command=/opt/ssr/ssrd</span></span>
+<span class="giallo-l"><span style="color: light-dark(#2B5581, #9DB1C5);">command_args=&quot;-c /opt/ssr/config.toml&quot;</span></span>
+<span class="giallo-l"></span>
+<span class="giallo-l"><span style="color: light-dark(#2B5581, #9DB1C5);">depend() {</span></span>
+<span class="giallo-l"><span style="color: light-dark(#2B5581, #9DB1C5);">  after net dns</span></span>
+<span class="giallo-l"><span style="color: light-dark(#2B5581, #9DB1C5);">}</span></span>
+<span class="giallo-l"><span>EOF</span></span>
+<span class="giallo-l"></span>
+<span class="giallo-l"><span style="color: light-dark(#6F42C1, #B392F0);">chmod</span><span style="color: light-dark(#2B5581, #9DB1C5);"> +x</span><span style="color: light-dark(#2B5581, #9DB1C5);"> /etc/init.d/ssrd</span></span>
+<span class="giallo-l"><span style="color: light-dark(#6F42C1, #B392F0);">rc-service</span><span style="color: light-dark(#2B5581, #9DB1C5);"> ssrd</span><span style="color: light-dark(#2B5581, #9DB1C5);"> start</span><span style="color: light-dark(#212121, #BBBBBB);"> &amp;&amp;</span><span style="color: light-dark(#6F42C1, #B392F0);"> rc-update</span><span style="color: light-dark(#2B5581, #9DB1C5);"> add</span><span style="color: light-dark(#2B5581, #9DB1C5);"> ssrd</span></span></code></pre><h2 id="ke-hu-duan-pei-zhi">客户端配置</h2>
+<p>同服务端，将客户端原始二进制文件名重命名为 ssr。</p>
+<p>对于客户端参数的管理可以使用 .env 文件来定义客户端设置。</p>
+<p>要从 .env 文件中读取环境变量，我参考这篇<a rel="external" href="https://stackoverflow.com/questions/19331497/set-environment-variables-from-file-of-key-value-pairs">讨论</a>，可以在 OpenRC 脚本中使用命令 <code>export $(xargs &lt; FILE)</code>。</p>
+<pre class="giallo" style="color-scheme: light dark; color: light-dark(#24292E, #B392F0); background-color: light-dark(#FFFFFF, #1F1F1F);"><code data-lang="shellscript"><span class="giallo-l"><span style="color: light-dark(#C2C3C5, #6B737C);">#</span><span style="color: light-dark(#C2C3C5, #6B737C);"> some dependencies</span></span>
+<span class="giallo-l"><span style="color: light-dark(#6F42C1, #B392F0);">apk</span><span style="color: light-dark(#2B5581, #9DB1C5);"> add</span><span style="color: light-dark(#2B5581, #9DB1C5);"> procps</span><span style="color: light-dark(#2B5581, #9DB1C5);"> iproute2</span><span style="color: light-dark(#2B5581, #9DB1C5);"> coreutils</span><span style="color: light-dark(#2B5581, #9DB1C5);"> vnstat</span></span>
+<span class="giallo-l"><span style="color: light-dark(#6F42C1, #B392F0);">rc-service</span><span style="color: light-dark(#2B5581, #9DB1C5);"> vnstatd</span><span style="color: light-dark(#2B5581, #9DB1C5);"> start</span></span>
+<span class="giallo-l"><span style="color: light-dark(#6F42C1, #B392F0);">rc-update</span><span style="color: light-dark(#2B5581, #9DB1C5);"> add</span><span style="color: light-dark(#2B5581, #9DB1C5);"> vnstatd</span></span>
+<span class="giallo-l"></span>
+<span class="giallo-l"><span style="color: light-dark(#C2C3C5, #6B737C);">#</span><span style="color: light-dark(#C2C3C5, #6B737C);"> client environments</span></span>
+<span class="giallo-l"><span style="color: light-dark(#6F42C1, #B392F0);">cat</span><span style="color: light-dark(#D32F2F, #F97583);"> &lt;&lt;</span><span> EOF</span><span style="color: light-dark(#D32F2F, #F97583);"> &gt;</span><span style="color: light-dark(#2B5581, #9DB1C5);"> /opt/ssr/.env</span></span>
+<span class="giallo-l"><span style="color: light-dark(#2B5581, #9DB1C5);">SSR_GID=N</span></span>
+<span class="giallo-l"><span style="color: light-dark(#2B5581, #9DB1C5);">SSR_PASS=N</span></span>
+<span class="giallo-l"><span style="color: light-dark(#2B5581, #9DB1C5);">SSR_LOC=us</span></span>
+<span class="giallo-l"><span style="color: light-dark(#2B5581, #9DB1C5);">SSR_TYPE=kvm</span></span>
+<span class="giallo-l"><span style="color: light-dark(#2B5581, #9DB1C5);">SSR_VNSTAT=true</span></span>
+<span class="giallo-l"><span style="color: light-dark(#2B5581, #9DB1C5);">SSR_VNSTAT_MR=10</span></span>
+<span class="giallo-l"><span style="color: light-dark(#2B5581, #9DB1C5);">SSR_ALIAS=N</span></span>
+<span class="giallo-l"><span style="color: light-dark(#2B5581, #9DB1C5);">SSR_ADDR=N</span></span>
+<span class="giallo-l"><span>EOF</span></span>
+<span class="giallo-l"></span>
+<span class="giallo-l"><span style="color: light-dark(#C2C3C5, #6B737C);">#</span><span style="color: light-dark(#C2C3C5, #6B737C);"> client binary</span></span>
+<span class="giallo-l"><span style="color: light-dark(#6F42C1, #B392F0);">mkdir</span><span style="color: light-dark(#2B5581, #9DB1C5);"> -</span><span style="color: light-dark(#2B5581, #9DB1C5);">p</span><span style="color: light-dark(#2B5581, #9DB1C5);"> /opt/ssr</span><span> \</span></span>
+<span class="giallo-l"><span>wget</span><span style="color: light-dark(#2B5581, #9DB1C5);"> -</span><span style="color: light-dark(#2B5581, #9DB1C5);">qO-</span><span style="color: light-dark(#2B5581, #9DB1C5);"> https://github.com/zdz/ServerStatus-Rust/releases/download/v1.8.1/client-x86_64-unknown-linux-musl.zip</span><span> \</span></span>
+<span class="giallo-l"><span style="color: light-dark(#D32F2F, #F97583);">|</span><span style="color: light-dark(#6F42C1, #B392F0);"> unzip</span><span style="color: light-dark(#2B5581, #9DB1C5);"> -</span><span style="color: light-dark(#2B5581, #9DB1C5);">po</span><span style="color: light-dark(#2B5581, #9DB1C5);"> -</span><span style="color: light-dark(#2B5581, #9DB1C5);"> stat_client</span><span style="color: light-dark(#D32F2F, #F97583);"> &gt;</span><span style="color: light-dark(#2B5581, #9DB1C5);"> /opt/ssr/ssr</span><span> \</span></span>
+<span class="giallo-l"><span style="color: light-dark(#212121, #BBBBBB);">&amp;&amp;</span><span style="color: light-dark(#6F42C1, #B392F0);"> chmod</span><span style="color: light-dark(#2B5581, #9DB1C5);"> +x</span><span style="color: light-dark(#2B5581, #9DB1C5);"> /opt/ssr/ssr</span><span> \</span></span>
+<span class="giallo-l"><span style="color: light-dark(#212121, #BBBBBB);">&amp;&amp;</span><span style="color: light-dark(#6F42C1, #B392F0);"> chown</span><span style="color: light-dark(#2B5581, #9DB1C5);"> -</span><span style="color: light-dark(#2B5581, #9DB1C5);">R</span><span style="color: light-dark(#2B5581, #9DB1C5);"> daemon:daemon</span><span style="color: light-dark(#2B5581, #9DB1C5);"> /opt/ssr</span></span>
+<span class="giallo-l"></span>
+<span class="giallo-l"><span style="color: light-dark(#6F42C1, #B392F0);">cat</span><span style="color: light-dark(#D32F2F, #F97583);"> &lt;&lt;</span><span> &#39;</span><span>EOF</span><span>&#39;</span><span style="color: light-dark(#D32F2F, #F97583);"> &gt;</span><span style="color: light-dark(#2B5581, #9DB1C5);"> /etc/init.d/ssr</span></span>
+<span class="giallo-l"><span style="color: light-dark(#22863A, #FFAB70);">#!/sbin/openrc-run</span></span>
+<span class="giallo-l"></span>
+<span class="giallo-l"><span style="color: light-dark(#22863A, #FFAB70);">export RUST_BACKTRACE=1 $(xargs&lt;/opt/ssr/.env)</span></span>
+<span class="giallo-l"></span>
+<span class="giallo-l"><span style="color: light-dark(#22863A, #FFAB70);">respawn_delay=5</span></span>
+<span class="giallo-l"><span style="color: light-dark(#22863A, #FFAB70);">respawn_period=60</span></span>
+<span class="giallo-l"><span style="color: light-dark(#22863A, #FFAB70);">supervisor=supervise-daemon</span></span>
+<span class="giallo-l"><span style="color: light-dark(#22863A, #FFAB70);">directory=/opt/ssr</span></span>
+<span class="giallo-l"><span style="color: light-dark(#22863A, #FFAB70);">command=/opt/ssr/ssr</span></span>
+<span class="giallo-l"><span style="color: light-dark(#22863A, #FFAB70);">command_user=daemon:daemon</span></span>
+<span class="giallo-l"></span>
+<span class="giallo-l"><span style="color: light-dark(#22863A, #FFAB70);">depend() {</span></span>
+<span class="giallo-l"><span style="color: light-dark(#22863A, #FFAB70);">  after net dns</span></span>
+<span class="giallo-l"><span style="color: light-dark(#22863A, #FFAB70);">}</span></span>
+<span class="giallo-l"><span>EOF</span></span>
+<span class="giallo-l"></span>
+<span class="giallo-l"><span style="color: light-dark(#6F42C1, #B392F0);">chmod</span><span style="color: light-dark(#2B5581, #9DB1C5);"> +x</span><span style="color: light-dark(#2B5581, #9DB1C5);"> /etc/init.d/ssr</span></span>
+<span class="giallo-l"><span style="color: light-dark(#6F42C1, #B392F0);">rc-service</span><span style="color: light-dark(#2B5581, #9DB1C5);"> ssr</span><span style="color: light-dark(#2B5581, #9DB1C5);"> start</span><span style="color: light-dark(#212121, #BBBBBB);"> &amp;&amp;</span><span style="color: light-dark(#6F42C1, #B392F0);"> rc-update</span><span style="color: light-dark(#2B5581, #9DB1C5);"> add</span><span style="color: light-dark(#2B5581, #9DB1C5);"> ssr</span></span></code></pre>
+</main>
+
+    <div class="dark-mode-buttons">
+        <button class="dark-mode-button" id="dark-mode-on"><img src="/gists/dark_mode.svg" width="24" height="24" alt="Dark mode" aria-label="dark mode toggle" title="Dark mode"></button>
+        <button class="dark-mode-button" id="dark-mode-off"><img src="/gists/light_mode.svg" width="24" height="24" alt="Light mode" aria-label="light mode toggle" title="Light mode"></button>
+    </div>
+    <script>
+        const cls = document.querySelector("html").classList;
+        const sessionTheme = sessionStorage.getItem("theme");
+
+        function setDark() {
+            cls.add("dark-mode");
+            cls.remove("light-mode");
+            sessionStorage.setItem("theme", "dark");
+        }
+        function setLight() {
+            cls.add("light-mode");
+            cls.remove("dark-mode");
+            sessionStorage.setItem("theme", "light");
+        }
+
+        if (sessionTheme === "dark") {
+            setDark();
+        } else if (sessionTheme === "light") {
+            setLight();
+        } else if (window.matchMedia("(prefers-color-scheme: dark)").matches) {
+            setDark();
+        }
+
+        document.getElementById("dark-mode-on").addEventListener("click", function(e) {
+            setDark();
+        });
+        document.getElementById("dark-mode-off").addEventListener("click", function(e) {
+            setLight();
+        });
+    </script>
+    <noscript>
+        <style>
+            .dark-mode-buttons {
+                display: none;
+            }
+        </style>
+    </noscript>
+</body>
+</html>
