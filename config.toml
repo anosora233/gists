@@ -1,0 +1,52 @@
+# The URL the site will be built for
+theme = "bear"
+title = "(¬`‸´¬) Anosora233"
+base_url = "/gists"
+
+generate_feeds = true
+
+# Whether to automatically compile all Sass files in the sass directory
+compile_sass = false
+
+# Whether to build a search index to be used later on by a JavaScript library
+build_search_index = false
+
+taxonomies = [
+  { name = "categories", feed = true },
+  { name = "tags", feed = true },
+]
+
+default_language = "zh"
+
+[languages.zh.translations]
+no_posts = "暂无内容"
+remove_filter = "清除筛选"
+filtering_for = "筛选条件"
+made_with = "基于"
+table_of_contents = "目录"
+language = "语言"
+site = "站点"
+
+[markdown]
+
+[markdown.highlighting]
+light_theme = "min-light"                                                                                     
+dark_theme = "min-dark"
+
+[extra]
+# Put all your custom variables here
+date_format = "%Y/%m/%d"
+webserver_sends_csp_headers = true
+
+[extra.table_of_contents]
+show = true
+max_level = 2
+visible_on_load = false
+
+[[extra.main_menu]]
+name = "主页"
+url = "@/_index.md"
+
+[[extra.main_menu]]
+name = "文章"
+url = "@/blog/_index.md"
