@@ -29,12 +29,17 @@ ssh -o ProxyCommand="connect -S 127.0.0.1:8080 %h %p" <host>
 
 ## 扩展：通过 .ssh/config 预先定义行为
 
-可以在主机名前加一个标记，表示需要通过代理连接。这里使用 `^` 作为标记，编辑 `.ssh/config`，加入以下配置：
+可以用 `Match tagged` 按标记启用代理。这里使用 `+` 作为标记，在 `.ssh/config` 中加入：
 
 ```text
-# ^[HOST]:PROXY, _[HOST]:DIRECT.
-Host ^*
+Match tagged +
   ProxyCommand connect -S 127.0.0.1:8080 %h %p
 ```
 
-这样，连接远程服务器时，只需在主机名前加上 `^` 标记，即可通过代理连接。
+连接远程服务器时，添加 `-P+` 即可通过代理连接：
+
+```sh
+ssh <host> -P+
+```
+
+不指定该标记时，这条代理配置不会生效。
