@@ -2,7 +2,7 @@
 theme = "bear"
 title = "🌌 Anosora233"
 description = "Anosora233 的笔记，记录 Linux、Windows、网络服务和日常配置中的实践。"
-base_url = "/gists"
+base_url = "/"
 
 generate_feeds = true
 
