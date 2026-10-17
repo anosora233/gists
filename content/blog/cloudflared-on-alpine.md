@@ -13,7 +13,7 @@ Cloudflared 可以通过 Cloudflare 的服务器，将受严格 NAT 限制的服
 
 撰文时，官方仓库的 cloudflared 包还在 testing 分支。参考 Alpine 文档有关[新增仓库的语法](https://wiki.alpinelinux.org/wiki/Repositories)，可以考虑使用 `@` 语法临时启用 testing 分支仓库。具体而言，将 `/etc/apk/repositories` 修改为以下内容：
 
-```conf
+```text
 https://dl-cdn.alpinelinux.org/alpine/v3.23/main
 https://dl-cdn.alpinelinux.org/alpine/v3.23/community
 @testing https://dl-cdn.alpinelinux.org/alpine/edge/testing

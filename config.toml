@@ -1,5 +1,6 @@
 # The URL the site will be built for
 theme = "bear"
+author = "Anosora233"
 title = "🌌 Anosora233"
 description = "Anosora233 的笔记，记录 Linux、Windows、网络服务和日常配置中的实践。"
 base_url = "/"
@@ -19,7 +20,7 @@ taxonomies = [
 
 default_language = "zh"
 
-[languages.zh.translations]
+[translations]
 no_posts = "暂无内容"
 remove_filter = "清除筛选"
 filtering_for = "筛选条件"

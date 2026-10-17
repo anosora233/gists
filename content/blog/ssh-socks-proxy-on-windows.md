@@ -31,7 +31,7 @@ ssh -o ProxyCommand="connect -S 127.0.0.1:8080 %h %p" <host>
 
 可以在主机名前加一个标记，表示需要通过代理连接。这里使用 `^` 作为标记，编辑 `.ssh/config`，加入以下配置：
 
-```conf
+```text
 # ^[HOST]:PROXY, _[HOST]:DIRECT.
 Host ^*
   ProxyCommand connect -S 127.0.0.1:8080 %h %p
