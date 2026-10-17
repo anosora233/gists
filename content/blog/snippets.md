@@ -6,14 +6,14 @@ taxonomies.tags = ["shell"]
 
 ## wsl
 
-Debian 系语言配置。
+Debian 系发行版的语言配置。
 
 ```zsh
 localectl set-locale LANG=en_US.UTF-8
 # localectl set-locale LANG=zh_CN.UTF-8
 ```
 
-在 Tun 模式下 WSL 不能正常联网，可以通过固定 WSL 系统的 dns 服务器解决。
+在 TUN 模式下，WSL 可能无法正常联网，可以通过固定 WSL 的 DNS 服务器来解决。
 
 ```zsh
 sudo rm /etc/resolv.conf
@@ -30,7 +30,7 @@ sudo chattr +i /etc/resolv.conf
 git clone --depth=1 https://github.com/mattmc3/antidote.git ${ZDOTDIR:-$HOME}/.antidote
 ```
 
-具体的 .zshrc 配置文件：
+具体的 `.zshrc` 配置如下：
 
 ```zsh
 cat << 'EOF' > .zshrc
@@ -79,7 +79,7 @@ EOF
 
 ## ndppd
 
-配置 ndppd 让你的闲置的 /64 块 IPv6 发挥效果，现在可以通过该块下任意一地址访问目标主机。
+配置 ndppd，让闲置的 IPv6 /64 地址段派上用场。配置后，即可通过该地址段中的任意地址访问目标主机。
 
 ```zsh
 sudo apt install ndppd
@@ -103,7 +103,7 @@ ip route del local 2001:ff::/64 dev lo
 
 ## ColorOS
 
-以下我在 C13 系统上禁用的一些软件包
+以下是我在 C13 系统上禁用的一些软件包：
 
 ```zsh
 # adb shell pm unsuspend <package>
@@ -121,7 +121,7 @@ adb shell pm uninstall --user 0 com.nearme.instant.platform
 
 ## SSL Cert
 
-通过 rsync 在一组服务器直接同步 SSL 证书，非去中心化的方案。
+通过 rsync 在一组服务器之间同步 SSL 证书。
 
 - 服务端
 
@@ -164,7 +164,7 @@ EOF
 
 ## hurricane electric ipv6 tunnel
 
-编辑：`/etc/network/interfaces`
+编辑 `/etc/network/interfaces`：
 
 ```zsh
 auto he6
